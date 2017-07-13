@@ -7,7 +7,8 @@ module.exports = function(grunt) {
             sdk: {
                 // the files to concatenate
                 src: [
-                   'src/Component.js'
+                   'src/Component.js',
+                   'src/Input.js'
                 ],
                 // the location of the resulting JS file
                 dest: 'dist/CloudCommponent.js'

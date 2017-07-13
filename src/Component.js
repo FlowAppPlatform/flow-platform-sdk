@@ -1,7 +1,7 @@
-/*
- Component
- */
-import {validate} from '../util'
+import CBFlow from './CBFlow';
+import {
+    validate
+} from '../util'
 class Component {
     constructor() {
         //set initial properties
@@ -13,19 +13,17 @@ class Component {
 
     addInPort(name, obj) {
 
-        if (!name) 
+        if (!name)
             throw "Inport name is required"
-        if (!validate(name, 'string')) 
+        if (!validate(name, 'string'))
             throw "Port name should be of type string."
-        
+
         //TODO: validate datatype
 
-        this
-            .inPorts
-            .push({
-                name: name,
-                metadata: obj || {}
-            })
+        this.inPorts.push({
+            name: name,
+            metadata: obj || {}
+        })
 
     }
 
@@ -41,19 +39,20 @@ class Component {
 
         //TODO: validate datatype
 
-        this
-            .inPorts
-            .push({
-                name: name,
-                metadata: obj || {}
-            })
+        this.inPorts.push({
+            name: name,
+            metadata: obj || {}
+        })
 
     }
 
-    process(data) {
+    process(handle) {
 
-        if (!validate(data, 'function')) {
-            throw 'Process can only accept function as a parameter.'
+        if (!validate(handle, 'function')) {
+            throw 'Process handler must be a function.'
+        }
+        if (!this.inPorts) {
+            throw new Error("Component ports must be defined before process function");
         }
 
     }
@@ -78,8 +77,6 @@ class Component {
         return this._process
     }
 
-    
-
 }
-
+CBFlow.Component = Component
 export default Component
