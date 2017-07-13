@@ -3,7 +3,7 @@ var config = {
    entry: './src/entry.js',
    output: {
       path:'./dist',
-      filename: 'CloudCommponent.js',
+      filename: 'CloudComponent.js',
       library: "CloudComponent",
       libraryTarget: 'umd',
       umdNamedDefine: true,
