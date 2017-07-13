@@ -1,26 +1,27 @@
-///<reference path="./cloudboost.d.ts" />
-
-import Component from './Component'
+import CBFlow from './CBFlow'
 
 try {
     if (window) {
         if (navigator.product == 'ReactNative') {
             // for react native turn node and native flags to true
-            Component._isNode = true
-            Component._isNative = true
+            CBFlow._isNode = true
+            CBFlow._isNative = true
         } else {
             // if window is found then node is false
-            Component._isNode = false
+            CBFlow._isNode = false
         }
     }
 } catch (e) {
     // if window is not found , then turn node flag to true
-    Component._isNode = true
+    CBFlow._isNode = true
 }
 
 require('./Component')
+require('./ProcessInput')
+require('./ProcessOutput')
+require('./Port')
 
 try {
-    window.Component = Component
+    window.CBFlow = CBFlow
 } catch (e) {}
-module.exports = Component
+module.exports = CBFlow
