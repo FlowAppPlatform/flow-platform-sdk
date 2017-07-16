@@ -11,7 +11,11 @@ class InPort {
         }
         this._description = options.description || '';
         this._name = name;
-        this._data = null;
+        if (validate(options.data, options.datatype)) {
+            this._data = options.data || null;
+        } else {
+            throw "data must be of type " + options.datatype
+        }
         this._required = options.required || false;
         if (!options.datatype) {
             throw "Datatype not found in port options"
@@ -34,8 +38,9 @@ class InPort {
         this._socket = socket;
 
         socket.on('data', function (data) {
-            if (validate(data))
+            if (validate(data)) {
                 this._data = data;
+            }
         });
         socket.on('connect', function (data) {
 
@@ -88,7 +93,11 @@ class InPort {
     }
 
     set data(value) {
-        this._data = value
+        if (validate(value, this._datatype)) {
+            this._data = value
+        } else
+            throw "data must be of type " + this._datatype;
+
     }
 
     get datatype() {
@@ -103,7 +112,7 @@ class InPort {
         return this._id
     }
 
-    get socket(){
+    get socket() {
         return this._socket
     }
 

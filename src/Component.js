@@ -8,29 +8,29 @@ class Component {
         this._description = '';
         this._inPorts = [];
         this._outPorts = [];
-        this._process = null;
+        this._handle = null;
     }
 
     addInPort(name, options) {
-        
-        if(!options){
+
+        if (!options) {
             throw "options parameter is required"
         }
 
-        if (!name)
+        if (!name) {
             throw "Inport name is required"
-        if (!validate(name, 'string'))
+        }
+        if (!validate(name, 'string')) {
             throw "Port name should be of type string."
+        }
 
-        //TODO: validate datatype
-
-        this.inPorts.push(new CBFlow.InPort(name,options));
+        this.inPorts.push(new CBFlow.InPort(name, options));
 
     }
 
-    addOutPort(name,options) {
+    addOutPort(name, options) {
 
-        if(!options){
+        if (!options) {
             throw "options parameter is required"
         }
 
@@ -50,8 +50,8 @@ class Component {
 
     }
 
-    execute(){
-        this._process(new CBFlow.ProcessInput(),new CBFlow.ProcessOutput())
+    execute() {
+        this._handle(new CBFlow.ProcessInput(this._inPorts), new CBFlow.ProcessOutput(this._outPorts))
     }
 
     process(handle) {
@@ -62,12 +62,12 @@ class Component {
         if (!this.inPorts) {
             throw new Error("Component ports must be defined before process function");
         }
-        this._process = handle;
+        this._handle = handle;
 
     }
 
     get description() {
-        return this.description
+        return this._description
     }
 
     set description(description) {
@@ -79,11 +79,7 @@ class Component {
     }
 
     get outPorts() {
-        return this.outPorts
-    }
-
-    get process() {
-        return this._process
+        return this._outPorts
     }
 
 }
