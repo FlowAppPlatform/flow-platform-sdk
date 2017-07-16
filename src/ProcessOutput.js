@@ -3,34 +3,34 @@ import {
     validate
 } from '../util'
 class ProcessOutput {
-    constructor() {
+    constructor(ports) {
         //set initial properties
-        this._description = '';
-        this._inPorts = [];
-        this._outPorts = [];
-        this._process = null;
+        this._ports = ports;
+
     }
 
-    get description() {
-        return this.description
+    done(err) {
+        if (err) {
+            throw err;
+        }else{
+            //finished processing
+        }
+    }
+    send(obj){
+        for(key in obj){
+            //validate if key(port name) exists in _ports;
+            //send data of obj.key
+            let port = this._ports.find({
+            name:key
+            })
+            let socket=port.socket;
+            socket.emit('data',obj.key)
+        }
     }
 
-    set description(description) {
-        this._description = description
+    get ports() {
+        return this._ports
     }
-
-    get inPorts() {
-        return this._inPorts
-    }
-
-    get outPorts() {
-        return this.outPorts
-    }
-
-    get process() {
-        return this._process
-    }
-
 }
 CBFlow.ProcessOutput = ProcessOutput
 export default ProcessOutput

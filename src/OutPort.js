@@ -3,7 +3,7 @@ import {
     validate,
     generateId
 } from '../util'
-class Port {
+class OutPort {
     constructor() {
         //set initial properties
         this._description = '';
@@ -11,6 +11,7 @@ class Port {
         this._data = null;
         this._required = false;
         this._datatype = null;
+        this._defaultValue = null;
         //attach socket
         this._socket = null;
         this._id = generateId();
@@ -24,6 +25,14 @@ class Port {
 
     set description(value) {
         this._description = value
+    }
+
+    get defaultValue() {
+        return this._defaultValue
+    }
+
+    set defaultValue(value) {
+        this._defaultValue = value
     }
 
     get required() {
@@ -63,5 +72,5 @@ class Port {
     }
 
 }
-CBFlow.Port = Port
-export default Port
+CBFlow.OutPort = OutPort
+export default OutPort

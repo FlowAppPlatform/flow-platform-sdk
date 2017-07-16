@@ -19,7 +19,8 @@ try {
 require('./Component')
 require('./ProcessInput')
 require('./ProcessOutput')
-require('./Port')
+require('./InPort')
+require('./OutPort')
 
 try {
     window.CBFlow = CBFlow

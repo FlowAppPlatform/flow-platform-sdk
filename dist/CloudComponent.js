@@ -79,7 +79,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(40);
 	__webpack_require__(42);
 	__webpack_require__(43);
-	__webpack_require__(44);
+	__webpack_require__(46);
+	__webpack_require__(47);
 
 	try {
 	    window.CBFlow = _CBFlow2.default;
@@ -6164,21 +6165,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _createClass(Component, [{
 	        key: 'addInPort',
-	        value: function addInPort(name, obj) {
+	        value: function addInPort(name, options) {
+
+	            if (!options) {
+	                throw "options parameter is required";
+	            }
 
 	            if (!name) throw "Inport name is required";
 	            if (!(0, _util.validate)(name, 'string')) throw "Port name should be of type string.";
 
 	            //TODO: validate datatype
 
-	            this.inPorts.push({
-	                name: name,
-	                metadata: obj || {}
-	            });
+	            this.inPorts.push(new _CBFlow2.default.InPort(name, options));
 	        }
 	    }, {
 	        key: 'addOutPort',
-	        value: function addOutPort(name) {
+	        value: function addOutPort(name, options) {
+
+	            if (!options) {
+	                throw "options parameter is required";
+	            }
 
 	            if (!name) {
 	                throw "Inport name is required";
@@ -6190,10 +6196,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            //TODO: validate datatype
 
-	            this.inPorts.push({
-	                name: name,
-	                metadata: obj || {}
-	            });
+	            this.outPorts.push(new _CBFlow2.default.OutPort(name, options));
+	        }
+	    }, {
+	        key: 'execute',
+	        value: function execute() {
+	            this._process(new _CBFlow2.default.ProcessInput(), new _CBFlow2.default.ProcessOutput());
 	        }
 	    }, {
 	        key: 'process',
@@ -6205,6 +6213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (!this.inPorts) {
 	                throw new Error("Component ports must be defined before process function");
 	            }
+	            this._process = handle;
 	        }
 	    }, {
 	        key: 'description',
@@ -6343,38 +6352,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var ProcessOutput = function () {
-	    function ProcessOutput() {
+	    function ProcessOutput(ports) {
 	        _classCallCheck(this, ProcessOutput);
 
 	        //set initial properties
-	        this._description = '';
-	        this._inPorts = [];
-	        this._outPorts = [];
-	        this._process = null;
+	        this._ports = ports;
 	    }
 
 	    _createClass(ProcessOutput, [{
-	        key: 'description',
-	        get: function get() {
-	            return this.description;
-	        },
-	        set: function set(description) {
-	            this._description = description;
+	        key: 'done',
+	        value: function done(err) {
+	            if (err) {
+	                throw err;
+	            } else {
+	                //finished processing
+	            }
 	        }
 	    }, {
-	        key: 'inPorts',
-	        get: function get() {
-	            return this._inPorts;
+	        key: 'send',
+	        value: function send(obj) {
+	            for (key in obj) {
+	                //validate if key(port name) exists in _ports;
+	                //send data of obj.key
+	                var port = this._ports.find({
+	                    name: key
+	                });
+	                var socket = port.socket;
+	                socket.emit('data', obj.key);
+	            }
 	        }
 	    }, {
-	        key: 'outPorts',
+	        key: 'ports',
 	        get: function get() {
-	            return this.outPorts;
-	        }
-	    }, {
-	        key: 'process',
-	        get: function get() {
-	            return this._process;
+	            return this._ports;
 	        }
 	    }]);
 
@@ -6385,7 +6395,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ProcessOutput;
 
 /***/ },
-/* 44 */
+/* 44 */,
+/* 45 */,
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -6404,16 +6416,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Port = function () {
-	    function Port() {
-	        _classCallCheck(this, Port);
+	var InPort = function () {
+	    function InPort(name, options) {
+	        _classCallCheck(this, InPort);
 
 	        //set initial properties
-	        this._description = '';
-	        this._name = '';
+	        if (!name && !(0, _util.validate)(name, 'string')) {
+	            throw "Port name not found";
+	        }
+	        this._description = options.description || '';
+	        this._name = name;
 	        this._data = null;
-	        this._required = false;
-	        this._datatype = null;
+	        this._required = options.required || false;
+	        if (!options.datatype) {
+	            throw "Datatype not found in port options";
+	        } else {
+	            this._datatype = options.datatype;
+	        }
+	        this._defaultValue = options.defaultValue || null;
 	        //attach socket
 	        this._socket = null;
 	        this._id = (0, _util.generateId)();
@@ -6421,13 +6441,146 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //TODO:
 	    //getter setter for attaching sockets 
 
-	    _createClass(Port, [{
+	    _createClass(InPort, [{
+	        key: 'clear',
+	        value: function clear() {
+	            this._data = null;
+	        }
+	    }, {
+	        key: 'attachSocket',
+	        value: function attachSocket(socket) {
+	            this._socket = socket;
+
+	            socket.on('data', function (data) {
+	                if ((0, _util.validate)(data)) this._data = data;
+	            });
+	            socket.on('connect', function (data) {});
+	            socket.on('disconnect', function (data) {});
+
+	            // this._handleSocketEvent(event, payload);
+	        }
+	    }, {
+	        key: '_handleSocketEvent',
+	        value: function _handleSocketEvent(event, payload) {}
+	    }, {
 	        key: 'description',
 	        get: function get() {
 	            return this._description;
 	        },
 	        set: function set(value) {
 	            this._description = value;
+	        }
+	    }, {
+	        key: 'defaultValue',
+	        get: function get() {
+	            return this._defaultValue;
+	        },
+	        set: function set(value) {
+	            this._defaultValue = value;
+	        }
+	    }, {
+	        key: 'required',
+	        get: function get() {
+	            return this._required;
+	        },
+	        set: function set(value) {
+	            this._required = value;
+	        }
+	    }, {
+	        key: 'name',
+	        get: function get() {
+	            return this._name;
+	        },
+	        set: function set(value) {
+	            this._name = value;
+	        }
+	    }, {
+	        key: 'data',
+	        get: function get() {
+	            return this._data;
+	        },
+	        set: function set(value) {
+	            this._data = value;
+	        }
+	    }, {
+	        key: 'datatype',
+	        get: function get() {
+	            return this._datatype;
+	        },
+	        set: function set(value) {
+	            this._datatype = value;
+	        }
+	    }, {
+	        key: 'id',
+	        get: function get() {
+	            return this._id;
+	        }
+	    }, {
+	        key: 'socket',
+	        get: function get() {
+	            return this._socket;
+	        }
+	    }]);
+
+	    return InPort;
+	}();
+
+	_CBFlow2.default.InPort = InPort;
+	exports.default = InPort;
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _CBFlow = __webpack_require__(1);
+
+	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+
+	var _util = __webpack_require__(41);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var OutPort = function () {
+	    function OutPort() {
+	        _classCallCheck(this, OutPort);
+
+	        //set initial properties
+	        this._description = '';
+	        this._name = '';
+	        this._data = null;
+	        this._required = false;
+	        this._datatype = null;
+	        this._defaultValue = null;
+	        //attach socket
+	        this._socket = null;
+	        this._id = (0, _util.generateId)();
+	    }
+	    //TODO:
+	    //getter setter for attaching sockets 
+
+	    _createClass(OutPort, [{
+	        key: 'description',
+	        get: function get() {
+	            return this._description;
+	        },
+	        set: function set(value) {
+	            this._description = value;
+	        }
+	    }, {
+	        key: 'defaultValue',
+	        get: function get() {
+	            return this._defaultValue;
+	        },
+	        set: function set(value) {
+	            this._defaultValue = value;
 	        }
 	    }, {
 	        key: 'required',
@@ -6468,11 +6621,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }]);
 
-	    return Port;
+	    return OutPort;
 	}();
 
-	_CBFlow2.default.Port = Port;
-	exports.default = Port;
+	_CBFlow2.default.OutPort = OutPort;
+	exports.default = OutPort;
 
 /***/ }
 /******/ ])

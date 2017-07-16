@@ -11,7 +11,11 @@ class Component {
         this._process = null;
     }
 
-    addInPort(name, obj) {
+    addInPort(name, options) {
+        
+        if(!options){
+            throw "options parameter is required"
+        }
 
         if (!name)
             throw "Inport name is required"
@@ -20,14 +24,15 @@ class Component {
 
         //TODO: validate datatype
 
-        this.inPorts.push({
-            name: name,
-            metadata: obj || {}
-        })
+        this.inPorts.push(new CBFlow.InPort(name,options));
 
     }
 
-    addOutPort(name) {
+    addOutPort(name,options) {
+
+        if(!options){
+            throw "options parameter is required"
+        }
 
         if (!name) {
             throw "Inport name is required"
@@ -39,11 +44,14 @@ class Component {
 
         //TODO: validate datatype
 
-        this.inPorts.push({
-            name: name,
-            metadata: obj || {}
-        })
+        this.outPorts.push(
+            new CBFlow.OutPort(name, options)
+        )
 
+    }
+
+    execute(){
+        this._process(new CBFlow.ProcessInput(),new CBFlow.ProcessOutput())
     }
 
     process(handle) {
@@ -54,6 +62,7 @@ class Component {
         if (!this.inPorts) {
             throw new Error("Component ports must be defined before process function");
         }
+        this._process = handle;
 
     }
 
