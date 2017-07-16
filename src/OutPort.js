@@ -44,6 +44,7 @@ class OutPort {
             //     this._data = data;
             // }
             console.log('received data', data)
+            this._data=data;
         });
 
         socket.on('test', (data) => {

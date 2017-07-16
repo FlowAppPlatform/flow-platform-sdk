@@ -79,10 +79,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	//import all js files
 	__webpack_require__(3);
 	__webpack_require__(5);
+	__webpack_require__(6);
 	__webpack_require__(7);
 	__webpack_require__(8);
 	__webpack_require__(9);
-	__webpack_require__(10);
 
 	try {
 	    window.CBFlow = _CBFlow2.default;
@@ -524,8 +524,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ProcessInput;
 
 /***/ },
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -564,7 +563,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw err;
 	            } else {
 	                //finished processing
-	                console.log('Processing finished');
+	                console.log('Processing finished, Data:');
+	                for (port in this._ports) {
+	                    console.log(port, ':', this._ports[port].data);
+	                }
 	            }
 	        }
 
@@ -576,9 +578,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            for (key in obj) {
 	                //validate if key(port name) exists in _ports;
 	                //send data of obj.key
-	                var port = this._ports[key];
-	                var socket = port.socket;
-	                console.log('sas', key);
+	                var _port = this._ports[key];
+	                var socket = _port.socket;
+	                _port.data = obj[key];
 	                socket.emit('data', obj[key]);
 	            }
 	        }
@@ -599,7 +601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ProcessOutput;
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -764,7 +766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = InPort;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -832,6 +834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                //     this._data = data;
 	                // }
 	                console.log('received data', data);
+	                this._data = data;
 	            });
 
 	            socket.on('test', function (data) {
@@ -913,7 +916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = OutPort;
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -932,7 +935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventEmitter = __webpack_require__(11);
+	var EventEmitter = __webpack_require__(10);
 
 	var Socket = function (_EventEmitter) {
 	  _inherits(Socket, _EventEmitter);
@@ -950,7 +953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Socket;
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.

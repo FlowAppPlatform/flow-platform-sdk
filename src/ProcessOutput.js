@@ -17,7 +17,11 @@ class ProcessOutput {
             throw err;
         }else{
             //finished processing
-            console.log('Processing finished');
+            console.log('Processing finished, Data:');
+            for(port in this._ports){
+                console.log(port,':', this._ports[port].data)
+            }
+
         }
     }
 
@@ -28,7 +32,7 @@ class ProcessOutput {
             //send data of obj.key
             let port =this._ports[key]
             let socket=port.socket;
-            console.log('sas',key);
+            port.data=obj[key];
             socket.emit('data',obj[key])
         }
     }
