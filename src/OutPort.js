@@ -3,36 +3,72 @@ import {
     validate,
     generateId
 } from '../util'
+
 class OutPort {
-    constructor() {
+    constructor(name, options) {
         //set initial properties
-        this._description = '';
-        this._name = '';
+
+        if (!name && !validate(name, 'string')) {
+            throw "Port name not found"
+        }
+
+        this._description = options.description || '';
+        this._name = name;
         this._data = null;
-        this._required = false;
-        this._datatype = null;
-        this._defaultValue = null;
+        this._required = options.required || false;
+
+        //TODO: add datatype
+
+        // if (!options.datatype) {
+        //     throw "Datatype not found in port options"
+        // } else {
+        //     this._datatype = options.datatype;
+        // }
+
         //attach socket
-        this._socket = null;
+        this.attachSocket(new CBFlow.Socket());
+
         this._id = generateId();
     }
-    //TODO:
-    //getter setter for attaching sockets 
 
+    //clear port data
+    clear() {
+        this._data = null;
+    }
+
+    //handle attach socket
+    attachSocket(socket) {
+
+        socket.on('data', function (data) {
+            // if (validate(data)) {
+            //     this._data = data;
+            // }
+            console.log('received data', data)
+        });
+
+        socket.on('test', (data) => {
+            console.log('test data received at out port', data);
+        })
+
+        socket.on('connect', function (data) {
+            console.log('socket at port: ' + this._name + ' connected.')
+        });
+
+        socket.on('disconnect', function (data) {
+            console.log('socket at port: ' + this._name + ' disconnected.')
+        });
+
+        this._socket = socket;
+
+    }
+
+    //setter and getters
     get description() {
         return this._description
     }
 
     set description(value) {
         this._description = value
-    }
-
-    get defaultValue() {
-        return this._defaultValue
-    }
-
-    set defaultValue(value) {
-        this._defaultValue = value
     }
 
     get required() {
@@ -56,7 +92,11 @@ class OutPort {
     }
 
     set data(value) {
-        this._data = value
+        //validate data
+        if (validate(value, this._datatype)) {
+            this._data = value
+        } else
+            throw "data must be of type " + this._datatype;
     }
 
     get datatype() {
@@ -69,6 +109,10 @@ class OutPort {
 
     get id() {
         return this._id
+    }
+
+    get socket() {
+        return this._socket
     }
 
 }

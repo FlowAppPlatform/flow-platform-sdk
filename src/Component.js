@@ -2,6 +2,7 @@ import CBFlow from './CBFlow';
 import {
     validate
 } from '../util'
+
 class Component {
     constructor() {
         //set initial properties
@@ -11,6 +12,7 @@ class Component {
         this._handle = null;
     }
 
+    //add in port
     addInPort(name, options) {
 
         if (!options) {
@@ -28,6 +30,7 @@ class Component {
 
     }
 
+    //add out port
     addOutPort(name, options) {
 
         if (!options) {
@@ -42,18 +45,18 @@ class Component {
             throw "Port name should be of type string."
         }
 
-        //TODO: validate datatype
-
         this.outPorts.push(
             new CBFlow.OutPort(name, options)
         )
 
     }
 
+    //run process handler
     execute() {
         this._handle(new CBFlow.ProcessInput(this._inPorts), new CBFlow.ProcessOutput(this._outPorts))
     }
 
+    //save process handler
     process(handle) {
 
         if (!validate(handle, 'function')) {
@@ -66,6 +69,7 @@ class Component {
 
     }
 
+    //getters and setters
     get description() {
         return this._description
     }

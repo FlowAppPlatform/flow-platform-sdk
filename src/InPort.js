@@ -3,59 +3,72 @@ import {
     validate,
     generateId
 } from '../util'
+
 class InPort {
     constructor(name, options) {
         //set initial properties
+
         if (!name && !validate(name, 'string')) {
             throw "Port name not found"
         }
         this._description = options.description || '';
         this._name = name;
+
+        //validate initial data
         if (validate(options.data, options.datatype)) {
             this._data = options.data || null;
         } else {
             throw "data must be of type " + options.datatype
         }
+
         this._required = options.required || false;
+
         if (!options.datatype) {
             throw "Datatype not found in port options"
         } else {
             this._datatype = options.datatype;
         }
+
         this._defaultValue = options.defaultValue || null;
+
         //attach socket
-        this._socket = null;
+        this.attachSocket(new CBFlow.Socket());
+
         this._id = generateId();
     }
-    //TODO:
-    //getter setter for attaching sockets 
 
+    //clear port data
     clear() {
         this._data = null;
     }
 
+    //handle attach socket
     attachSocket(socket) {
-        this._socket = socket;
 
         socket.on('data', function (data) {
-            if (validate(data)) {
-                this._data = data;
-            }
+            // if (validate(data)) {
+            //     this._data = data;
+            // }
+            console.log('received data at inport', data)
         });
+
+        socket.on('test', (data) => {
+            console.log('test data received at in port', data);
+        })
+
         socket.on('connect', function (data) {
-
+            console.log('socket at port: ' + this._name + ' connected.')
         });
+
         socket.on('disconnect', function (data) {
-
+            console.log('socket at port: ' + this._name + ' disconnected.')
         });
 
-
-        // this._handleSocketEvent(event, payload);
-    }
-    _handleSocketEvent(event, payload) {
+        this._socket = socket;
 
     }
 
+    //getters and setters
     get description() {
         return this._description
     }
@@ -93,11 +106,12 @@ class InPort {
     }
 
     set data(value) {
+
+        //validate data
         if (validate(value, this._datatype)) {
             this._data = value
         } else
             throw "data must be of type " + this._datatype;
-
     }
 
     get datatype() {
@@ -105,6 +119,8 @@ class InPort {
     }
 
     set datatype(value) {
+        if (!value)
+            throw 'datatype required'
         this._datatype = value
     }
 

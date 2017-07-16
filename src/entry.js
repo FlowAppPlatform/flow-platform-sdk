@@ -16,11 +16,13 @@ try {
     CBFlow._isNode = true
 }
 
+//import all js files
 require('./Component')
 require('./ProcessInput')
 require('./ProcessOutput')
 require('./InPort')
 require('./OutPort')
+require('./Socket')
 
 try {
     window.CBFlow = CBFlow

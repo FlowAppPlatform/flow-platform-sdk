@@ -1,5 +1,3 @@
-import Promise_BlueBird from 'bluebird'
-
 class CloudBoostFlow {
 	constructor() {
 		// to check if the env is node
