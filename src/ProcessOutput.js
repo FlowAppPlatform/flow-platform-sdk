@@ -2,7 +2,7 @@ import CBFlow from './CBFlow';
 import {
     validate
 } from '../util'
-import _ from 'underscore';
+
 class ProcessOutput {
     constructor(ports) {
         //set initial properties
@@ -26,9 +26,9 @@ class ProcessOutput {
         for(key in obj){
             //validate if key(port name) exists in _ports;
             //send data of obj.key
-            let port = _.find(this._ports,(port)=>port.name=key)
+            let port =this._ports[key]
             let socket=port.socket;
-            console.log(obj,key);
+            console.log('sas',key);
             socket.emit('data',obj[key])
         }
     }

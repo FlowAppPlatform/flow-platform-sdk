@@ -2,7 +2,6 @@ import CBFlow from './CBFlow';
 import {
     validate
 } from '../util'
-import _ from 'underscore';
 
 class ProcessInput {
     constructor(ports) {
@@ -13,7 +12,7 @@ class ProcessInput {
 
     //checks data at port`name`
     hasData(name) {
-        let port = _.find(this._ports, (port) => port.name = name)
+        let port = this._ports[name]
         if (port.data) {
             return true
         }
@@ -22,7 +21,7 @@ class ProcessInput {
 
     //return data at port `name`
     getData(name) {
-        let port = _.find(this._ports, (port) => port.name = name)
+        let port =this._ports[name]
         return port.data;
     }
 

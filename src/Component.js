@@ -7,8 +7,8 @@ class Component {
     constructor() {
         //set initial properties
         this._description = '';
-        this._inPorts = [];
-        this._outPorts = [];
+        this._inPorts = {};
+        this._outPorts = {};
         this._handle = null;
     }
 
@@ -26,7 +26,7 @@ class Component {
             throw "Port name should be of type string."
         }
 
-        this.inPorts.push(new CBFlow.InPort(name, options));
+        this.inPorts[name] = new CBFlow.InPort(name, options);
 
     }
 
@@ -45,9 +45,8 @@ class Component {
             throw "Port name should be of type string."
         }
 
-        this.outPorts.push(
-            new CBFlow.OutPort(name, options)
-        )
+        this.outPorts[name] = new CBFlow.OutPort(name, options)
+
 
     }
 
