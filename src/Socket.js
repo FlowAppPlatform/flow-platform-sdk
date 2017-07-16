@@ -1,7 +1,7 @@
-import CBFlow from './CBFlow'
+import Flow from './Flow'
 const EventEmitter = require('events');
 
 class Socket extends EventEmitter {}
 
-CBFlow.Socket=Socket;
+Flow.Socket=Socket;
 export default Socket;

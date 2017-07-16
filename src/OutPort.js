@@ -1,4 +1,4 @@
-import CBFlow from './CBFlow';
+import Flow from './Flow';
 import {
     validate,
     generateId
@@ -7,10 +7,6 @@ import {
 class OutPort {
     constructor(name, options) {
         //set initial properties
-
-        if (!name && !validate(name, 'string')) {
-            throw "Port name not found"
-        }
 
         this._description = options.description || '';
         this._name = name;
@@ -26,7 +22,7 @@ class OutPort {
         // }
 
         //attach socket
-        this.attachSocket(new CBFlow.Socket());
+        this.attachSocket(new Flow.Socket());
 
         this._id = generateId();
     }
@@ -117,5 +113,5 @@ class OutPort {
     }
 
 }
-CBFlow.OutPort = OutPort
+Flow.OutPort = OutPort
 export default OutPort

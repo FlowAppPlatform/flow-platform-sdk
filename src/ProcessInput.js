@@ -1,4 +1,4 @@
-import CBFlow from './CBFlow';
+import Flow from './Flow';
 import {
     validate
 } from '../util'
@@ -30,5 +30,5 @@ class ProcessInput {
         return this._ports
     }
 }
-CBFlow.ProcessInput = ProcessInput
+Flow.ProcessInput = ProcessInput
 export default ProcessInput

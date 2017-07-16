@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("CloudComponent", [], factory);
+		define("CloudBoostFlow", [], factory);
 	else if(typeof exports === 'object')
-		exports["CloudComponent"] = factory();
+		exports["CloudBoostFlow"] = factory();
 	else
-		root["CloudComponent"] = factory();
+		root["CloudBoostFlow"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -54,9 +54,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -64,16 +64,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (window) {
 	        if (navigator.product == 'ReactNative') {
 	            // for react native turn node and native flags to true
-	            _CBFlow2.default._isNode = true;
-	            _CBFlow2.default._isNative = true;
+	            _Flow2.default._isNode = true;
+	            _Flow2.default._isNative = true;
 	        } else {
 	            // if window is found then node is false
-	            _CBFlow2.default._isNode = false;
+	            _Flow2.default._isNode = false;
 	        }
 	    }
 	} catch (e) {
 	    // if window is not found , then turn node flag to true
-	    _CBFlow2.default._isNode = true;
+	    _Flow2.default._isNode = true;
 	}
 
 	//import all js files
@@ -85,9 +85,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(9);
 
 	try {
-	    window.CBFlow = _CBFlow2.default;
+	    window.Flow = _Flow2.default;
 	} catch (e) {}
-	module.exports = _CBFlow2.default;
+	module.exports = _Flow2.default;
 
 /***/ },
 /* 1 */
@@ -113,9 +113,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 	};
 
-	var CBFlow = new CloudBoostFlow();
+	var Flow = new CloudBoostFlow();
 
-	exports.default = CBFlow;
+	exports.default = Flow;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
@@ -318,9 +318,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	var _util = __webpack_require__(4);
 
@@ -346,10 +346,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'addInPort',
 	        value: function addInPort(name, options) {
 
-	            if (!options) {
-	                throw "options parameter is required";
-	            }
-
 	            if (!name) {
 	                throw "Inport name is required";
 	            }
@@ -357,7 +353,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw "Port name should be of type string.";
 	            }
 
-	            this.inPorts[name] = new _CBFlow2.default.InPort(name, options);
+	            if (!options) options = {};
+	            this.inPorts[name] = new _Flow2.default.InPort(name, options);
 	        }
 
 	        //add out port
@@ -366,19 +363,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'addOutPort',
 	        value: function addOutPort(name, options) {
 
-	            if (!options) {
-	                throw "options parameter is required";
-	            }
-
 	            if (!name) {
-	                throw "Inport name is required";
+	                throw "Outport name is required";
 	            }
 
 	            if (!(0, _util.validate)(name, 'string')) {
 	                throw "Port name should be of type string.";
 	            }
 
-	            this.outPorts[name] = new _CBFlow2.default.OutPort(name, options);
+	            if (!options) options = {};
+
+	            this.outPorts[name] = new _Flow2.default.OutPort(name, options);
 	        }
 
 	        //run process handler
@@ -386,7 +381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'execute',
 	        value: function execute() {
-	            this._handle(new _CBFlow2.default.ProcessInput(this._inPorts), new _CBFlow2.default.ProcessOutput(this._outPorts));
+	            this._handle(new _Flow2.default.ProcessInput(this._inPorts), new _Flow2.default.ProcessOutput(this._outPorts));
 	        }
 
 	        //save process handler
@@ -429,7 +424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Component;
 	}();
 
-	_CBFlow2.default.Component = Component;
+	_Flow2.default.Component = Component;
 	exports.default = Component;
 
 /***/ },
@@ -467,9 +462,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	var _util = __webpack_require__(4);
 
@@ -520,7 +515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return ProcessInput;
 	}();
 
-	_CBFlow2.default.ProcessInput = ProcessInput;
+	_Flow2.default.ProcessInput = ProcessInput;
 	exports.default = ProcessInput;
 
 /***/ },
@@ -533,9 +528,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	var _util = __webpack_require__(4);
 
@@ -579,9 +574,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                //validate if key(port name) exists in _ports;
 	                //send data of obj.key
 	                var _port = this._ports[key];
-	                var socket = _port.socket;
-	                _port.data = obj[key];
-	                socket.emit('data', obj[key]);
+	                if (_port) {
+	                    var socket = _port.socket;
+	                    _port.data = obj[key];
+	                    socket.emit('data', obj[key]);
+	                } else {
+	                    throw 'Outport : ' + key + ' not found';
+	                }
 	            }
 	        }
 
@@ -597,7 +596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return ProcessOutput;
 	}();
 
-	_CBFlow2.default.ProcessOutput = ProcessOutput;
+	_Flow2.default.ProcessOutput = ProcessOutput;
 	exports.default = ProcessOutput;
 
 /***/ },
@@ -610,9 +609,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	var _util = __webpack_require__(4);
 
@@ -626,11 +625,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        //set initial properties
 
-	        if (!name && !(0, _util.validate)(name, 'string')) {
-	            throw "Port name not found";
-	        }
 	        this._description = options.description || '';
 	        this._name = name;
+
+	        //validate options.datatype
 
 	        //validate initial data
 	        if ((0, _util.validate)(options.data, options.datatype)) {
@@ -641,16 +639,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        this._required = options.required || false;
 
-	        if (!options.datatype) {
-	            throw "Datatype not found in port options";
-	        } else {
-	            this._datatype = options.datatype;
-	        }
+	        this._datatype = options.datatype || 'string';
 
 	        this._defaultValue = options.defaultValue || null;
 
 	        //attach socket
-	        this.attachSocket(new _CBFlow2.default.Socket());
+	        this.attachSocket(new _Flow2.default.Socket());
 
 	        this._id = (0, _util.generateId)();
 	    }
@@ -762,7 +756,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return InPort;
 	}();
 
-	_CBFlow2.default.InPort = InPort;
+	_Flow2.default.InPort = InPort;
 	exports.default = InPort;
 
 /***/ },
@@ -775,9 +769,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	var _util = __webpack_require__(4);
 
@@ -790,10 +784,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _classCallCheck(this, OutPort);
 
 	        //set initial properties
-
-	        if (!name && !(0, _util.validate)(name, 'string')) {
-	            throw "Port name not found";
-	        }
 
 	        this._description = options.description || '';
 	        this._name = name;
@@ -809,7 +799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // }
 
 	        //attach socket
-	        this.attachSocket(new _CBFlow2.default.Socket());
+	        this.attachSocket(new _Flow2.default.Socket());
 
 	        this._id = (0, _util.generateId)();
 	    }
@@ -912,7 +902,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return OutPort;
 	}();
 
-	_CBFlow2.default.OutPort = OutPort;
+	_Flow2.default.OutPort = OutPort;
 	exports.default = OutPort;
 
 /***/ },
@@ -923,9 +913,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _CBFlow = __webpack_require__(1);
+	var _Flow = __webpack_require__(1);
 
-	var _CBFlow2 = _interopRequireDefault(_CBFlow);
+	var _Flow2 = _interopRequireDefault(_Flow);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -949,7 +939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Socket;
 	}(EventEmitter);
 
-	_CBFlow2.default.Socket = Socket;
+	_Flow2.default.Socket = Socket;
 	exports.default = Socket;
 
 /***/ },

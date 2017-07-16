@@ -1,4 +1,4 @@
-import CBFlow from './CBFlow';
+import Flow from './Flow';
 import {
     validate,
     generateId
@@ -8,11 +8,10 @@ class InPort {
     constructor(name, options) {
         //set initial properties
 
-        if (!name && !validate(name, 'string')) {
-            throw "Port name not found"
-        }
         this._description = options.description || '';
         this._name = name;
+
+        //validate options.datatype
 
         //validate initial data
         if (validate(options.data, options.datatype)) {
@@ -23,16 +22,12 @@ class InPort {
 
         this._required = options.required || false;
 
-        if (!options.datatype) {
-            throw "Datatype not found in port options"
-        } else {
-            this._datatype = options.datatype;
-        }
+        this._datatype = options.datatype || 'string';
 
         this._defaultValue = options.defaultValue || null;
 
         //attach socket
-        this.attachSocket(new CBFlow.Socket());
+        this.attachSocket(new Flow.Socket());
 
         this._id = generateId();
     }
@@ -133,5 +128,5 @@ class InPort {
     }
 
 }
-CBFlow.InPort = InPort
+Flow.InPort = InPort
 export default InPort

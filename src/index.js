@@ -1,19 +1,19 @@
-import CBFlow from './CBFlow'
+import Flow from './Flow'
 
 try {
     if (window) {
         if (navigator.product == 'ReactNative') {
             // for react native turn node and native flags to true
-            CBFlow._isNode = true
-            CBFlow._isNative = true
+            Flow._isNode = true
+            Flow._isNative = true
         } else {
             // if window is found then node is false
-            CBFlow._isNode = false
+            Flow._isNode = false
         }
     }
 } catch (e) {
     // if window is not found , then turn node flag to true
-    CBFlow._isNode = true
+    Flow._isNode = true
 }
 
 //import all js files
@@ -25,6 +25,6 @@ require('./OutPort')
 require('./Socket')
 
 try {
-    window.CBFlow = CBFlow
+    window.Flow = Flow
 } catch (e) {}
-module.exports = CBFlow
+module.exports = Flow

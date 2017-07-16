@@ -2,15 +2,16 @@
   "name": "cloudboost-flow",
   "version": "1.0.0",
   "description": "Cloudboost Flow.",
-  "main": "./dist/CloudCommponent.js",
-  "types": "./dist/CloudCommponent.d.ts",
+  "main": "./dist/CloudBoostFlow.js",
+  "types": "./dist/CloudBoostFlow.d.ts",
   "keywords": [
     "database as a service",
     "dbaas",
     "no-sql",
     "database",
     "serverless",
-    "flow based programming"
+    "flow based programming",
+    "cloudboost"
   ],
   "scripts": {
     "start": "webpack --watch --progress",

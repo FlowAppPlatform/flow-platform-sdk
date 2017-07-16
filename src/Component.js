@@ -1,4 +1,4 @@
-import CBFlow from './CBFlow';
+import Flow from './Flow';
 import {
     validate
 } from '../util'
@@ -15,10 +15,6 @@ class Component {
     //add in port
     addInPort(name, options) {
 
-        if (!options) {
-            throw "options parameter is required"
-        }
-
         if (!name) {
             throw "Inport name is required"
         }
@@ -26,33 +22,34 @@ class Component {
             throw "Port name should be of type string."
         }
 
-        this.inPorts[name] = new CBFlow.InPort(name, options);
+        if (!options)
+            options = {}
+        this.inPorts[name] = new Flow.InPort(name, options);
 
     }
 
     //add out port
     addOutPort(name, options) {
 
-        if (!options) {
-            throw "options parameter is required"
-        }
-
         if (!name) {
-            throw "Inport name is required"
+            throw "Outport name is required"
         }
 
         if (!validate(name, 'string')) {
             throw "Port name should be of type string."
         }
 
-        this.outPorts[name] = new CBFlow.OutPort(name, options)
+        if (!options)
+            options = {}
+
+        this.outPorts[name] = new Flow.OutPort(name, options)
 
 
     }
 
     //run process handler
     execute() {
-        this._handle(new CBFlow.ProcessInput(this._inPorts), new CBFlow.ProcessOutput(this._outPorts))
+        this._handle(new Flow.ProcessInput(this._inPorts), new Flow.ProcessOutput(this._outPorts))
     }
 
     //save process handler
@@ -86,5 +83,5 @@ class Component {
     }
 
 }
-CBFlow.Component = Component
+Flow.Component = Component
 export default Component

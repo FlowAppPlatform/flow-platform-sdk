@@ -1,23 +1,22 @@
-var CBFlow = require('../dist/CloudComponent.js')
+var Flow = require('../dist/CloudBoostFlow.js')
 var fs = require('fs');
 
 
 exports.getComponent = function () {
     //initiate a CloudBoost Flow Component
-    var c = new CBFlow.Component();
+    var c = new Flow.Component();
 
     //set description
     c.description = 'Read File';
 
     //add inports
     c.addInPort('in', {
-        data: 'index.js', //name of the file
-        datatype: 'string' //datatype of `in` port data
+        data: 'index.js' //name of the file
     });
 
     //add outports
-    c.addOutPort('out', {});
-    c.addOutPort('err', {});
+    c.addOutPort('out');
+    c.addOutPort('err');
 
     //function to be executed
     c.process(function (input, output) {

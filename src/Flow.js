@@ -15,6 +15,6 @@ class CloudBoostFlow {
 
 }
 
-let CBFlow = new CloudBoostFlow()
+let Flow = new CloudBoostFlow()
 
-export default CBFlow
+export default Flow
