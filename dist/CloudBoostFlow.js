@@ -488,7 +488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'hasData',
 	        value: function hasData(name) {
 	            var port = this._ports[name];
-	            if (port.data) {
+	            if (port.data || port.defaultValue) {
 	                return true;
 	            }
 	            return false;
@@ -500,7 +500,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'getData',
 	        value: function getData(name) {
 	            var port = this._ports[name];
-	            return port.data;
+	            var data = port.data || port.defaultValue;
+	            return data;
 	        }
 
 	        //getters and setters
@@ -634,7 +635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if ((0, _util.validate)(options.data, options.datatype)) {
 	            this._data = options.data || null;
 	        } else {
-	            throw "data must be of type " + options.datatype;
+	            this._data = null;
 	        }
 
 	        this._required = options.required || false;
