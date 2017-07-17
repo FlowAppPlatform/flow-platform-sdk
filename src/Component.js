@@ -1,51 +1,58 @@
-import CBFlow from './CBFlow';
+import Flow from './Flow';
 import {
     validate
 } from '../util'
+
 class Component {
     constructor() {
         //set initial properties
         this._description = '';
-        this._inPorts = [];
-        this._outPorts = [];
-        this._process = null;
+        this._inPorts = {};
+        this._outPorts = {};
+        this._handle = null;
     }
 
-    addInPort(name, obj) {
-
-        if (!name)
-            throw "Inport name is required"
-        if (!validate(name, 'string'))
-            throw "Port name should be of type string."
-
-        //TODO: validate datatype
-
-        this.inPorts.push({
-            name: name,
-            metadata: obj || {}
-        })
-
-    }
-
-    addOutPort(name) {
+    //add in port
+    addInPort(name, options) {
 
         if (!name) {
             throw "Inport name is required"
+        }
+        if (!validate(name, 'string')) {
+            throw "Port name should be of type string."
+        }
+
+        if (!options)
+            options = {}
+        this.inPorts[name] = new Flow.InPort(name, options);
+
+    }
+
+    //add out port
+    addOutPort(name, options) {
+
+        if (!name) {
+            throw "Outport name is required"
         }
 
         if (!validate(name, 'string')) {
             throw "Port name should be of type string."
         }
 
-        //TODO: validate datatype
+        if (!options)
+            options = {}
 
-        this.inPorts.push({
-            name: name,
-            metadata: obj || {}
-        })
+        this.outPorts[name] = new Flow.OutPort(name, options)
+
 
     }
 
+    //run process handler
+    execute() {
+        this._handle(new Flow.ProcessInput(this._inPorts), new Flow.ProcessOutput(this._outPorts))
+    }
+
+    //save process handler
     process(handle) {
 
         if (!validate(handle, 'function')) {
@@ -54,11 +61,13 @@ class Component {
         if (!this.inPorts) {
             throw new Error("Component ports must be defined before process function");
         }
+        this._handle = handle;
 
     }
 
+    //getters and setters
     get description() {
-        return this.description
+        return this._description
     }
 
     set description(description) {
@@ -70,13 +79,9 @@ class Component {
     }
 
     get outPorts() {
-        return this.outPorts
-    }
-
-    get process() {
-        return this._process
+        return this._outPorts
     }
 
 }
-CBFlow.Component = Component
+Flow.Component = Component
 export default Component

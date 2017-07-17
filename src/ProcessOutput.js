@@ -1,36 +1,50 @@
-import CBFlow from './CBFlow';
+import Flow from './Flow';
 import {
     validate
 } from '../util'
+
 class ProcessOutput {
-    constructor() {
+    constructor(ports) {
         //set initial properties
-        this._description = '';
-        this._inPorts = [];
-        this._outPorts = [];
-        this._process = null;
+
+        this._ports = ports;
     }
 
-    get description() {
-        return this.description
+    //done handlers
+    done(err) {
+        if (err) {
+            console.log('errrrr')
+            throw err;
+        } else {
+            //finished processing
+            console.log('Processing finished, Data:');
+            for (port in this._ports) {
+                console.log(port, ':', this._ports[port].data)
+            }
+
+        }
     }
 
-    set description(description) {
-        this._description = description
+    //send data at specific port
+    send(obj) {
+        for (key in obj) {
+            //validate if key(port name) exists in _ports;
+            //send data of obj.key
+            let port = this._ports[key]
+            if (port) {
+            let socket = port.socket;
+            port.data = obj[key];
+            socket.emit('data', obj[key])
+        } else {
+            throw 'Outport : ' + key + ' not found'
+        }
     }
-
-    get inPorts() {
-        return this._inPorts
-    }
-
-    get outPorts() {
-        return this.outPorts
-    }
-
-    get process() {
-        return this._process
-    }
-
 }
-CBFlow.ProcessOutput = ProcessOutput
+
+//getters and setters
+get ports() {
+    return this._ports
+}
+}
+Flow.ProcessOutput = ProcessOutput
 export default ProcessOutput

@@ -1,10 +1,10 @@
 var webpack = require('webpack')
 var config = {
-   entry: './src/entry.js',
+   entry: './src/index.js',
    output: {
       path:'./dist',
-      filename: 'CloudComponent.js',
-      library: "CloudComponent",
+      filename: 'CloudBoostFlow.js',
+      library: "CloudBoostFlow",
       libraryTarget: 'umd',
       umdNamedDefine: true,
 

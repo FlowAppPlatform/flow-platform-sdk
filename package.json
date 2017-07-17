@@ -1,58 +1,52 @@
 {
-    "name": "cloudboost-flow",
-    "version": "1.0.0",
-    "description": "Cloudboost Flow.",
-    "main": "./dist/CloudCommponent.js",
-    "types": "./dist/CloudCommponent.d.ts",
-    "keywords": [
-        "database as a service",
-        "dbaas",
-        "no-sql",
-        "database",
-        "serverless",
-        "flow based programming"
-    ],
-    "scripts": {
-        "start": "webpack --watch --progress",
-        "test": "npm run test-browser && npm run test-node",
-        "test-browser": "mocha-phantomjs -p node_modules/phantomjs/lib/phantom/bin/phantomjs -s webSecurityEnabled=false --ssl-protocol=any test/index.html",
-        "test-node": "./node_modules/.bin/mocha --reporter spec test/test.js",
-        "test-windows": "npm run test-browser-windows && npm run test-node",
-        "test-browser-windows": "mocha-phantomjs -p node_modules/phantomjs/lib/phantom/bin/phantomjs.exe -s webSecurityEnabled=false --ssl-protocol=any test/index.html",
-        "2npm": "publish"
-    },
-    "author": "ritishgumber@gmail.com",
-    "license": "MIT",
-    "dependencies": {
-        "axios": "^0.14.0",
-        "bluebird": "^3.4.6",
-        "deep-equal": "^1.0.1",
-        "form-data": "^2.1.2",
-        "jsdom": "^9.10.0",
-        "localStorage": "^1.0.3",
-        "localforage": "^1.5.0",
-        "socket.io-client": "^1.7.1"
-    },
-    "devDependencies": {
-        "babel-core": "^6.17.0",
-        "babel-loader": "^6.2.5",
-        "babel-preset-es2015": "^6.16.0",
-        "babel-preset-es2015-without-strict": "0.0.4",
-        "chai": "^3.5.0",
-        "chance": "^1.0.1",
-        "grunt": "~0.4.5",
-        "grunt-bump": "^0.3.1",
-        "grunt-bumpup": "^0.6.3",
-        "grunt-contrib-concat": "^0.5.1",
-        "grunt-contrib-uglify": "^0.9.1",
-        "grunt-contrib-watch": "^0.6.1",
-        "grunt-release": "^0.13.0",
-        "json-loader": "^0.5.4",
-        "mocha": "^2.4.5",
-        "mocha-phantomjs": "^4.1.0",
-        "phantomjs": "^2.1.7",
-        "publish": "^0.6.0",
-        "webpack": "~1.13.1",
-        "webpack-dev-server": "~1.14.1"
-    }
+  "name": "cloudboost-flow",
+  "version": "1.0.0",
+  "description": "Cloudboost Flow.",
+  "main": "./dist/CloudBoostFlow.js",
+  "types": "./dist/CloudBoostFlow.d.ts",
+  "keywords": [
+    "database as a service",
+    "dbaas",
+    "no-sql",
+    "database",
+    "serverless",
+    "flow based programming",
+    "cloudboost"
+  ],
+  "scripts": {
+    "start": "webpack --watch --progress",
+    "test": "npm run test-browser && npm run test-node",
+    "test-browser": "mocha-phantomjs -p node_modules/phantomjs/lib/phantom/bin/phantomjs -s webSecurityEnabled=false --ssl-protocol=any test/index.html",
+    "test-node": "./node_modules/.bin/mocha --reporter spec test/test.js",
+    "test-windows": "npm run test-browser-windows && npm run test-node",
+    "test-browser-windows": "mocha-phantomjs -p node_modules/phantomjs/lib/phantom/bin/phantomjs.exe -s webSecurityEnabled=false --ssl-protocol=any test/index.html",
+    "2npm": "publish"
+  },
+  "author": "ritishgumber@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-es2015-without-strict": "0.0.4",
+    "chai": "^3.5.0",
+    "chance": "^1.0.1",
+    "grunt": "~0.4.5",
+    "grunt-bump": "^0.3.1",
+    "grunt-bumpup": "^0.6.3",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-release": "^0.13.0",
+    "json-loader": "^0.5.4",
+    "mocha": "^2.4.5",
+    "mocha-phantomjs": "^4.1.0",
+    "phantomjs": "^2.1.7",
+    "publish": "^0.6.0",
+    "webpack": "~1.13.1",
+    "webpack-dev-server": "~1.14.1"
+  }
 }
