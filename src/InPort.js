@@ -17,7 +17,7 @@ class InPort {
         if (validate(options.data, options.datatype)) {
             this._data = options.data || null;
         } else {
-            throw "data must be of type " + options.datatype
+            this._data = null;
         }
 
         this._required = options.required || false;

@@ -13,7 +13,7 @@ class ProcessInput {
     //checks data at port`name`
     hasData(name) {
         let port = this._ports[name]
-        if (port.data) {
+        if (port.data || port.defaultValue) {
             return true
         }
         return false;
@@ -21,8 +21,9 @@ class ProcessInput {
 
     //return data at port `name`
     getData(name) {
-        let port =this._ports[name]
-        return port.data;
+        let port = this._ports[name]
+        let data = port.data || port.defaultValue
+        return data;
     }
 
     //getters and setters

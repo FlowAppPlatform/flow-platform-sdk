@@ -11,7 +11,7 @@ exports.getComponent = function () {
 
     //add inports
     c.addInPort('in', {
-        data: 'index.js' //name of the file
+        defaultValue: 'index.js' //name of the file
     });
 
     //add outports
