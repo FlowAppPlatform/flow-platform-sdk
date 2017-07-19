@@ -16,6 +16,7 @@ install:
 - webpack --progress
 after_success:
   # publish to npm
+  - npm cache clean
   - npm set init.author.name $NPM_USERNAME
   - npm set init.author.email $NPM_EMAIL
   - npm set init.author.url "https://cloudboost.io"
