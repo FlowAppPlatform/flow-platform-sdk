@@ -1,0 +1,29 @@
+sudo: required
+services:
+- docker
+env:
+  global:
+    # Ensure the install happens without prompts
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+language: node_js
+node_js:
+- '7.4'
+before_install:
+- npm install webpack -g
+- npm install grunt-cli -g
+install:
+- npm install
+- webpack --progress
+after_success:
+  # publish to npm
+  - npm cache clean
+  - npm set init.author.name $NPM_USERNAME
+  - npm set init.author.email $NPM_EMAIL
+  - npm set init.author.url "https://cloudboost.io"
+  - npm --no-git-tag-version version 2.0.$TRAVIS_BUILD_NUMBER --force
+  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+  - sleep 10s
+  - npm publish
+#Notify Team on Slack
+notifications:
+  slack: cloudboost:gm7nWJDLDtBRyF75VKLKOoMW
