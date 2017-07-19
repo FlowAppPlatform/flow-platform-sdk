@@ -4,12 +4,14 @@ import {
 } from '../util'
 
 class Component {
-    constructor() {
+    constructor(socket, id) {
         //set initial properties
         this._description = '';
         this._inPorts = {};
         this._outPorts = {};
         this._handle = null;
+        this._socket = this.attachSocket(socket, id);
+        this._id = id;
     }
 
     //add in port
@@ -24,7 +26,7 @@ class Component {
 
         if (!options)
             options = {}
-        this.inPorts[name] = new Flow.InPort(name, options);
+        this.inPorts[name] = new Flow.InPort(name, this._socket, this._id, options);
 
     }
 
@@ -42,14 +44,25 @@ class Component {
         if (!options)
             options = {}
 
-        this.outPorts[name] = new Flow.OutPort(name, options)
+        this.outPorts[name] = new Flow.OutPort(name, this._socket, this._id, options)
 
 
     }
 
+    attachSocket(socket, id) {
+        let thisObj = this;
+        socket.on('execute-' + id, function (data) {
+            thisObj.execute(data);
+        })
+        return socket;
+    }
+
     //run process handler
-    execute() {
-        this._handle(new Flow.ProcessInput(this._inPorts), new Flow.ProcessOutput(this._outPorts))
+    execute(socket) {
+        let input = new Flow.ProcessInput(this._inPorts)
+        let output = new Flow.ProcessOutput(this._outPorts, this._id)
+        output._receivingSocket = socket;
+        this._handle(input, output)
     }
 
     //save process handler

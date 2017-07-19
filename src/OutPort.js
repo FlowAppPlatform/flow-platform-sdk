@@ -5,7 +5,7 @@ import {
 } from '../util'
 
 class OutPort {
-    constructor(name, options) {
+    constructor(name, socket, id, options) {
         //set initial properties
 
         this._description = options.description || '';
@@ -22,7 +22,7 @@ class OutPort {
         // }
 
         //attach socket
-        this.attachSocket(new Flow.Socket());
+        this.attachSocket(socket, id);
 
         this._id = generateId();
     }
@@ -33,26 +33,11 @@ class OutPort {
     }
 
     //handle attach socket
-    attachSocket(socket) {
-
-        socket.on('data', function (data) {
-            // if (validate(data)) {
-            //     this._data = data;
-            // }
+    attachSocket(socket, id) {
+        const thisObj = this
+        socket.on('data-outport-' + id + '-' + thisObj._name, function (data) {
             console.log('received data', data)
-            this._data=data;
-        });
-
-        socket.on('test', (data) => {
-            console.log('test data received at out port', data);
-        })
-
-        socket.on('connect', function (data) {
-            console.log('socket at port: ' + this._name + ' connected.')
-        });
-
-        socket.on('disconnect', function (data) {
-            console.log('socket at port: ' + this._name + ' disconnected.')
+            thisObj._data = data;
         });
 
         this._socket = socket;

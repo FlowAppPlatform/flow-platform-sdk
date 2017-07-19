@@ -5,7 +5,7 @@ import {
 } from '../util'
 
 class InPort {
-    constructor(name, options) {
+    constructor(name, socket, id, options) {
         //set initial properties
 
         this._description = options.description || '';
@@ -27,7 +27,7 @@ class InPort {
         this._defaultValue = options.defaultValue || null;
 
         //attach socket
-        this.attachSocket(new Flow.Socket());
+        this.attachSocket(socket, id);
 
         this._id = generateId();
     }
@@ -38,25 +38,11 @@ class InPort {
     }
 
     //handle attach socket
-    attachSocket(socket) {
-
-        socket.on('data', function (data) {
-            // if (validate(data)) {
-            //     this._data = data;
-            // }
+    attachSocket(socket, id) {
+        const thisObj = this;
+        socket.on('data-inport-' + id + '-' + thisObj._name, function (data) {
+            thisObj._data = data;
             console.log('received data at inport', data)
-        });
-
-        socket.on('test', (data) => {
-            console.log('test data received at in port', data);
-        })
-
-        socket.on('connect', function (data) {
-            console.log('socket at port: ' + this._name + ' connected.')
-        });
-
-        socket.on('disconnect', function (data) {
-            console.log('socket at port: ' + this._name + ' disconnected.')
         });
 
         this._socket = socket;
