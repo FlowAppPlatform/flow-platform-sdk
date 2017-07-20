@@ -329,7 +329,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Component = function () {
-	    function Component() {
+	    function Component(socket, id) {
 	        _classCallCheck(this, Component);
 
 	        //set initial properties
@@ -337,6 +337,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._inPorts = {};
 	        this._outPorts = {};
 	        this._handle = null;
+	        this._socket = this.attachSocket(socket, id);
+	        this._id = id;
 	    }
 
 	    //add in port
@@ -354,7 +356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            if (!options) options = {};
-	            this.inPorts[name] = new _Flow2.default.InPort(name, options);
+	            this.inPorts[name] = new _Flow2.default.InPort(name, this._socket, this._id, options);
 	        }
 
 	        //add out port
@@ -373,15 +375,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (!options) options = {};
 
-	            this.outPorts[name] = new _Flow2.default.OutPort(name, options);
+	            this.outPorts[name] = new _Flow2.default.OutPort(name, this._socket, this._id, options);
+	        }
+	    }, {
+	        key: 'attachSocket',
+	        value: function attachSocket(socket, id) {
+	            var thisObj = this;
+	            socket.on('execute-' + id, function (data) {
+	                thisObj.execute(data);
+	            });
+	            return socket;
 	        }
 
 	        //run process handler
 
 	    }, {
 	        key: 'execute',
-	        value: function execute() {
-	            this._handle(new _Flow2.default.ProcessInput(this._inPorts), new _Flow2.default.ProcessOutput(this._outPorts));
+	        value: function execute(socket) {
+	            var input = new _Flow2.default.ProcessInput(this._inPorts);
+	            var output = new _Flow2.default.ProcessOutput(this._outPorts, this._id);
+	            output._receivingSocket = socket;
+	            this._handle(input, output);
 	        }
 
 	        //save process handler
@@ -540,12 +554,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var ProcessOutput = function () {
-	    function ProcessOutput(ports) {
+	    function ProcessOutput(ports, id) {
 	        _classCallCheck(this, ProcessOutput);
 
 	        //set initial properties
 
 	        this._ports = ports;
+	        this._receivingSocket = null;
+	        this._id = id;
 	    }
 
 	    //done handlers
@@ -563,6 +579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (port in this._ports) {
 	                    console.log(port, ':', this._ports[port].data);
 	                }
+	                if (this._receivingSocket) this._receivingSocket.emit('result-' + this._id, this._ports);
 	            }
 	        }
 
@@ -578,7 +595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (_port) {
 	                    var socket = _port.socket;
 	                    _port.data = obj[key];
-	                    socket.emit('data', obj[key]);
+	                    socket.emit('data-outport-' + this._id + '-' + _port.name, obj[key]);
 	                } else {
 	                    throw 'Outport : ' + key + ' not found';
 	                }
@@ -621,7 +638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var InPort = function () {
-	    function InPort(name, options) {
+	    function InPort(name, socket, id, options) {
 	        _classCallCheck(this, InPort);
 
 	        //set initial properties
@@ -645,7 +662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._defaultValue = options.defaultValue || null;
 
 	        //attach socket
-	        this.attachSocket(new _Flow2.default.Socket());
+	        this.attachSocket(socket, id);
 
 	        this._id = (0, _util.generateId)();
 	    }
@@ -663,25 +680,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    }, {
 	        key: 'attachSocket',
-	        value: function attachSocket(socket) {
-
-	            socket.on('data', function (data) {
-	                // if (validate(data)) {
-	                //     this._data = data;
-	                // }
+	        value: function attachSocket(socket, id) {
+	            var thisObj = this;
+	            socket.on('data-inport-' + id + '-' + thisObj._name, function (data) {
+	                thisObj._data = data;
 	                console.log('received data at inport', data);
-	            });
-
-	            socket.on('test', function (data) {
-	                console.log('test data received at in port', data);
-	            });
-
-	            socket.on('connect', function (data) {
-	                console.log('socket at port: ' + this._name + ' connected.');
-	            });
-
-	            socket.on('disconnect', function (data) {
-	                console.log('socket at port: ' + this._name + ' disconnected.');
 	            });
 
 	            this._socket = socket;
@@ -781,7 +784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var OutPort = function () {
-	    function OutPort(name, options) {
+	    function OutPort(name, socket, id, options) {
 	        _classCallCheck(this, OutPort);
 
 	        //set initial properties
@@ -800,7 +803,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // }
 
 	        //attach socket
-	        this.attachSocket(new _Flow2.default.Socket());
+	        this.attachSocket(socket, id);
 
 	        this._id = (0, _util.generateId)();
 	    }
@@ -818,26 +821,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    }, {
 	        key: 'attachSocket',
-	        value: function attachSocket(socket) {
-
-	            socket.on('data', function (data) {
-	                // if (validate(data)) {
-	                //     this._data = data;
-	                // }
+	        value: function attachSocket(socket, id) {
+	            var thisObj = this;
+	            socket.on('data-outport-' + id + '-' + thisObj._name, function (data) {
 	                console.log('received data', data);
-	                this._data = data;
-	            });
-
-	            socket.on('test', function (data) {
-	                console.log('test data received at out port', data);
-	            });
-
-	            socket.on('connect', function (data) {
-	                console.log('socket at port: ' + this._name + ' connected.');
-	            });
-
-	            socket.on('disconnect', function (data) {
-	                console.log('socket at port: ' + this._name + ' disconnected.');
+	                thisObj._data = data;
 	            });
 
 	            this._socket = socket;
