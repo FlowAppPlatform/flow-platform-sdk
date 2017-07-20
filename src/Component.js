@@ -1,7 +1,13 @@
-import Flow from './Flow';
 import {
-    validate
+    validate,
+    generateId
 } from '../util'
+import InPort from './InPort'
+import OutPort from './OutPort'
+import ProcessInput from './ProcessInput'
+import ProcessOutput from './ProcessOutput'
+import EventEmitter from 'events'
+
 
 class Component {
     constructor(socket, id) {
@@ -10,8 +16,40 @@ class Component {
         this._inPorts = {};
         this._outPorts = {};
         this._handle = null;
+        if (!socket)
+            socket = new EventEmitter();
         this._socket = this.attachSocket(socket, id);
+        if (!id)
+            id = generateId();
         this._id = id;
+
+        //other properties
+        // to check if the env is node
+        this._isNode = false
+        // to check if env is native ( react native , native script etc. )
+        this._isNative = false
+        if (typeof (process) !== "undefined" &&
+            process.versions &&
+            process.versions.node) {
+            this._isNode = true
+        } else {
+            this._isNode = false
+        }
+        try {
+            if (window) {
+                if (navigator.product == 'ReactNative') {
+                    // for react native turn node and native flags to true
+                    this._isNode = true
+                    this._isNative = true
+                } else {
+                    // if window is found then node is false
+                    this._isNode = false
+                }
+            }
+        } catch (e) {
+            // if window is not found , then turn node flag to true
+            this._isNode = true
+        }
     }
 
     //add in port
@@ -26,7 +64,7 @@ class Component {
 
         if (!options)
             options = {}
-        this.inPorts[name] = new Flow.InPort(name, this._socket, this._id, options);
+        this.inPorts[name] = new InPort(name, this._socket, this._id, options);
 
     }
 
@@ -44,7 +82,7 @@ class Component {
         if (!options)
             options = {}
 
-        this.outPorts[name] = new Flow.OutPort(name, this._socket, this._id, options)
+        this.outPorts[name] = new OutPort(name, this._socket, this._id, options)
 
 
     }
@@ -59,8 +97,8 @@ class Component {
 
     //run process handler
     execute(socket) {
-        let input = new Flow.ProcessInput(this._inPorts)
-        let output = new Flow.ProcessOutput(this._outPorts, this._id)
+        let input = new ProcessInput(this._inPorts)
+        let output = new ProcessOutput(this._outPorts, this._id)
         output._receivingSocket = socket;
         this._handle(input, output)
     }
@@ -95,6 +133,15 @@ class Component {
         return this._outPorts
     }
 
+    get socket() {
+        return this._socket;
+    }
+    set socket(socket) {
+        this._socket = this.attachSocket(socket);
+    }
+
 }
-Flow.Component = Component
-export default Component
+try {
+    window.Flow = Component
+} catch (e) {}
+module.exports = Component

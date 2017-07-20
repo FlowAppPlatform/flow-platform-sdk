@@ -1,4 +1,3 @@
-import Flow from './Flow';
 import {
     validate
 } from '../util'
@@ -15,17 +14,11 @@ class ProcessOutput {
     //done handlers
     done(err) {
         if (err) {
-            console.log('errrrr')
             throw err;
         } else {
-            //finished processing
-            console.log('Processing finished, Data:');
-            for (port in this._ports) {
-                console.log(port, ':', this._ports[port].data)
-            }
-            if (this._receivingSocket)
+            if (this._receivingSocket) {
                 this._receivingSocket.emit('result-' + this._id, this._ports);
-
+            }
         }
     }
 
@@ -50,5 +43,4 @@ class ProcessOutput {
         return this._ports
     }
 }
-Flow.ProcessOutput = ProcessOutput
-export default ProcessOutput
+module.exports = ProcessOutput
