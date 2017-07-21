@@ -3,11 +3,11 @@ import {
 } from '../util'
 
 class ProcessOutput {
-    constructor(ports, id) {
+    constructor(ports, socket, id) {
         //set initial properties
 
         this._ports = ports;
-        this._receivingSocket = null;
+        this._receivingSocket = socket;
         this._id = id
     }
 

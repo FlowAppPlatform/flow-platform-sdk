@@ -1,6 +1,6 @@
 var webpack = require('webpack')
 var config = {
-    entry: './src/Component.js',
+    entry: './src/index.js',
     output: {
         path: './dist',
         filename: 'CloudBoostFlow.js',

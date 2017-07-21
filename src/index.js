@@ -65,6 +65,7 @@ class Component {
         if (!options)
             options = {}
         this.inPorts[name] = new InPort(name, this._socket, this._id, options);
+        this._input = new ProcessInput(this.inPorts)
 
     }
 
@@ -83,6 +84,7 @@ class Component {
             options = {}
 
         this.outPorts[name] = new OutPort(name, this._socket, this._id, options)
+        this._output = new ProcessOutput(this.outPorts, this.socket, this.id)
 
 
     }
@@ -98,8 +100,7 @@ class Component {
     //run process handler
     execute(socket) {
         let input = new ProcessInput(this._inPorts)
-        let output = new ProcessOutput(this._outPorts, this._id)
-        output._receivingSocket = socket;
+        let output = new ProcessOutput(this._outPorts, this.socket, this._id)
         this._handle(input, output)
     }
 
@@ -124,6 +125,20 @@ class Component {
     set description(description) {
         this._description = description
     }
+    get input() {
+        return this._input
+    }
+
+    set input(value) {
+        this._input = value
+    }
+    get output() {
+        return this._output
+    }
+
+    set output(value) {
+        this._output = value
+    }
 
     get inPorts() {
         return this._inPorts
@@ -138,6 +153,12 @@ class Component {
     }
     set socket(socket) {
         this._socket = this.attachSocket(socket);
+    }
+    get id() {
+        return this._id;
+    }
+    get handle() {
+        return this._handle;
     }
 
 }

@@ -139,6 +139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (!options) options = {};
 	            this.inPorts[name] = new _InPort2.default(name, this._socket, this._id, options);
+	            this._input = new _ProcessInput2.default(this.inPorts);
 	        }
 
 	        //add out port
@@ -158,6 +159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (!options) options = {};
 
 	            this.outPorts[name] = new _OutPort2.default(name, this._socket, this._id, options);
+	            this._output = new _ProcessOutput2.default(this.outPorts, this.socket, this.id);
 	        }
 	    }, {
 	        key: 'attachSocket',
@@ -175,8 +177,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'execute',
 	        value: function execute(socket) {
 	            var input = new _ProcessInput2.default(this._inPorts);
-	            var output = new _ProcessOutput2.default(this._outPorts, this._id);
-	            output._receivingSocket = socket;
+	            var output = new _ProcessOutput2.default(this._outPorts, this.socket, this._id);
 	            this._handle(input, output);
 	        }
 
@@ -206,6 +207,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._description = description;
 	        }
 	    }, {
+	        key: 'input',
+	        get: function get() {
+	            return this._input;
+	        },
+	        set: function set(value) {
+	            this._input = value;
+	        }
+	    }, {
+	        key: 'output',
+	        get: function get() {
+	            return this._output;
+	        },
+	        set: function set(value) {
+	            this._output = value;
+	        }
+	    }, {
 	        key: 'inPorts',
 	        get: function get() {
 	            return this._inPorts;
@@ -222,6 +239,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        set: function set(socket) {
 	            this._socket = this.attachSocket(socket);
+	        }
+	    }, {
+	        key: 'id',
+	        get: function get() {
+	            return this._id;
+	        }
+	    }, {
+	        key: 'handle',
+	        get: function get() {
+	            return this._handle;
 	        }
 	    }]);
 
@@ -769,13 +796,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var ProcessOutput = function () {
-	    function ProcessOutput(ports, id) {
+	    function ProcessOutput(ports, socket, id) {
 	        _classCallCheck(this, ProcessOutput);
 
 	        //set initial properties
 
 	        this._ports = ports;
-	        this._receivingSocket = null;
+	        this._receivingSocket = socket;
 	        this._id = id;
 	    }
 
