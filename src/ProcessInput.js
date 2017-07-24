@@ -1,4 +1,3 @@
-import Flow from './Flow';
 import {
     validate
 } from '../util'
@@ -31,5 +30,4 @@ class ProcessInput {
         return this._ports
     }
 }
-Flow.ProcessInput = ProcessInput
-export default ProcessInput
+module.exports = ProcessInput

@@ -54,72 +54,215 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _Flow = __webpack_require__(1);
+	/* WEBPACK VAR INJECTION */(function(process) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Flow2 = _interopRequireDefault(_Flow);
+	var _util = __webpack_require__(2);
+
+	var _InPort = __webpack_require__(3);
+
+	var _InPort2 = _interopRequireDefault(_InPort);
+
+	var _OutPort = __webpack_require__(4);
+
+	var _OutPort2 = _interopRequireDefault(_OutPort);
+
+	var _ProcessInput = __webpack_require__(5);
+
+	var _ProcessInput2 = _interopRequireDefault(_ProcessInput);
+
+	var _ProcessOutput = __webpack_require__(6);
+
+	var _ProcessOutput2 = _interopRequireDefault(_ProcessOutput);
+
+	var _events = __webpack_require__(7);
+
+	var _events2 = _interopRequireDefault(_events);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	try {
-	    if (window) {
-	        if (navigator.product == 'ReactNative') {
-	            // for react native turn node and native flags to true
-	            _Flow2.default._isNode = true;
-	            _Flow2.default._isNative = true;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Component = function () {
+	    function Component(socket, id) {
+	        _classCallCheck(this, Component);
+
+	        //set initial properties
+	        this._description = '';
+	        this._inPorts = {};
+	        this._outPorts = {};
+	        this._handle = null;
+	        if (!socket) socket = new _events2.default();
+	        this._socket = this.attachSocket(socket, id);
+	        if (!id) id = (0, _util.generateId)();
+	        this._id = id;
+
+	        //other properties
+	        // to check if the env is node
+	        this._isNode = false;
+	        // to check if env is native ( react native , native script etc. )
+	        this._isNative = false;
+	        if (typeof process !== "undefined" && process.versions && process.versions.node) {
+	            this._isNode = true;
 	        } else {
-	            // if window is found then node is false
-	            _Flow2.default._isNode = false;
+	            this._isNode = false;
+	        }
+	        try {
+	            if (window) {
+	                if (navigator.product == 'ReactNative') {
+	                    // for react native turn node and native flags to true
+	                    this._isNode = true;
+	                    this._isNative = true;
+	                } else {
+	                    // if window is found then node is false
+	                    this._isNode = false;
+	                }
+	            }
+	        } catch (e) {
+	            // if window is not found , then turn node flag to true
+	            this._isNode = true;
 	        }
 	    }
-	} catch (e) {
-	    // if window is not found , then turn node flag to true
-	    _Flow2.default._isNode = true;
-	}
 
-	//import all js files
-	__webpack_require__(3);
-	__webpack_require__(5);
-	__webpack_require__(6);
-	__webpack_require__(7);
-	__webpack_require__(8);
-	__webpack_require__(9);
+	    //add in port
+
+
+	    _createClass(Component, [{
+	        key: 'addInPort',
+	        value: function addInPort(name, options) {
+
+	            if (!name) {
+	                throw "Inport name is required";
+	            }
+	            if (!(0, _util.validate)(name, 'string')) {
+	                throw "Port name should be of type string.";
+	            }
+
+	            if (!options) options = {};
+	            this.inPorts[name] = new _InPort2.default(name, this._socket, this._id, options);
+	            this._input = new _ProcessInput2.default(this.inPorts);
+	        }
+
+	        //add out port
+
+	    }, {
+	        key: 'addOutPort',
+	        value: function addOutPort(name, options) {
+
+	            if (!name) {
+	                throw "Outport name is required";
+	            }
+
+	            if (!(0, _util.validate)(name, 'string')) {
+	                throw "Port name should be of type string.";
+	            }
+
+	            if (!options) options = {};
+
+	            this.outPorts[name] = new _OutPort2.default(name, this._socket, this._id, options);
+	            this._output = new _ProcessOutput2.default(this.outPorts, this.socket, this.id);
+	        }
+	    }, {
+	        key: 'attachSocket',
+	        value: function attachSocket(socket, id) {
+	            var thisObj = this;
+	            socket.on('execute-' + id, function (data) {
+	                thisObj.execute(data);
+	            });
+	            return socket;
+	        }
+
+	        //run process handler
+
+	    }, {
+	        key: 'execute',
+	        value: function execute(socket) {
+	            var input = new _ProcessInput2.default(this._inPorts);
+	            var output = new _ProcessOutput2.default(this._outPorts, this.socket, this._id);
+	            this._handle(input, output);
+	        }
+
+	        //save process handler
+
+	    }, {
+	        key: 'process',
+	        value: function process(handle) {
+
+	            if (!(0, _util.validate)(handle, 'function')) {
+	                throw 'Process handler must be a function.';
+	            }
+	            if (!this.inPorts) {
+	                throw new Error("Component ports must be defined before process function");
+	            }
+	            this._handle = handle;
+	        }
+
+	        //getters and setters
+
+	    }, {
+	        key: 'description',
+	        get: function get() {
+	            return this._description;
+	        },
+	        set: function set(description) {
+	            this._description = description;
+	        }
+	    }, {
+	        key: 'input',
+	        get: function get() {
+	            return this._input;
+	        },
+	        set: function set(value) {
+	            this._input = value;
+	        }
+	    }, {
+	        key: 'output',
+	        get: function get() {
+	            return this._output;
+	        },
+	        set: function set(value) {
+	            this._output = value;
+	        }
+	    }, {
+	        key: 'inPorts',
+	        get: function get() {
+	            return this._inPorts;
+	        }
+	    }, {
+	        key: 'outPorts',
+	        get: function get() {
+	            return this._outPorts;
+	        }
+	    }, {
+	        key: 'socket',
+	        get: function get() {
+	            return this._socket;
+	        },
+	        set: function set(socket) {
+	            this._socket = this.attachSocket(socket);
+	        }
+	    }, {
+	        key: 'id',
+	        get: function get() {
+	            return this._id;
+	        }
+	    }, {
+	        key: 'handle',
+	        get: function get() {
+	            return this._handle;
+	        }
+	    }]);
+
+	    return Component;
+	}();
 
 	try {
-	    window.Flow = _Flow2.default;
+	    window.Flow = Component;
 	} catch (e) {}
-	module.exports = _Flow2.default;
+	module.exports = Component;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var CloudBoostFlow = function CloudBoostFlow() {
-		_classCallCheck(this, CloudBoostFlow);
-
-		// to check if the env is node
-		this._isNode = false;
-		// to check if env is native ( react native , native script etc. )
-		this._isNative = false;
-		if (typeof process !== "undefined" && process.versions && process.versions.node) {
-			this._isNode = true;
-		} else {
-			this._isNode = false;
-		}
-	};
-
-	var Flow = new CloudBoostFlow();
-
-	exports.default = Flow;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ },
-/* 2 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -309,140 +452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Flow = __webpack_require__(1);
-
-	var _Flow2 = _interopRequireDefault(_Flow);
-
-	var _util = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Component = function () {
-	    function Component(socket, id) {
-	        _classCallCheck(this, Component);
-
-	        //set initial properties
-	        this._description = '';
-	        this._inPorts = {};
-	        this._outPorts = {};
-	        this._handle = null;
-	        this._socket = this.attachSocket(socket, id);
-	        this._id = id;
-	    }
-
-	    //add in port
-
-
-	    _createClass(Component, [{
-	        key: 'addInPort',
-	        value: function addInPort(name, options) {
-
-	            if (!name) {
-	                throw "Inport name is required";
-	            }
-	            if (!(0, _util.validate)(name, 'string')) {
-	                throw "Port name should be of type string.";
-	            }
-
-	            if (!options) options = {};
-	            this.inPorts[name] = new _Flow2.default.InPort(name, this._socket, this._id, options);
-	        }
-
-	        //add out port
-
-	    }, {
-	        key: 'addOutPort',
-	        value: function addOutPort(name, options) {
-
-	            if (!name) {
-	                throw "Outport name is required";
-	            }
-
-	            if (!(0, _util.validate)(name, 'string')) {
-	                throw "Port name should be of type string.";
-	            }
-
-	            if (!options) options = {};
-
-	            this.outPorts[name] = new _Flow2.default.OutPort(name, this._socket, this._id, options);
-	        }
-	    }, {
-	        key: 'attachSocket',
-	        value: function attachSocket(socket, id) {
-	            var thisObj = this;
-	            socket.on('execute-' + id, function (data) {
-	                thisObj.execute(data);
-	            });
-	            return socket;
-	        }
-
-	        //run process handler
-
-	    }, {
-	        key: 'execute',
-	        value: function execute(socket) {
-	            var input = new _Flow2.default.ProcessInput(this._inPorts);
-	            var output = new _Flow2.default.ProcessOutput(this._outPorts, this._id);
-	            output._receivingSocket = socket;
-	            this._handle(input, output);
-	        }
-
-	        //save process handler
-
-	    }, {
-	        key: 'process',
-	        value: function process(handle) {
-
-	            if (!(0, _util.validate)(handle, 'function')) {
-	                throw 'Process handler must be a function.';
-	            }
-	            if (!this.inPorts) {
-	                throw new Error("Component ports must be defined before process function");
-	            }
-	            this._handle = handle;
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(description) {
-	            this._description = description;
-	        }
-	    }, {
-	        key: 'inPorts',
-	        get: function get() {
-	            return this._inPorts;
-	        }
-	    }, {
-	        key: 'outPorts',
-	        get: function get() {
-	            return this._outPorts;
-	        }
-	    }]);
-
-	    return Component;
-	}();
-
-	_Flow2.default.Component = Component;
-	exports.default = Component;
-
-/***/ },
-/* 4 */
+/* 2 */
 /***/ function(module, exports) {
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -467,173 +477,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 5 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Flow = __webpack_require__(1);
-
-	var _Flow2 = _interopRequireDefault(_Flow);
-
-	var _util = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ProcessInput = function () {
-	    function ProcessInput(ports) {
-	        _classCallCheck(this, ProcessInput);
-
-	        //set initial properties
-
-	        this._ports = ports;
-	    }
-
-	    //checks data at port`name`
-
-
-	    _createClass(ProcessInput, [{
-	        key: 'hasData',
-	        value: function hasData(name) {
-	            var port = this._ports[name];
-	            if (port.data || port.defaultValue) {
-	                return true;
-	            }
-	            return false;
-	        }
-
-	        //return data at port `name`
-
-	    }, {
-	        key: 'getData',
-	        value: function getData(name) {
-	            var port = this._ports[name];
-	            var data = port.data || port.defaultValue;
-	            return data;
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'ports',
-	        get: function get() {
-	            return this._ports;
-	        }
-	    }]);
-
-	    return ProcessInput;
-	}();
-
-	_Flow2.default.ProcessInput = ProcessInput;
-	exports.default = ProcessInput;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Flow = __webpack_require__(1);
-
-	var _Flow2 = _interopRequireDefault(_Flow);
-
-	var _util = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ProcessOutput = function () {
-	    function ProcessOutput(ports, id) {
-	        _classCallCheck(this, ProcessOutput);
-
-	        //set initial properties
-
-	        this._ports = ports;
-	        this._receivingSocket = null;
-	        this._id = id;
-	    }
-
-	    //done handlers
-
-
-	    _createClass(ProcessOutput, [{
-	        key: 'done',
-	        value: function done(err) {
-	            if (err) {
-	                console.log('errrrr');
-	                throw err;
-	            } else {
-	                //finished processing
-	                console.log('Processing finished, Data:');
-	                for (port in this._ports) {
-	                    console.log(port, ':', this._ports[port].data);
-	                }
-	                if (this._receivingSocket) this._receivingSocket.emit('result-' + this._id, this._ports);
-	            }
-	        }
-
-	        //send data at specific port
-
-	    }, {
-	        key: 'send',
-	        value: function send(obj) {
-	            for (key in obj) {
-	                //validate if key(port name) exists in _ports;
-	                //send data of obj.key
-	                var _port = this._ports[key];
-	                if (_port) {
-	                    var socket = _port.socket;
-	                    _port.data = obj[key];
-	                    socket.emit('data-outport-' + this._id + '-' + _port.name, obj[key]);
-	                } else {
-	                    throw 'Outport : ' + key + ' not found';
-	                }
-	            }
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'ports',
-	        get: function get() {
-	            return this._ports;
-	        }
-	    }]);
-
-	    return ProcessOutput;
-	}();
-
-	_Flow2.default.ProcessOutput = ProcessOutput;
-	exports.default = ProcessOutput;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Flow = __webpack_require__(1);
-
-	var _Flow2 = _interopRequireDefault(_Flow);
-
-	var _util = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _util = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -684,7 +533,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var thisObj = this;
 	            socket.on('data-inport-' + id + '-' + thisObj._name, function (data) {
 	                thisObj._data = data;
-	                console.log('received data at inport', data);
 	            });
 
 	            this._socket = socket;
@@ -760,26 +608,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return InPort;
 	}();
 
-	_Flow2.default.InPort = InPort;
-	exports.default = InPort;
+	module.exports = InPort;
 
 /***/ },
-/* 8 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Flow = __webpack_require__(1);
-
-	var _Flow2 = _interopRequireDefault(_Flow);
-
-	var _util = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _util = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -824,7 +661,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function attachSocket(socket, id) {
 	            var thisObj = this;
 	            socket.on('data-outport-' + id + '-' + thisObj._name, function (data) {
-	                console.log('received data', data);
 	                thisObj._data = data;
 	            });
 
@@ -891,48 +727,135 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return OutPort;
 	}();
 
-	_Flow2.default.OutPort = OutPort;
-	exports.default = OutPort;
+	module.exports = OutPort;
 
 /***/ },
-/* 9 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Flow = __webpack_require__(1);
-
-	var _Flow2 = _interopRequireDefault(_Flow);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _util = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	var ProcessInput = function () {
+	    function ProcessInput(ports) {
+	        _classCallCheck(this, ProcessInput);
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	        //set initial properties
 
-	var EventEmitter = __webpack_require__(10);
+	        this._ports = ports;
+	    }
 
-	var Socket = function (_EventEmitter) {
-	  _inherits(Socket, _EventEmitter);
+	    //checks data at port`name`
 
-	  function Socket() {
-	    _classCallCheck(this, Socket);
 
-	    return _possibleConstructorReturn(this, (Socket.__proto__ || Object.getPrototypeOf(Socket)).apply(this, arguments));
-	  }
+	    _createClass(ProcessInput, [{
+	        key: 'hasData',
+	        value: function hasData(name) {
+	            var port = this._ports[name];
+	            if (port.data || port.defaultValue) {
+	                return true;
+	            }
+	            return false;
+	        }
 
-	  return Socket;
-	}(EventEmitter);
+	        //return data at port `name`
 
-	_Flow2.default.Socket = Socket;
-	exports.default = Socket;
+	    }, {
+	        key: 'getData',
+	        value: function getData(name) {
+	            var port = this._ports[name];
+	            var data = port.data || port.defaultValue;
+	            return data;
+	        }
+
+	        //getters and setters
+
+	    }, {
+	        key: 'ports',
+	        get: function get() {
+	            return this._ports;
+	        }
+	    }]);
+
+	    return ProcessInput;
+	}();
+
+	module.exports = ProcessInput;
 
 /***/ },
-/* 10 */
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _util = __webpack_require__(2);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ProcessOutput = function () {
+	    function ProcessOutput(ports, socket, id) {
+	        _classCallCheck(this, ProcessOutput);
+
+	        //set initial properties
+
+	        this._ports = ports;
+	        this._receivingSocket = socket;
+	        this._id = id;
+	    }
+
+	    //done handlers
+
+
+	    _createClass(ProcessOutput, [{
+	        key: 'done',
+	        value: function done(err) {
+	            if (err) {
+	                throw err;
+	            } else {
+	                if (this._receivingSocket) {
+	                    this._receivingSocket.emit('result-' + this._id, this._ports);
+	                }
+	            }
+	        }
+
+	        //send data at specific port
+
+	    }, {
+	        key: 'send',
+	        value: function send(obj) {
+	            for (key in obj) {
+	                //validate if key(port name) exists in _ports;
+	                //send data of obj.key
+	                var port = this._ports[key];
+	                if (port) {
+	                    var socket = port.socket;
+	                    port.data = obj[key];
+	                    socket.emit('data-outport-' + this._id + '-' + port.name, obj[key]);
+	                } else {
+	                    throw 'Outport : ' + key + ' not found';
+	                }
+	            }
+	        }
+
+	        //getters and setters
+
+	    }, {
+	        key: 'ports',
+	        get: function get() {
+	            return this._ports;
+	        }
+	    }]);
+
+	    return ProcessOutput;
+	}();
+
+	module.exports = ProcessOutput;
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.

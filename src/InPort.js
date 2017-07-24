@@ -1,4 +1,3 @@
-import Flow from './Flow';
 import {
     validate,
     generateId
@@ -42,7 +41,6 @@ class InPort {
         const thisObj = this;
         socket.on('data-inport-' + id + '-' + thisObj._name, function (data) {
             thisObj._data = data;
-            console.log('received data at inport', data)
         });
 
         this._socket = socket;
@@ -114,5 +112,4 @@ class InPort {
     }
 
 }
-Flow.InPort = InPort
-export default InPort
+module.exports = InPort
