@@ -1,31 +1,19 @@
 {
   "name": "cloudboost-flow",
   "version": "1.0.0",
-  "description": "Cloudboost Flow.",
-  "main": "./dist/CloudBoostFlow.js",
-  "types": "./dist/CloudBoostFlow.d.ts",
+  "description": "Cloudboost Flow",
+  "main": "./dist/index.js",
   "keywords": [
-    "database as a service",
-    "dbaas",
-    "no-sql",
-    "database",
-    "serverless",
-    "flow based programming",
-    "cloudboost"
+    
   ],
   "scripts": {
-    "start": "webpack --watch --progress",
-    "test": "echo 'NO TESTS'",
-    "test-browser": "mocha-phantomjs -p node_modules/phantomjs/lib/phantom/bin/phantomjs -s webSecurityEnabled=false --ssl-protocol=any test/index.html",
-    "test-node": "./node_modules/.bin/mocha --reporter spec test/test.js",
-    "test-windows": "npm run test-browser-windows && npm run test-node",
-    "test-browser-windows": "mocha-phantomjs -p node_modules/phantomjs/lib/phantom/bin/phantomjs.exe -s webSecurityEnabled=false --ssl-protocol=any test/index.html",
-    "2npm": "publish"
+    "build": "echo 'Bulding library...' &&  webpack && echo 'Done.'",
+    "test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js"
   },
-  "author": "ritishgumber@gmail.com",
+  "author": "hello@cloudboost.io",
   "license": "MIT",
   "dependencies": {
-    "fs": "0.0.1-security"
+    
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
@@ -42,7 +30,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-release": "^0.13.0",
     "json-loader": "^0.5.4",
-    "mocha": "^2.4.5",
+    "mocha": "^2.5.3",
     "mocha-phantomjs": "^4.1.0",
     "phantomjs": "^2.1.7",
     "publish": "^0.6.0",

@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("CloudBoostFlow", [], factory);
+		define("cloudboost-flow", [], factory);
 	else if(typeof exports === 'object')
-		exports["CloudBoostFlow"] = factory();
+		exports["cloudboost-flow"] = factory();
 	else
-		root["CloudBoostFlow"] = factory();
+		root["cloudboost-flow"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -54,146 +54,149 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _Component = __webpack_require__(1);
+
+	var _Component2 = _interopRequireDefault(_Component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Flow = {};
+	Flow.Component = _Component2.default;
+
+	module.exports = Flow;
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _util = __webpack_require__(2);
+	var _Util = __webpack_require__(3);
 
-	var _InPort = __webpack_require__(3);
+	var _Util2 = _interopRequireDefault(_Util);
 
-	var _InPort2 = _interopRequireDefault(_InPort);
-
-	var _OutPort = __webpack_require__(4);
-
-	var _OutPort2 = _interopRequireDefault(_OutPort);
-
-	var _ProcessInput = __webpack_require__(5);
-
-	var _ProcessInput2 = _interopRequireDefault(_ProcessInput);
-
-	var _ProcessOutput = __webpack_require__(6);
-
-	var _ProcessOutput2 = _interopRequireDefault(_ProcessOutput);
-
-	var _events = __webpack_require__(7);
+	var _events = __webpack_require__(4);
 
 	var _events2 = _interopRequireDefault(_events);
+
+	var _Port = __webpack_require__(5);
+
+	var _Port2 = _interopRequireDefault(_Port);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Component = function () {
-	    function Component(socket, id) {
+	    function Component(name) {
 	        _classCallCheck(this, Component);
 
-	        //set initial properties
-	        this._description = '';
-	        this._inPorts = {};
-	        this._outPorts = {};
-	        this._handle = null;
-	        if (!socket) socket = new _events2.default();
-	        this._socket = this.attachSocket(socket, id);
-	        if (!id) id = (0, _util.generateId)();
-	        this._id = id;
-
-	        //other properties
-	        // to check if the env is node
-	        this._isNode = false;
-	        // to check if env is native ( react native , native script etc. )
-	        this._isNative = false;
-	        if (typeof process !== "undefined" && process.versions && process.versions.node) {
-	            this._isNode = true;
-	        } else {
-	            this._isNode = false;
+	        if (!name) {
+	            throw "Component Name is required.";
 	        }
-	        try {
-	            if (window) {
-	                if (navigator.product == 'ReactNative') {
-	                    // for react native turn node and native flags to true
-	                    this._isNode = true;
-	                    this._isNative = true;
-	                } else {
-	                    // if window is found then node is false
-	                    this._isNode = false;
-	                }
-	            }
-	        } catch (e) {
-	            // if window is not found , then turn node flag to true
-	            this._isNode = true;
+
+	        //Icon URL is the URL of an Icon in SVG that can be showed in the UI. 
+	        this._iconUrl = '';
+
+	        this._ports = [];
+
+	        //A name of the component. 
+	        this.name = name;
+
+	        //A short description of the component. 
+	        this._description = '';
+
+	        //List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc. 
+	        this._outPorts = {};
+
+	        //A socket object to communicate with other components. 
+	        this._socket = new _events2.default();
+
+	        //Genere a new ID for this instance. 
+	        this._id = _Util2.default.generateId();
+
+	        //check if the env is NodeJS
+	        this._platform = "browser";
+	        if (typeof process !== "undefined" && process.versions && process.versions.node) {
+	            this._platform = "node";
 	        }
 	    }
 
-	    //add in port
+	    //execute the component task.
 
 
 	    _createClass(Component, [{
-	        key: 'addInPort',
-	        value: function addInPort(name, options) {
-
-	            if (!name) {
-	                throw "Inport name is required";
-	            }
-	            if (!(0, _util.validate)(name, 'string')) {
-	                throw "Port name should be of type string.";
-	            }
-
-	            if (!options) options = {};
-	            this.inPorts[name] = new _InPort2.default(name, this._socket, this._id, options);
-	            this._input = new _ProcessInput2.default(this.inPorts);
-	        }
-
-	        //add out port
-
-	    }, {
-	        key: 'addOutPort',
-	        value: function addOutPort(name, options) {
-
-	            if (!name) {
-	                throw "Outport name is required";
-	            }
-
-	            if (!(0, _util.validate)(name, 'string')) {
-	                throw "Port name should be of type string.";
-	            }
-
-	            if (!options) options = {};
-
-	            this.outPorts[name] = new _OutPort2.default(name, this._socket, this._id, options);
-	            this._output = new _ProcessOutput2.default(this.outPorts, this.socket, this.id);
-	        }
-	    }, {
-	        key: 'attachSocket',
-	        value: function attachSocket(socket, id) {
-	            var thisObj = this;
-	            socket.on('execute-' + id, function (data) {
-	                thisObj.execute(data);
-	            });
-	            return socket;
-	        }
-
-	        //run process handler
-
-	    }, {
 	        key: 'execute',
-	        value: function execute(socket) {
-	            var input = new _ProcessInput2.default(this._inPorts);
-	            var output = new _ProcessOutput2.default(this._outPorts, this.socket, this._id);
-	            this._handle(input, output);
+	        value: function execute() {
+	            if (this._task && validate(this._task === "function")) {
+	                this._task();
+	            }
 	        }
 
-	        //save process handler
+	        //Task is a custom code as a function that runs when the component executes. 
 
 	    }, {
-	        key: 'process',
-	        value: function process(handle) {
+	        key: 'attachTask',
+	        value: function attachTask(task) {
 
-	            if (!(0, _util.validate)(handle, 'function')) {
-	                throw 'Process handler must be a function.';
+	            if (!_Util2.default.validate(task, 'function')) {
+	                throw 'Task must be a function.';
 	            }
-	            if (!this.inPorts) {
-	                throw new Error("Component ports must be defined before process function");
+
+	            this._task = task;
+	        }
+	    }, {
+	        key: 'addPort',
+	        value: function addPort(port) {
+	            if (port instanceof _Port2.default) {
+	                if (!port.id) throw "Port does not have an ID.";
+
+	                for (var i = 0; i < this._ports.length; i++) {
+	                    if (port.name === _this.ports[i].name || port.id === _this.ports[i].id) {
+	                        throw "Port with the same name or id already exists.";
+	                    }
+	                }
+
+	                if (port._isAttachedToComponent) throw "This port is already attached with other component";
+
+	                port._componentAttachedTo = this;
+	                this._ports.push(port);
+	            } else {
+	                throw "Port should be an instance of Port class.";
 	            }
-	            this._handle = handle;
+	        }
+	    }, {
+	        key: 'removePort',
+	        value: function removePort(port) {
+	            if (port instanceof _Port2.default) {
+	                if (!port.id) throw "Port does not have an ID.";
+	                if (his._ports.indexOf(port) < 0) {
+	                    throw "Port not found in the component.";
+	                }
+	                this._ports.slice(this._ports.indexOf(port), 1);
+	                port._componentAttachedTo = null;
+	            } else {
+	                throw "Port should be an instance of Port class.";
+	            }
+	        }
+	    }, {
+	        key: 'hasPort',
+	        value: function hasPort(port) {
+	            if (port instanceof _Port2.default) {
+	                if (!port.id) throw "Port does not have an ID.";
+	                if (his._ports.indexOf(port) < 0) {
+	                    return false;
+	                }
+
+	                return true;
+	            } else {
+	                throw "Port should be an instance of Port class.";
+	            }
+	        }
+	    }, {
+	        key: 'getPorts',
+	        value: function getPorts() {
+	            return this._ports;
 	        }
 
 	        //getters and setters
@@ -201,31 +204,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'description',
 	        get: function get() {
+
 	            return this._description;
 	        },
 	        set: function set(description) {
+
+	            if (!_Util2.default.validate(description, 'string')) {
+	                throw 'Description must be a string.';
+	            }
+
 	            this._description = description;
 	        }
 	    }, {
-	        key: 'input',
+	        key: 'task',
 	        get: function get() {
-	            return this._input;
+	            return this._name;
 	        },
-	        set: function set(value) {
-	            this._input = value;
+	        set: function set(task) {
+	            this.attachTask(task);
 	        }
 	    }, {
-	        key: 'output',
+	        key: 'name',
 	        get: function get() {
-	            return this._output;
+	            return this._name;
 	        },
-	        set: function set(value) {
-	            this._output = value;
+	        set: function set(name) {
+	            if (!_Util2.default.validate(name, 'string')) {
+	                throw 'Name must be a string.';
+	            }
+	            this._name = name;
 	        }
 	    }, {
-	        key: 'inPorts',
+	        key: 'iconUrl',
 	        get: function get() {
-	            return this._inPorts;
+	            return this._iconUrl;
+	        },
+	        set: function set(iconUrl) {
+	            if (!_Util2.default.validate(name, 'url')) {
+	                throw 'iconUrl must be a URL.';
+	            }
+	            this._iconUrl = iconUrl;
 	        }
 	    }, {
 	        key: 'outPorts',
@@ -233,36 +251,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return this._outPorts;
 	        }
 	    }, {
-	        key: 'socket',
-	        get: function get() {
-	            return this._socket;
-	        },
-	        set: function set(socket) {
-	            this._socket = this.attachSocket(socket);
-	        }
-	    }, {
 	        key: 'id',
 	        get: function get() {
 	            return this._id;
-	        }
-	    }, {
-	        key: 'handle',
-	        get: function get() {
-	            return this._handle;
 	        }
 	    }]);
 
 	    return Component;
 	}();
 
-	try {
-	    window.Flow = Component;
-	} catch (e) {}
+	//export. 
+
+
 	module.exports = Component;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -452,410 +457,68 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _exports = module.exports = {};
-
-	_exports.validate = function (value, type) {
-		if (value === undefined || value === null || value === '') return false;
-		if (type && type != 'any') {
-			if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) != type) return false;
-		}
-		return true;
-	};
-
-	_exports.generateId = function () {
-		var id = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for (var i = 0; i < 8; i++) {
-			id = id + possible.charAt(Math.floor(Math.random() * possible.length));
-		}
-		return id;
-	};
-
-/***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _util = __webpack_require__(2);
+	var _events = __webpack_require__(4);
+
+	var _events2 = _interopRequireDefault(_events);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var InPort = function () {
-	    function InPort(name, socket, id, options) {
-	        _classCallCheck(this, InPort);
+	var Util = function () {
+		function Util() {
+			_classCallCheck(this, Util);
+		}
 
-	        //set initial properties
+		_createClass(Util, null, [{
+			key: "validate",
+			value: function validate(value, type) {
 
-	        this._description = options.description || '';
-	        this._name = name;
+				//validate for URL.
+				if (type === "url" && this.validate(value, "string")) {
+					var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
 
-	        //validate options.datatype
+					if (!re.test(value)) {
+						return false;
+					}
 
-	        //validate initial data
-	        if ((0, _util.validate)(options.data, options.datatype)) {
-	            this._data = options.data || null;
-	        } else {
-	            this._data = null;
-	        }
+					return true;
+				}
 
-	        this._required = options.required || false;
+				if (value === undefined || value === null || value === '') return false;
 
-	        this._datatype = options.datatype || 'string';
+				if (type && type != 'any') {
+					if ((typeof value === "undefined" ? "undefined" : _typeof(value)) != type) return false;
+				}
 
-	        this._defaultValue = options.defaultValue || null;
+				return true;
+			}
+		}, {
+			key: "generateId",
+			value: function generateId() {
+				var id = "";
+				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				for (var i = 0; i < 8; i++) {
+					id = id + possible.charAt(Math.floor(Math.random() * possible.length));
+				}
+				return id;
+			}
+		}]);
 
-	        //attach socket
-	        this.attachSocket(socket, id);
-
-	        this._id = (0, _util.generateId)();
-	    }
-
-	    //clear port data
-
-
-	    _createClass(InPort, [{
-	        key: 'clear',
-	        value: function clear() {
-	            this._data = null;
-	        }
-
-	        //handle attach socket
-
-	    }, {
-	        key: 'attachSocket',
-	        value: function attachSocket(socket, id) {
-	            var thisObj = this;
-	            socket.on('data-inport-' + id + '-' + thisObj._name, function (data) {
-	                thisObj._data = data;
-	            });
-
-	            this._socket = socket;
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(value) {
-	            this._description = value;
-	        }
-	    }, {
-	        key: 'defaultValue',
-	        get: function get() {
-	            return this._defaultValue;
-	        },
-	        set: function set(value) {
-	            this._defaultValue = value;
-	        }
-	    }, {
-	        key: 'required',
-	        get: function get() {
-	            return this._required;
-	        },
-	        set: function set(value) {
-	            this._required = value;
-	        }
-	    }, {
-	        key: 'name',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(value) {
-	            this._name = value;
-	        }
-	    }, {
-	        key: 'data',
-	        get: function get() {
-	            return this._data;
-	        },
-	        set: function set(value) {
-
-	            //validate data
-	            if ((0, _util.validate)(value, this._datatype)) {
-	                this._data = value;
-	            } else throw "data must be of type " + this._datatype;
-	        }
-	    }, {
-	        key: 'datatype',
-	        get: function get() {
-	            return this._datatype;
-	        },
-	        set: function set(value) {
-	            if (!value) throw 'datatype required';
-	            this._datatype = value;
-	        }
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            return this._id;
-	        }
-	    }, {
-	        key: 'socket',
-	        get: function get() {
-	            return this._socket;
-	        }
-	    }]);
-
-	    return InPort;
+		return Util;
 	}();
 
-	module.exports = InPort;
+	var _exports = module.exports = Util;
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _util = __webpack_require__(2);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var OutPort = function () {
-	    function OutPort(name, socket, id, options) {
-	        _classCallCheck(this, OutPort);
-
-	        //set initial properties
-
-	        this._description = options.description || '';
-	        this._name = name;
-	        this._data = null;
-	        this._required = options.required || false;
-
-	        //TODO: add datatype
-
-	        // if (!options.datatype) {
-	        //     throw "Datatype not found in port options"
-	        // } else {
-	        //     this._datatype = options.datatype;
-	        // }
-
-	        //attach socket
-	        this.attachSocket(socket, id);
-
-	        this._id = (0, _util.generateId)();
-	    }
-
-	    //clear port data
-
-
-	    _createClass(OutPort, [{
-	        key: 'clear',
-	        value: function clear() {
-	            this._data = null;
-	        }
-
-	        //handle attach socket
-
-	    }, {
-	        key: 'attachSocket',
-	        value: function attachSocket(socket, id) {
-	            var thisObj = this;
-	            socket.on('data-outport-' + id + '-' + thisObj._name, function (data) {
-	                thisObj._data = data;
-	            });
-
-	            this._socket = socket;
-	        }
-
-	        //setter and getters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(value) {
-	            this._description = value;
-	        }
-	    }, {
-	        key: 'required',
-	        get: function get() {
-	            return this._required;
-	        },
-	        set: function set(value) {
-	            this._required = value;
-	        }
-	    }, {
-	        key: 'name',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(value) {
-	            this._name = value;
-	        }
-	    }, {
-	        key: 'data',
-	        get: function get() {
-	            return this._data;
-	        },
-	        set: function set(value) {
-	            //validate data
-	            if ((0, _util.validate)(value, this._datatype)) {
-	                this._data = value;
-	            } else throw "data must be of type " + this._datatype;
-	        }
-	    }, {
-	        key: 'datatype',
-	        get: function get() {
-	            return this._datatype;
-	        },
-	        set: function set(value) {
-	            this._datatype = value;
-	        }
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            return this._id;
-	        }
-	    }, {
-	        key: 'socket',
-	        get: function get() {
-	            return this._socket;
-	        }
-	    }]);
-
-	    return OutPort;
-	}();
-
-	module.exports = OutPort;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _util = __webpack_require__(2);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ProcessInput = function () {
-	    function ProcessInput(ports) {
-	        _classCallCheck(this, ProcessInput);
-
-	        //set initial properties
-
-	        this._ports = ports;
-	    }
-
-	    //checks data at port`name`
-
-
-	    _createClass(ProcessInput, [{
-	        key: 'hasData',
-	        value: function hasData(name) {
-	            var port = this._ports[name];
-	            if (port.data || port.defaultValue) {
-	                return true;
-	            }
-	            return false;
-	        }
-
-	        //return data at port `name`
-
-	    }, {
-	        key: 'getData',
-	        value: function getData(name) {
-	            var port = this._ports[name];
-	            var data = port.data || port.defaultValue;
-	            return data;
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'ports',
-	        get: function get() {
-	            return this._ports;
-	        }
-	    }]);
-
-	    return ProcessInput;
-	}();
-
-	module.exports = ProcessInput;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _util = __webpack_require__(2);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ProcessOutput = function () {
-	    function ProcessOutput(ports, socket, id) {
-	        _classCallCheck(this, ProcessOutput);
-
-	        //set initial properties
-
-	        this._ports = ports;
-	        this._receivingSocket = socket;
-	        this._id = id;
-	    }
-
-	    //done handlers
-
-
-	    _createClass(ProcessOutput, [{
-	        key: 'done',
-	        value: function done(err) {
-	            if (err) {
-	                throw err;
-	            } else {
-	                if (this._receivingSocket) {
-	                    this._receivingSocket.emit('result-' + this._id, this._ports);
-	                }
-	            }
-	        }
-
-	        //send data at specific port
-
-	    }, {
-	        key: 'send',
-	        value: function send(obj) {
-	            for (key in obj) {
-	                //validate if key(port name) exists in _ports;
-	                //send data of obj.key
-	                var port = this._ports[key];
-	                if (port) {
-	                    var socket = port.socket;
-	                    port.data = obj[key];
-	                    socket.emit('data-outport-' + this._id + '-' + port.name, obj[key]);
-	                } else {
-	                    throw 'Outport : ' + key + ' not found';
-	                }
-	            }
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'ports',
-	        get: function get() {
-	            return this._ports;
-	        }
-	    }]);
-
-	    return ProcessOutput;
-	}();
-
-	module.exports = ProcessOutput;
-
-/***/ },
-/* 7 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -1161,6 +824,120 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return arg === void 0;
 	}
 
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Util = __webpack_require__(3);
+
+	var _Util2 = _interopRequireDefault(_Util);
+
+	var _Component = __webpack_require__(1);
+
+	var _Component2 = _interopRequireDefault(_Component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Port = function () {
+	    function Port(name) {
+	        _classCallCheck(this, Port);
+
+	        //set initial properties
+
+
+	        if (!name) {
+	            throw "Port Name is required.";
+	        }
+
+	        this._description = options.description || '';
+	        this.name = name;
+	        this._id = generateId();
+	        this._connectedComponents = [];
+	        this._componentAttachedTo = null;
+	        this._isAttachedToComponent = false;
+	    }
+
+	    //This passes the flow to components that this port is connected to. 
+
+
+	    _createClass(Port, [{
+	        key: 'emit',
+	        value: function emit() {
+	            for (var i = 0; i < this._connectedComponents; i++) {
+	                this._connectedComponents[i].execute(); //execute the component. 
+	            }
+	        }
+	    }, {
+	        key: 'connectComponent',
+	        value: function connectComponent(component) {
+	            if (component instanceof _Component2.default) {
+	                if (!port.id) throw "Port does not have an ID.";
+
+	                for (var i = 0; i < this._ports.length; i++) {
+	                    if (port.name === _this.ports[i].name || port.id === _this.ports[i].id) {
+	                        throw "Port with the same name or id already exists.";
+	                    }
+	                }
+
+	                if (port._isAttachedToComponent) throw "This port is already attached with other component";
+
+	                port._componentAttachedTo = this;
+	                this._ports.push(port);
+	            } else {
+	                throw "Port should be an instance of Port class.";
+	            }
+	        }
+	    }, {
+	        key: 'disconnectComponent',
+	        value: function disconnectComponent(component) {}
+	    }, {
+	        key: 'getConnectedComponents',
+	        value: function getConnectedComponents() {
+	            return this._connectedComponents;
+	        }
+
+	        //getters and setters
+
+	    }, {
+	        key: 'description',
+	        get: function get() {
+	            return this._description;
+	        },
+	        set: function set(description) {
+
+	            if (!_Util2.default.validate(description, 'string')) {
+	                throw 'Description must be a string.';
+	            }
+
+	            this._description = description;
+	        }
+	    }, {
+	        key: 'name',
+	        get: function get() {
+	            return this._name;
+	        },
+	        set: function set(name) {
+	            if (!_Util2.default.validate(name, 'string')) {
+	                throw 'Name must be a string.';
+	            }
+	            this._name = name;
+	        }
+	    }, {
+	        key: 'id',
+	        get: function get() {
+	            return this._id;
+	        }
+	    }]);
+
+	    return Port;
+	}();
+
+	module.exports = Port;
 
 /***/ }
 /******/ ])

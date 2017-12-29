@@ -10,7 +10,6 @@ node_js:
 - '7.4'
 before_install:
 - npm install webpack -g
-- npm install grunt-cli -g
 install:
 - npm install
 - webpack --progress
