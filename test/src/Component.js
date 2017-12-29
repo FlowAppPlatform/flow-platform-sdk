@@ -24,8 +24,8 @@ describe('Component Tests', function() {
         // component.attachTask = function(){
         //       console.log("This is a task.");  
         // };
-  
         //This should throw an error. 
+        
         try{
             component.execute();
             done(err);

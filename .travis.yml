@@ -12,7 +12,7 @@ before_install:
 - npm install webpack -g
 install:
 - npm install
-- webpack --progress
+- npm test
 after_success:
   # publish to npm
   - npm cache clean
