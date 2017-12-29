@@ -1,7 +1,9 @@
 import Util from './Util';
 
 class Param{
-    constructor(name, dataType, required){
+
+    constructor(name, dataType){
+
         if(!name){
             throw "Name is required.";
         }
@@ -12,53 +14,76 @@ class Param{
 
         this.name = name;
         this.dataType = dataType;
-        this.required = required || false;
+        this.required = false;
+        this.id = Util.generateId();
+        this.data = null;
+    }
+
+    set data(data){
+        //ToDO: Check the DataType and Set Data.
+        this._data = data;
+    }
+
+    get data(){
+        return this._data;
     }
 
 
     //getters and setters
     get description() {
-        
         return this._description;
     }
 
     set description(description) {
-        
         if (!Util.validate(description, 'string')) {
             throw 'Description must be a string.'
         }
-
         this._description = description;
     }
 
-     //getters and setters
-     get name() {
-        
+    //getters and setters
+    get name() {
         return this._name;
     }
 
     set name(name) {
-        
         if (!Util.validate(name, 'string')) {
             throw 'Name must be a string.'
         }
-
         this._name = name;
     }
 
 
-     //getters and setters
-     get description() {
-        
-        return this._description;
+    //getters and setters
+    get dataType() {
+        return this._dataType;
     }
 
-    set description(description) {
+    //DataType can be an array too. Like a selector box or an object of Params. 
+    set dataType(dataType) {
         
-        if (!Util.validate(description, 'string')) {
-            throw 'Description must be a string.'
+        if (!Util.validate(dataType, 'string') && ! (dataType instanceof Array)) {
+            throw 'DataType must be a string or an array.'
         }
 
-        this._description = description;
+        this._dataType = dataType;
+    }
+
+    //getters and setters
+    get required() {
+        return this._required;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    set required(required) {
+        
+        if (!Util.validate(required, 'boolean')) {
+            throw 'Required must be a string.'
+        }
+
+        this._required = required;
     }
 }

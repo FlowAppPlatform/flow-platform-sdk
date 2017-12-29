@@ -29,7 +29,7 @@ class Port {
                 throw "Component does not have an ID.";
 
             for(let i=0;i<this._connectedComponents.length;i++){
-                if(component.name === _this._connectedComponents[i].name || component.id === _this._connectedComponents[i].id){
+                if(component.name === this._connectedComponents[i].name || component.id === this._connectedComponents[i].id){
                     throw "Component with the same name or id already exists.";
                 }
             }

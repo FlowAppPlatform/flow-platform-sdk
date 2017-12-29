@@ -32,19 +32,13 @@ $ npm install cloudboost-flow --save
 
 ### Installing from Git
 
-CloudBoost Flow requires a reasonably recent version of [Node.js](http://nodejs.org/), and some [npm](http://npmjs.org/) packages. Ensure that you have NoFlo checked out from Git, and all NPM dependencies installed. Build NoFlo with:
+CloudBoost Flow requires a reasonably recent version of [Node.js](http://nodejs.org/), and some [npm](http://npmjs.org/) packages. Ensure that you have CloudBoost Flow checked out from Git, and all NPM dependencies installed. Build and test CloudBoost Flow with:
 
 ```bash
-$ npm run build
+$ npm test
 ```
 
-Then you can install everything needed by a simple:
-
-```bash
-$ npm link
-```
-
-NoFlo is available from [GitHub](https://github.com/cloudboost/flow-sdk) under the MIT license.
+CloudBoost Flow is available from [GitHub](https://github.com/cloudboost/flow-sdk) under the MIT license.
 
 
 ## Development

@@ -27,7 +27,7 @@ class Util {
 	static generateId() {
 		var id = "";
 		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for (var i = 0; i < 8; i++) {
+		for (var i = 0; i < 12; i++) {
 			id = id + possible.charAt(Math.floor(Math.random() * possible.length));
 		}
 		return id;
