@@ -1,7 +1,7 @@
 import Util from './Util';
 import EventEmitter from 'events'
 import Port from './Port';
-import Param from '/Param';
+import Variable from '/Variable';
 
 class Component {
 
@@ -32,7 +32,7 @@ class Component {
         //Genere a new ID for this instance. 
         this._id = Util.generateId();
 
-        this.params = [];
+        this.variables = [];
 
         //check if the env is NodeJS
         this._platform = "browser";
@@ -44,84 +44,84 @@ class Component {
     }
 
 
-    addParam(param){
-        if(param instanceof Param){
-            if(!param.id)
-                throw "Param does not have an ID.";
+    addVariable(variable){
+        if(variable instanceof Variable){
+            if(!variable.id)
+                throw "Variable does not have an ID.";
 
-            for(let i=0;i<this._params.length;i++){
-                if(param.name === this._params[i].name || param.id === this._params[i].id){
-                    throw "Param with the same name or id already exists.";
+            for(let i=0;i<this._variables.length;i++){
+                if(variable.name === this._variables[i].name || variable.id === this._variables[i].id){
+                    throw "Variable with the same name or id already exists.";
                 }
             }
 
-            this._params.push(params);
+            this._variables.push(variables);
         }else{
-            throw "params should be an instance of Param class.";
+            throw "variables should be an instance of Variable class.";
         }
     }
 
-    removeParam(param){
-        if(param instanceof Param ||  typeof param === 'string'){
-            if(param instanceof Param && !param.id)
-                throw "Param does not have an ID.";
+    removeVariable(variable){
+        if(variable instanceof Variable ||  typeof variable === 'string'){
+            if(variable instanceof Variable && !variable.id)
+                throw "Variable does not have an ID.";
 
-            for(let i=0;i<this._params.length;i++){
+            for(let i=0;i<this._variables.length;i++){
 
-                if(typeof param === 'string'){
-                    if(param === this._params[i].name){
-                        this._params.slice(i,1);
+                if(typeof variable === 'string'){
+                    if(variable === this._variables[i].name){
+                        this._variables.slice(i,1);
                     }
                 }else{
-                    if(param.name === this._params[i].name || param.id === this._params[i].id){
-                        this._params.slice(i,1);
+                    if(variable.name === this._variables[i].name || variable.id === this._variables[i].id){
+                        this._variables.slice(i,1);
                     }
                 }
             }
         }else{
-            throw "params should be an instance of Param class.";
+            throw "variables should be an instance of Variable class.";
         }
     }
 
-    updateParam(param){
-        if(param instanceof Param){
-            if(!param.id)
-                throw "Param does not have an ID.";
+    updateVariable(variable){
+        if(variable instanceof Variable){
+            if(!variable.id)
+                throw "Variable does not have an ID.";
 
-            for(let i=0;i<this._params.length;i++){
-                if(param.name === this._params[i].name || param.id === this._params[i].id){
-                    this._params[i] = param;
+            for(let i=0;i<this._variables.length;i++){
+                if(variable.name === this._variables[i].name || variable.id === this._variables[i].id){
+                    this._variables[i] = variable;
                     return;
                 }
             }
 
-            throw "Param not found and is not updated.";
+            throw "Variable not found and is not updated.";
         }else{
-            throw "params should be an instance of Param class.";
+            throw "variables should be an instance of Variable class.";
         }
     }
 
 
-    hasParam(param){
-        if(param instanceof Param ||  typeof param === 'string'){
-            if(param instanceof Param && !param.id)
-                throw "Param does not have an ID.";
+    hasVariable(variable){
+        if(variable instanceof Variable ||  typeof variable === 'string'){
+            if(variable instanceof Variable && !variable.id)
+                throw "Variable does not have an ID.";
 
-            for(let i=0;i<this._params.length;i++){
+            for(let i=0;i<this._variables.length;i++){
 
-                if(typeof param === 'string'){
-                    if(param === this._params[i].name){
+                if(typeof variable === 'string'){
+                    if(variable === this._variables[i].name){
                         return true;
                     }
                 }else{
-                    if(param.name === this._params[i].name || param.id === this._params[i].id){
+                    if(variable.name === this._variables[i].name || variable.id === this._variables[i].id){
                         return true;
                     }
                 }
             }
            return false;
         }else{
-            throw "params should be an instance of Param class.";
+            throw "variables should be an instance of Variable class.";
         }
     }
 
