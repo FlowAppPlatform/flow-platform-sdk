@@ -10,13 +10,14 @@ class Component {
             throw "Component Name is required.";
         }
 
+        //A name of the component. 
+        this.name = name; 
+
         //Icon URL is the URL of an Icon in SVG that can be showed in the UI. 
         this._iconUrl = '';
 
+        //These are number of outports.
         this._ports = [];
-
-        //A name of the component. 
-        this.name = name; 
 
         //A short description of the component. 
         this._description = '';
@@ -42,7 +43,7 @@ class Component {
 
     //execute the component task.
     execute() {
-       if(this._task &&  validate(this._task === "function")){
+       if(this._task &&  Util.validate(this._task === "function")){
             this._task(); 
        }
     }
