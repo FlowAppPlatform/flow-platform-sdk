@@ -1,8 +1,8 @@
 CloudBoost Flow: Flow-based programming for JavaScript 
 ========================================================
-
+[![Build Status](https://travis-ci.org/CloudBoost/flow-sdk.svg?branch=master)](https://travis-ci.org/CloudBoost/flow-sdk)
 [![codecov](https://codecov.io/gh/CloudBoost/flow-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/CloudBoost/flow-sdk)
-
+[![npm version](https://badge.fury.io/js/cloudboost-flow.svg)](https://badge.fury.io/js/cloudboost-flow)
 
 CloudBoost is an implementation of [flow-based programming](http://en.wikipedia.org/wiki/Flow-based_programming) for JavaScript running on both Node.js and the browser. From WikiPedia:
 
