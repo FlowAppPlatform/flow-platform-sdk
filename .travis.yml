@@ -25,4 +25,4 @@ after_success:
   - npm publish
 #Notify Team on Slack
 notifications:
-  slack: cloudboost:gm7nWJDLDtBRyF75VKLKOoMW
+  slack: hackerbaycompany:gm7nWJDLDtBRyF75VKLKOoMW
