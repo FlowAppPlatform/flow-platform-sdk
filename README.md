@@ -1,6 +1,9 @@
 CloudBoost Flow: Flow-based programming for JavaScript 
 ========================================================
 
+[![codecov](https://codecov.io/gh/CloudBoost/flow-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/CloudBoost/flow-sdk)
+
+
 CloudBoost is an implementation of [flow-based programming](http://en.wikipedia.org/wiki/Flow-based_programming) for JavaScript running on both Node.js and the browser. From WikiPedia:
 
 > In computer science, flow-based programming (FBP) is a programming paradigm that defines applications as networks of "black box" processes, which exchange data across predefined connections by message passing, where the connections are specified externally to the processes. These black box processes can be reconnected endlessly to form different applications without having to be changed internally. FBP is thus naturally component-oriented.
@@ -50,3 +53,10 @@ We have an extensive suite of tests available for CloudBoost Flow. Run them with
 ```bash
 $ npm test
 ```
+
+## Integrations
+
+Automated Code Reviews by [CodeClimate](https://codeclimate.com)
+Code Coverage is done by [codecov](https://codecov.io)
+Dependency Vulnerebility test is done by [snyk](https://snyk.io)
+
