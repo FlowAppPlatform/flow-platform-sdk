@@ -1,20 +1,22 @@
 import Util from './Util';
 import Component from './Component';
+import Variable from './Variable';
+import EventEmitter from 'events';
 
 class Port {
     constructor(name) {
+
         //set initial properties
         if(!name){
             throw "Port Name is required.";
         }
 
-        this._description = options.description || '';
         this.name = name;
-        this._id = generateId();
+        this._id = Util.generateId();
         this._connectedComponents = [];
         this._componentAttachedTo = null;
-        this._isAttachedToComponent = false;
         this._variables = [];
+        this._socket = new EventEmitter();
     }
 
     addVariable(variable){
@@ -28,7 +30,7 @@ class Port {
                 }
             }
 
-            this._variables.push(variables);
+            this._variables.push(variable);
         }else{
             throw "variables should be an instance of Variable class.";
         }
@@ -101,41 +103,82 @@ class Port {
     //This passes the flow to components that this port is connected to. 
     emit(){
         for(var i=0;i<this._connectedComponents; i++){
-            this._connectedComponents[i].execute(); //execute the component. 
+            this._socket.emit("execute-component-"+this._connectedComponents[i]);
         }
+
+        //Fire an onEmit Callback.
+        if(this._onEmit)
+            this._onEmit(); 
+    }
+
+    onEmit(callback){
+        this._onEmit = callback;
     }
 
     connectComponent(component){
         if(component instanceof Component){
             if(!component.id)
                 throw "Component does not have an ID.";
+            
+            var componentId = component.id;
 
             for(let i=0;i<this._connectedComponents.length;i++){
-                if(component.name === this._connectedComponents[i].name || component.id === this._connectedComponents[i].id){
-                    throw "Component with the same name or id already exists.";
+                if(componentId === this._connectedComponents[i]){
+                    throw "Port is already connected to "+component.name+".";
                 }
             }
             
-            this._connectedComponents.push(component);
+            this._connectedComponents.push(componentId);
         }else{
             throw "component should be an instance of Component class.";
         }
+    }
+
+
+    getVariable(variable){
+        if(variable instanceof Variable ||  typeof variable === 'string'){
+            if(variable instanceof Variable && !variable.id)
+                throw "Variable does not have an ID.";
+
+            for(let i=0;i<this._variables.length;i++){
+                if(typeof variable === 'string'){
+                    if(variable === this._variables[i].name){
+                        return this._variables[i];
+                    }
+                }else{
+                    if(variable.name === this._variables[i].name || variable.id === this._variables[i].id){
+                        return this._variables[i];
+                    }
+                }
+            }
+
+            throw "Variable not found.";
+        }else{
+            throw "Variable should be an instance of variable class.";
+        }
+    }
+
+    serialize(){
+        return JSON.stringify(this);
     }
 
     disconnectComponent(component){
         if(component instanceof Component){
             if(!component.id)
                 throw "Component does not have an ID.";
-                if(this._connectedComponents.indexOf(component) < 0){
-                    throw "Component is not connected to the port.";
-                }
-                this._connectedComponents.slice(this._connectedComponents.indexOf(component),1); 
+            
+            var componentId = component.id;
+            if(this._connectedComponents.indexOf(componentId) < 0){
+                throw "Component is not connected to the port.";
+            }
+
+            this._connectedComponents.slice(this._connectedComponents.indexOf(componentId),1); 
         }else{
             throw "component should be an instance of Component class.";
         }
     }
 
-    getConnectedComponents(){
+    getConnectedComponentIds(){
         return this._connectedComponents;
     }
 

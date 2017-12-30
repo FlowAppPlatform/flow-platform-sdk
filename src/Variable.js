@@ -1,6 +1,6 @@
 import Util from './Util';
 
-class Param{
+class Variable{
 
     constructor(name, dataType){
 
@@ -15,8 +15,13 @@ class Param{
         this.name = name;
         this.dataType = dataType;
         this.required = false;
-        this.id = Util.generateId();
+        this._id = Util.generateId();
         this.data = null;
+        this.index=null;
+    }
+
+    serialize(){
+        return JSON.stringify(this);
     }
 
     set data(data){
@@ -27,7 +32,6 @@ class Param{
     get data(){
         return this._data;
     }
-
 
     //getters and setters
     get description() {
@@ -87,3 +91,5 @@ class Param{
         this._required = required;
     }
 }
+
+module.exports = Variable;
