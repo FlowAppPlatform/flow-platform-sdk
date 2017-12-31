@@ -1137,21 +1137,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'connectComponent',
 	        value: function connectComponent(component) {
-	            if (component instanceof _Component2.default) {
-	                if (!component.id) throw "Component does not have an ID.";
+	            //if(component instanceof Component){
+	            if (!component.id) throw "Component does not have an ID.";
 
-	                var componentId = component.id;
+	            var componentId = component.id;
 
-	                for (var i = 0; i < this._connectedComponents.length; i++) {
-	                    if (componentId === this._connectedComponents[i]) {
-	                        throw "Port is already connected to " + component.name + ".";
-	                    }
+	            for (var i = 0; i < this._connectedComponents.length; i++) {
+	                if (componentId === this._connectedComponents[i]) {
+	                    throw "Port is already connected to " + component.name + ".";
 	                }
-
-	                this._connectedComponents.push(componentId);
-	            } else {
-	                throw "component should be an instance of Component class.";
 	            }
+
+	            this._connectedComponents.push(componentId);
+	            // }else{
+	            //     throw "component should be an instance of Component class.";
+	            // }
 	        }
 	    }, {
 	        key: 'getVariable',
@@ -1336,14 +1336,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            this._dataType = dataType;
 	        }
-
-	        //getters and setters
-
+	    }, {
+	        key: "id",
+	        get: function get() {
+	            return this._id;
+	        }
 	    }, {
 	        key: "required",
-	        get: function get() {
-	            return this._required;
-	        },
 	        set: function set(required) {
 
 	            if (!_Util2.default.validate(required, 'boolean')) {
@@ -1352,10 +1351,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            this._required = required;
 	        }
-	    }, {
-	        key: "id",
+
+	        //getters and setters
+	        ,
 	        get: function get() {
-	            return this._id;
+	            return this._required;
 	        }
 	    }]);
 

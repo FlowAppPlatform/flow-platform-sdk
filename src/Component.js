@@ -38,6 +38,7 @@ class Component {
         }
 
         this._isProcessingTask = false;
+        
     }
 
 

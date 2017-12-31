@@ -127,6 +127,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	        addComponent.execute();
 	    });
+
+	    it("Connect two components together and process data.", function (done) {
+
+	        var addComponent = new AddComponent();
+	        addComponent.getVariable("Variable 1").data = 1;
+	        addComponent.getVariable("Variable 2").data = 2;
+
+	        var subComponent = new SubtractComponent();
+	        subComponent.getVariable("Variable 1").data = addComponent.getPort("Result").data;
+	        subComponent.getVariable("Variable 2").data = 2;
+
+	        addComponent.getPort("Result").connectComponent(subComponent);
+
+	        subComponent.getPort("Result").onEmit(function () {
+
+	            if (subComponent.getPort("Result").getVariable("Variable 3").data === 2) {
+	                done();
+	            } else {
+	                done("Failed");
+	            }
+	        });
+	        addComponent.execute();
+	    });
 	});
 
 	var AddComponent = function (_Flow$Component) {
@@ -170,6 +193,50 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return AddComponent;
 	}(_index2.default.Component);
+
+	var SubtractComponent = function (_Flow$Component2) {
+	    _inherits(SubtractComponent, _Flow$Component2);
+
+	    function SubtractComponent() {
+	        _classCallCheck(this, SubtractComponent);
+
+	        //construct the component.
+	        var _this2 = _possibleConstructorReturn(this, (SubtractComponent.__proto__ || Object.getPrototypeOf(SubtractComponent)).call(this));
+
+	        _this2.name = "Subtract";
+
+	        var var1 = new _index2.default.Variable("Variable 1", "number");
+	        var1.required = true;
+
+	        _this2.addVariable(var1);
+
+	        var var2 = new _index2.default.Variable("Variable 2", "number");
+	        var2.required = true;
+
+	        _this2.addVariable(var2);
+
+	        var port = new _index2.default.Port("Result");
+
+	        var var3 = new _index2.default.Variable("Variable 3", "number");
+	        var3.required = true;
+
+	        port.addVariable(var3);
+
+	        _this2.addPort(port);
+
+	        _this2.attachTask(function () {
+	            this.getPort("Result").getVariable("Variable 3").data = this.getVariable("Variable 1").data - this.getVariable("Variable 2").data;
+	            this.getPort("Result").emit();
+	            this.taskComplete();
+	        });
+
+	        return _this2;
+	    }
+
+	    return SubtractComponent;
+	}(_index2.default.Component);
+
+	;
 
 /***/ },
 /* 2 */
@@ -2388,21 +2455,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'connectComponent',
 	        value: function connectComponent(component) {
-	            if (component instanceof _Component2.default) {
-	                if (!component.id) throw "Component does not have an ID.";
+	            //if(component instanceof Component){
+	            if (!component.id) throw "Component does not have an ID.";
 
-	                var componentId = component.id;
+	            var componentId = component.id;
 
-	                for (var i = 0; i < this._connectedComponents.length; i++) {
-	                    if (componentId === this._connectedComponents[i]) {
-	                        throw "Port is already connected to " + component.name + ".";
-	                    }
+	            for (var i = 0; i < this._connectedComponents.length; i++) {
+	                if (componentId === this._connectedComponents[i]) {
+	                    throw "Port is already connected to " + component.name + ".";
 	                }
-
-	                this._connectedComponents.push(componentId);
-	            } else {
-	                throw "component should be an instance of Component class.";
 	            }
+
+	            this._connectedComponents.push(componentId);
+	            // }else{
+	            //     throw "component should be an instance of Component class.";
+	            // }
 	        }
 	    }, {
 	        key: 'getVariable',
@@ -2587,14 +2654,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            this._dataType = dataType;
 	        }
-
-	        //getters and setters
-
+	    }, {
+	        key: "id",
+	        get: function get() {
+	            return this._id;
+	        }
 	    }, {
 	        key: "required",
-	        get: function get() {
-	            return this._required;
-	        },
 	        set: function set(required) {
 
 	            if (!_Util2.default.validate(required, 'boolean')) {
@@ -2603,10 +2669,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            this._required = required;
 	        }
-	    }, {
-	        key: "id",
+
+	        //getters and setters
+	        ,
 	        get: function get() {
-	            return this._id;
+	            return this._required;
 	        }
 	    }]);
 

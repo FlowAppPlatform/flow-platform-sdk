@@ -73,11 +73,6 @@ class Variable{
         this._dataType = dataType;
     }
 
-    //getters and setters
-    get required() {
-        return this._required;
-    }
-
     get id() {
         return this._id;
     }
@@ -89,6 +84,11 @@ class Variable{
         }
 
         this._required = required;
+    }
+
+    //getters and setters
+    get required() {
+        return this._required;
     }
 }
 

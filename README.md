@@ -54,9 +54,6 @@ We have an extensive suite of tests available for CloudBoost Flow. Run them with
 $ npm test
 ```
 
-## Integrations
+# Docs
 
-Automated Code Reviews by [CodeClimate](https://codeclimate.com)
-Code Coverage is done by [codecov](https://codecov.io)
-Dependency Vulnerebility test is done by [snyk](https://snyk.io)
-
+Please check out the documentation for the SDK [here.](/docs)
