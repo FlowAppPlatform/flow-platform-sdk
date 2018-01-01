@@ -6,7 +6,7 @@
   "keywords": [],
   "scripts": {
     "build": "echo 'Bulding library...' && ./node_modules/.bin/eslint src --fix &&  webpack && echo 'Done.'",
-    "test": "echo 'Bulding library...' && ./node_modules/.bin/eslint src --fix && webpack && echo 'Bulding tests...' && ./node_modules/.bin/eslint test/src --fix && cd test && webpack && cd dist && mocha index.js",
+    "test": "echo 'Bulding library...' && ./node_modules/.bin/eslint src --fix && webpack && echo 'Bulding tests...' && ./node_modules/.bin/eslint test/src --fix && cd test && webpack && cd dist && istanbul cover ../../node_modules/mocha/bin/_mocha --reporter index.js -- -R spec && codecov",
     "debug-test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js --debug-brk"
   },
   "author": "hello@cloudboost.io",

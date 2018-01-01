@@ -4,6 +4,7 @@
 - Install [Node and NPM](https://nodejs.org/)
 - Fork and clone the repo. 
 - Install NPM modules. `npm install`
+- Install CodeCov and Istanbul `npm install -g istanbul codecov` for test coverage.
 - Build the SDK `npm build`
 - Run all the tests `npm test`. If any tests fail. Please raise an [issue](/issues).
 

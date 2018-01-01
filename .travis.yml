@@ -12,7 +12,9 @@ before_install:
 - npm install webpack -g
 install:
 - npm install
-- npm test
+- npm install -g istanbul # For test coverage. 
+- npm install -g codecov # For test coverage. 
+- npm test # Run tests 
 after_success:
   # publish to npm
   - npm cache clean
