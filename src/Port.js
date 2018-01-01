@@ -116,7 +116,7 @@ class Port {
     }
 
     connectComponent(component){
-        //if(component instanceof Component){
+        if(component instanceof Component){
             if(!component.id)
                 throw "Component does not have an ID.";
             
@@ -129,9 +129,9 @@ class Port {
             }
             
             this._connectedComponents.push(componentId);
-        // }else{
-        //     throw "component should be an instance of Component class.";
-        // }
+        }else{
+            throw "component should be an instance of Component class.";
+        }
     }
 
 

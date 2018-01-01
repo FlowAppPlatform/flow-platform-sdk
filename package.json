@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build": "echo 'Bulding library...' &&  webpack && echo 'Done.'",
-    "test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js"
+    "test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js",
+    "debug-test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js --debug-brk"
   },
   "author": "hello@cloudboost.io",
   "license": "MIT",

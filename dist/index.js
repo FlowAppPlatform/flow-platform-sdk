@@ -1137,21 +1137,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'connectComponent',
 	        value: function connectComponent(component) {
-	            //if(component instanceof Component){
-	            if (!component.id) throw "Component does not have an ID.";
+	            if (component instanceof _Component2.default) {
+	                if (!component.id) throw "Component does not have an ID.";
 
-	            var componentId = component.id;
+	                var componentId = component.id;
 
-	            for (var i = 0; i < this._connectedComponents.length; i++) {
-	                if (componentId === this._connectedComponents[i]) {
-	                    throw "Port is already connected to " + component.name + ".";
+	                for (var i = 0; i < this._connectedComponents.length; i++) {
+	                    if (componentId === this._connectedComponents[i]) {
+	                        throw "Port is already connected to " + component.name + ".";
+	                    }
 	                }
-	            }
 
-	            this._connectedComponents.push(componentId);
-	            // }else{
-	            //     throw "component should be an instance of Component class.";
-	            // }
+	                this._connectedComponents.push(componentId);
+	            } else {
+	                throw "component should be an instance of Component class.";
+	            }
 	        }
 	    }, {
 	        key: 'getVariable',

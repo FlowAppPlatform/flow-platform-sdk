@@ -54,6 +54,16 @@ We have an extensive suite of tests available for CloudBoost Flow. Run them with
 $ npm test
 ```
 
-# Docs
+## Docs
 
 Please check out the documentation for the SDK [here.](/docs)
+
+## Scripts
+
+- `npm build` builds the SDK. You can find the built library at `/dist/index.js`. 
+- `npm test` builds the library, build the tests at `test/dist/index.js`,  and runs all the tests.
+- `npm debug-test` builds the library, build the tests at `test/dist/index.js`,  and runs all the tests in debug mode. 
+    - Before you run tests in debug mode. Install Chrome Browser, and Node Inspector `npm install -g node-inspector`. `node-inspector`. It should run on the port 5858 in Chrome. 
+    - Then run `npm debug-test`
+
+

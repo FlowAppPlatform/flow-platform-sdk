@@ -15,6 +15,10 @@
 
 - [Add Component](./examples/add.js)
 
+### Contributing
+
+Please read the guide [here](./contributing).
+
 
 
 

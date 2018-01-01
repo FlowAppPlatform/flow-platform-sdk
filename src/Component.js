@@ -6,7 +6,7 @@ import Variable from './Variable';
 class Component {
 
     constructor() {
-
+        
         //Icon URL is the URL of an Icon in SVG that can be showed in the UI. 
         this._iconUrl = '';
 
