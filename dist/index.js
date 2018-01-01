@@ -107,6 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Icon URL is the URL of an Icon in SVG that can be showed in the UI.
 	    this._iconUrl = '';
+	    this._type = 'component';
 
 	    // These are number of outports.
 	    this._ports = [];
@@ -122,6 +123,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Genere a new ID for this instance.
 	    this._id = _Util2.default.generateId();
+
+	    this._task = null;
 
 	    this._socket.on('execute-component-' + this.id, this.execute);
 
@@ -253,12 +256,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'execute',
 	    value: function execute() {
+	      if (!this._task) {
+	        throw new Error('No task attached.');
+	      }
 	      // check if task is attached and if its actually a function.
 	      if (this._isProcessingTask) {
 	        throw new Error('Component is already processing a task.');
 	      }
 
-	      if (this._task && _Util2.default.validateType(this._task === 'function')) {
+	      if (this._task && _Util2.default.validateType(this._task, 'function')) {
 	        this._isProcessingTask = true;
 	        this._task();
 	      }
@@ -1082,6 +1088,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new Error('Port Name is required.');
 	    }
 
+	    this._type = 'port';
+
 	    this.name = name;
 	    this._id = _Util2.default.generateId();
 	    this._connectedComponents = [];
@@ -1199,7 +1207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'connectComponent',
 	    value: function connectComponent(component) {
-	      if (component instanceof _Component2.default) {
+	      if (component._type === 'component') {
 	        if (!component.id) {
 	          throw new Error('Component does not have an ID.');
 	        }
@@ -1333,6 +1341,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!dataType) {
 	      throw new Error('DataType is required.');
 	    }
+
+	    this._type = 'variable';
 
 	    this.name = name;
 	    this.dataType = dataType;

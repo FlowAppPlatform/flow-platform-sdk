@@ -2,7 +2,7 @@ import Flow from '../../src/index'
 
 describe('Component Tests', function () {
   it('Attach and run a task.', function (done) {
-    var component = new Flow.Component()
+    let component = new Flow.Component()
     // attach a task.
 
     component.attachTask(function () {
@@ -15,7 +15,7 @@ describe('Component Tests', function () {
   })
 
   it('Do not run a task if its not attached. ', function (done) {
-    var component = new Flow.Component()
+    let component = new Flow.Component()
 
     // Task is commented and not attached.
     // component.attachTask = function(){

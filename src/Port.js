@@ -10,6 +10,8 @@ class Port {
       throw new Error('Port Name is required.')
     }
 
+    this._type = 'port'
+
     this.name = name
     this._id = Util.generateId()
     this._connectedComponents = []
@@ -107,7 +109,7 @@ class Port {
   }
 
   connectComponent (component) {
-    if (component instanceof Component) {
+    if (component && component._type && component._type === 'component') {
       if (!component.id) { throw new Error('Component does not have an ID.') }
 
       var componentId = component.id

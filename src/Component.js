@@ -7,6 +7,7 @@ class Component {
   constructor () {
     // Icon URL is the URL of an Icon in SVG that can be showed in the UI.
     this._iconUrl = ''
+    this._type = 'component'
 
     // These are number of outports.
     this._ports = []
@@ -22,6 +23,8 @@ class Component {
 
     // Genere a new ID for this instance.
     this._id = Util.generateId()
+
+    this._task = null
 
     this._socket.on('execute-component-' + this.id, this.execute)
 
@@ -136,10 +139,11 @@ class Component {
 
   // execute the component task.
   execute () {
+    if (!this._task) { throw new Error('No task attached.') }
     // check if task is attached and if its actually a function.
     if (this._isProcessingTask) { throw new Error('Component is already processing a task.') }
 
-    if (this._task && Util.validateType(this._task === 'function')) {
+    if (this._task && Util.validateType(this._task, 'function')) {
       this._isProcessingTask = true
       this._task()
     }

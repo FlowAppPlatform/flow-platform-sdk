@@ -10,6 +10,8 @@ class Variable {
       throw new Error('DataType is required.')
     }
 
+    this._type = 'variable'
+
     this.name = name
     this.dataType = dataType
     this.required = false
