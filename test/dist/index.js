@@ -60,15 +60,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var Flow = {};
+	Flow.Component = _Component2.default;
+
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _assert = __webpack_require__(2);
-
-	var _assert2 = _interopRequireDefault(_assert);
-
-	var _index = __webpack_require__(7);
+	var _index = __webpack_require__(2);
 
 	var _index2 = _interopRequireDefault(_index);
 
@@ -81,159 +80,153 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	describe('Component Tests', function () {
+	  it('Attach and run a task.', function (done) {
+	    var component = new _index2.default.Component();
+	    // attach a task.
 
-	    it('Attach and run a task.', function (done) {
-	        var component = new _index2.default.Component();
-	        //attach a task. 
+	    component.attachTask(function () {
+	      // do nothing.
+	    });
 
-	        component.attachTask(function () {
-	            // do nothing.  
-	        });
+	    component.execute();
 
-	        component.execute();
+	    done();
+	  });
 
+	  it('Do not run a task if its not attached. ', function (done) {
+	    var component = new _index2.default.Component();
+
+	    // Task is commented and not attached.
+	    // component.attachTask = function(){
+	    //       console.log("This is a task.");
+	    // };
+	    // This should throw an error.
+
+	    try {
+	      component.execute();
+	      done(new Error('Component Executed without a task.'));
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Create a simple add component', function (done) {
+	    var addComponent = new AddComponent();
+	    addComponent.getVariable('Variable 1').data = 1;
+	    addComponent.getVariable('Variable 2').data = 2;
+	    addComponent.getPort('Result').onEmit(function () {
+	      addComponent.getVariable('Variable 1');
+	      if (addComponent.getPort('Result').getVariable('Variable 3').data === 3) {
 	        done();
+	      } else {
+	        done('Failed');
+	      }
 	    });
+	    addComponent.execute();
+	  });
 
-	    it('Do not run a task if its not attached. ', function (done) {
-	        var component = new _index2.default.Component();
+	  it('Connect two components together and process data.', function (done) {
+	    var addComponent = new AddComponent();
+	    addComponent.getVariable('Variable 1').data = 1;
+	    addComponent.getVariable('Variable 2').data = 2;
 
-	        //Task is commented and not attached. 
-	        // component.attachTask = function(){
-	        //       console.log("This is a task.");  
-	        // };
-	        //This should throw an error. 
+	    var subComponent = new SubtractComponent();
+	    subComponent.getVariable('Variable 1').data = addComponent.getPort('Result').data;
+	    subComponent.getVariable('Variable 2').data = 2;
 
-	        try {
-	            component.execute();
-	            done(err);
-	        } catch (e) {
-	            done();
-	        }
+	    addComponent.getPort('Result').connectComponent(subComponent);
+
+	    subComponent.getPort('Result').onEmit(function () {
+	      if (subComponent.getPort('Result').getVariable('Variable 3').data === 2) {
+	        done();
+	      } else {
+	        done('Failed');
+	      }
 	    });
-
-	    it("Create a simple add component", function (done) {
-
-	        var addComponent = new AddComponent();
-	        addComponent.getVariable("Variable 1").data = 1;
-	        addComponent.getVariable("Variable 2").data = 2;
-	        addComponent.getPort("Result").onEmit(function () {
-	            addComponent.getVariable("Variable 1");
-	            if (addComponent.getPort("Result").getVariable("Variable 3").data === 3) {
-	                done();
-	            } else {
-	                done("Failed");
-	            }
-	        });
-	        addComponent.execute();
-	    });
-
-	    it("Connect two components together and process data.", function (done) {
-
-	        var addComponent = new AddComponent();
-	        addComponent.getVariable("Variable 1").data = 1;
-	        addComponent.getVariable("Variable 2").data = 2;
-
-	        var subComponent = new SubtractComponent();
-	        subComponent.getVariable("Variable 1").data = addComponent.getPort("Result").data;
-	        subComponent.getVariable("Variable 2").data = 2;
-
-	        addComponent.getPort("Result").connectComponent(subComponent);
-
-	        subComponent.getPort("Result").onEmit(function () {
-
-	            if (subComponent.getPort("Result").getVariable("Variable 3").data === 2) {
-	                done();
-	            } else {
-	                done("Failed");
-	            }
-	        });
-	        addComponent.execute();
-	    });
+	    addComponent.execute();
+	  });
 	});
 
 	var AddComponent = function (_Flow$Component) {
-	    _inherits(AddComponent, _Flow$Component);
+	  _inherits(AddComponent, _Flow$Component);
 
-	    function AddComponent() {
-	        _classCallCheck(this, AddComponent);
+	  function AddComponent() {
+	    _classCallCheck(this, AddComponent);
 
-	        //construct the component.
-	        var _this = _possibleConstructorReturn(this, (AddComponent.__proto__ || Object.getPrototypeOf(AddComponent)).call(this));
+	    // construct the component.
+	    var _this = _possibleConstructorReturn(this, (AddComponent.__proto__ || Object.getPrototypeOf(AddComponent)).call(this));
 
-	        _this.name = "Add";
+	    _this.name = 'Add';
 
-	        var var1 = new _index2.default.Variable("Variable 1", "number");
-	        var1.required = true;
+	    var var1 = new _index2.default.Variable('Variable 1', 'number');
+	    var1.required = true;
 
-	        _this.addVariable(var1);
+	    _this.addVariable(var1);
 
-	        var var2 = new _index2.default.Variable("Variable 2", "number");
-	        var2.required = true;
+	    var var2 = new _index2.default.Variable('Variable 2', 'number');
+	    var2.required = true;
 
-	        _this.addVariable(var2);
+	    _this.addVariable(var2);
 
-	        var port = new _index2.default.Port("Result");
+	    var port = new _index2.default.Port('Result');
 
-	        var var3 = new _index2.default.Variable("Variable 3", "number");
-	        var3.required = true;
+	    var var3 = new _index2.default.Variable('Variable 3', 'number');
+	    var3.required = true;
 
-	        port.addVariable(var3);
+	    port.addVariable(var3);
 
-	        _this.addPort(port);
+	    _this.addPort(port);
 
-	        _this.attachTask(function () {
-	            this.getPort("Result").getVariable("Variable 3").data = this.getVariable("Variable 1").data + this.getVariable("Variable 2").data;
-	            this.getPort("Result").emit();
-	            this.taskComplete();
-	        });
+	    _this.attachTask(function () {
+	      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data + this.getVariable('Variable 2').data;
+	      this.getPort('Result').emit();
+	      this.taskComplete();
+	    });
+	    return _this;
+	  }
 
-	        return _this;
-	    }
-
-	    return AddComponent;
+	  return AddComponent;
 	}(_index2.default.Component);
 
 	var SubtractComponent = function (_Flow$Component2) {
-	    _inherits(SubtractComponent, _Flow$Component2);
+	  _inherits(SubtractComponent, _Flow$Component2);
 
-	    function SubtractComponent() {
-	        _classCallCheck(this, SubtractComponent);
+	  function SubtractComponent() {
+	    _classCallCheck(this, SubtractComponent);
 
-	        //construct the component.
-	        var _this2 = _possibleConstructorReturn(this, (SubtractComponent.__proto__ || Object.getPrototypeOf(SubtractComponent)).call(this));
+	    // construct the component.
+	    var _this2 = _possibleConstructorReturn(this, (SubtractComponent.__proto__ || Object.getPrototypeOf(SubtractComponent)).call(this));
 
-	        _this2.name = "Subtract";
+	    _this2.name = 'Subtract';
 
-	        var var1 = new _index2.default.Variable("Variable 1", "number");
-	        var1.required = true;
+	    var var1 = new _index2.default.Variable('Variable 1', 'number');
+	    var1.required = true;
 
-	        _this2.addVariable(var1);
+	    _this2.addVariable(var1);
 
-	        var var2 = new _index2.default.Variable("Variable 2", "number");
-	        var2.required = true;
+	    var var2 = new _index2.default.Variable('Variable 2', 'number');
+	    var2.required = true;
 
-	        _this2.addVariable(var2);
+	    _this2.addVariable(var2);
 
-	        var port = new _index2.default.Port("Result");
+	    var port = new _index2.default.Port('Result');
 
-	        var var3 = new _index2.default.Variable("Variable 3", "number");
-	        var3.required = true;
+	    var var3 = new _index2.default.Variable('Variable 3', 'number');
+	    var3.required = true;
 
-	        port.addVariable(var3);
+	    port.addVariable(var3);
 
-	        _this2.addPort(port);
+	    _this2.addPort(port);
 
-	        _this2.attachTask(function () {
-	            this.getPort("Result").getVariable("Variable 3").data = this.getVariable("Variable 1").data - this.getVariable("Variable 2").data;
-	            this.getPort("Result").emit();
-	            this.taskComplete();
-	        });
+	    _this2.attachTask(function () {
+	      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data - this.getVariable('Variable 2').data;
+	      this.getPort('Result').emit();
+	      this.taskComplete();
+	    });
+	    return _this2;
+	  }
 
-	        return _this2;
-	    }
-
-	    return SubtractComponent;
+	  return SubtractComponent;
 	}(_index2.default.Component);
 
 	;
@@ -242,1091 +235,400 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	var _Component = __webpack_require__(3);
 
-	// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
-	// original notice:
+	var _Component2 = _interopRequireDefault(_Component);
 
-	/*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
-	function compare(a, b) {
-	  if (a === b) {
-	    return 0;
-	  }
+	var _Port = __webpack_require__(7);
 
-	  var x = a.length;
-	  var y = b.length;
+	var _Port2 = _interopRequireDefault(_Port);
 
-	  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-	    if (a[i] !== b[i]) {
-	      x = a[i];
-	      y = b[i];
-	      break;
-	    }
-	  }
+	var _Variable = __webpack_require__(8);
 
-	  if (x < y) {
-	    return -1;
-	  }
-	  if (y < x) {
-	    return 1;
-	  }
-	  return 0;
-	}
-	function isBuffer(b) {
-	  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
-	    return global.Buffer.isBuffer(b);
-	  }
-	  return !!(b != null && b._isBuffer);
-	}
+	var _Variable2 = _interopRequireDefault(_Variable);
 
-	// based on node assert, original notice:
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
-	//
-	// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
-	//
-	// Originally from narwhal.js (http://narwhaljs.org)
-	// Copyright (c) 2009 Thomas Robinson <280north.com>
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a copy
-	// of this software and associated documentation files (the 'Software'), to
-	// deal in the Software without restriction, including without limitation the
-	// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-	// sell copies of the Software, and to permit persons to whom the Software is
-	// furnished to do so, subject to the following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included in
-	// all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	var Flow = {};
+	Flow.Component = _Component2.default;
+	Flow.Port = _Port2.default;
+	Flow.Variable = _Variable2.default;
 
-	var util = __webpack_require__(3);
-	var hasOwn = Object.prototype.hasOwnProperty;
-	var pSlice = Array.prototype.slice;
-	var functionsHaveNames = (function () {
-	  return function foo() {}.name === 'foo';
-	}());
-	function pToString (obj) {
-	  return Object.prototype.toString.call(obj);
-	}
-	function isView(arrbuf) {
-	  if (isBuffer(arrbuf)) {
-	    return false;
-	  }
-	  if (typeof global.ArrayBuffer !== 'function') {
-	    return false;
-	  }
-	  if (typeof ArrayBuffer.isView === 'function') {
-	    return ArrayBuffer.isView(arrbuf);
-	  }
-	  if (!arrbuf) {
-	    return false;
-	  }
-	  if (arrbuf instanceof DataView) {
-	    return true;
-	  }
-	  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
-	    return true;
-	  }
-	  return false;
-	}
-	// 1. The assert module provides functions that throw
-	// AssertionError's when particular conditions are not met. The
-	// assert module must conform to the following interface.
-
-	var assert = module.exports = ok;
-
-	// 2. The AssertionError is defined in assert.
-	// new assert.AssertionError({ message: message,
-	//                             actual: actual,
-	//                             expected: expected })
-
-	var regex = /\s*function\s+([^\(\s]*)\s*/;
-	// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
-	function getName(func) {
-	  if (!util.isFunction(func)) {
-	    return;
-	  }
-	  if (functionsHaveNames) {
-	    return func.name;
-	  }
-	  var str = func.toString();
-	  var match = str.match(regex);
-	  return match && match[1];
-	}
-	assert.AssertionError = function AssertionError(options) {
-	  this.name = 'AssertionError';
-	  this.actual = options.actual;
-	  this.expected = options.expected;
-	  this.operator = options.operator;
-	  if (options.message) {
-	    this.message = options.message;
-	    this.generatedMessage = false;
-	  } else {
-	    this.message = getMessage(this);
-	    this.generatedMessage = true;
-	  }
-	  var stackStartFunction = options.stackStartFunction || fail;
-	  if (Error.captureStackTrace) {
-	    Error.captureStackTrace(this, stackStartFunction);
-	  } else {
-	    // non v8 browsers so we can have a stacktrace
-	    var err = new Error();
-	    if (err.stack) {
-	      var out = err.stack;
-
-	      // try to strip useless frames
-	      var fn_name = getName(stackStartFunction);
-	      var idx = out.indexOf('\n' + fn_name);
-	      if (idx >= 0) {
-	        // once we have located the function frame
-	        // we need to strip out everything before it (and its line)
-	        var next_line = out.indexOf('\n', idx + 1);
-	        out = out.substring(next_line + 1);
-	      }
-
-	      this.stack = out;
-	    }
-	  }
-	};
-
-	// assert.AssertionError instanceof Error
-	util.inherits(assert.AssertionError, Error);
-
-	function truncate(s, n) {
-	  if (typeof s === 'string') {
-	    return s.length < n ? s : s.slice(0, n);
-	  } else {
-	    return s;
-	  }
-	}
-	function inspect(something) {
-	  if (functionsHaveNames || !util.isFunction(something)) {
-	    return util.inspect(something);
-	  }
-	  var rawname = getName(something);
-	  var name = rawname ? ': ' + rawname : '';
-	  return '[Function' +  name + ']';
-	}
-	function getMessage(self) {
-	  return truncate(inspect(self.actual), 128) + ' ' +
-	         self.operator + ' ' +
-	         truncate(inspect(self.expected), 128);
-	}
-
-	// At present only the three keys mentioned above are used and
-	// understood by the spec. Implementations or sub modules can pass
-	// other keys to the AssertionError's constructor - they will be
-	// ignored.
-
-	// 3. All of the following functions must throw an AssertionError
-	// when a corresponding condition is not met, with a message that
-	// may be undefined if not provided.  All assertion methods provide
-	// both the actual and expected values to the assertion error for
-	// display purposes.
-
-	function fail(actual, expected, message, operator, stackStartFunction) {
-	  throw new assert.AssertionError({
-	    message: message,
-	    actual: actual,
-	    expected: expected,
-	    operator: operator,
-	    stackStartFunction: stackStartFunction
-	  });
-	}
-
-	// EXTENSION! allows for well behaved errors defined elsewhere.
-	assert.fail = fail;
-
-	// 4. Pure assertion tests whether a value is truthy, as determined
-	// by !!guard.
-	// assert.ok(guard, message_opt);
-	// This statement is equivalent to assert.equal(true, !!guard,
-	// message_opt);. To test strictly for the value true, use
-	// assert.strictEqual(true, guard, message_opt);.
-
-	function ok(value, message) {
-	  if (!value) fail(value, true, message, '==', assert.ok);
-	}
-	assert.ok = ok;
-
-	// 5. The equality assertion tests shallow, coercive equality with
-	// ==.
-	// assert.equal(actual, expected, message_opt);
-
-	assert.equal = function equal(actual, expected, message) {
-	  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
-	};
-
-	// 6. The non-equality assertion tests for whether two objects are not equal
-	// with != assert.notEqual(actual, expected, message_opt);
-
-	assert.notEqual = function notEqual(actual, expected, message) {
-	  if (actual == expected) {
-	    fail(actual, expected, message, '!=', assert.notEqual);
-	  }
-	};
-
-	// 7. The equivalence assertion tests a deep equality relation.
-	// assert.deepEqual(actual, expected, message_opt);
-
-	assert.deepEqual = function deepEqual(actual, expected, message) {
-	  if (!_deepEqual(actual, expected, false)) {
-	    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
-	  }
-	};
-
-	assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
-	  if (!_deepEqual(actual, expected, true)) {
-	    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
-	  }
-	};
-
-	function _deepEqual(actual, expected, strict, memos) {
-	  // 7.1. All identical values are equivalent, as determined by ===.
-	  if (actual === expected) {
-	    return true;
-	  } else if (isBuffer(actual) && isBuffer(expected)) {
-	    return compare(actual, expected) === 0;
-
-	  // 7.2. If the expected value is a Date object, the actual value is
-	  // equivalent if it is also a Date object that refers to the same time.
-	  } else if (util.isDate(actual) && util.isDate(expected)) {
-	    return actual.getTime() === expected.getTime();
-
-	  // 7.3 If the expected value is a RegExp object, the actual value is
-	  // equivalent if it is also a RegExp object with the same source and
-	  // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
-	  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
-	    return actual.source === expected.source &&
-	           actual.global === expected.global &&
-	           actual.multiline === expected.multiline &&
-	           actual.lastIndex === expected.lastIndex &&
-	           actual.ignoreCase === expected.ignoreCase;
-
-	  // 7.4. Other pairs that do not both pass typeof value == 'object',
-	  // equivalence is determined by ==.
-	  } else if ((actual === null || typeof actual !== 'object') &&
-	             (expected === null || typeof expected !== 'object')) {
-	    return strict ? actual === expected : actual == expected;
-
-	  // If both values are instances of typed arrays, wrap their underlying
-	  // ArrayBuffers in a Buffer each to increase performance
-	  // This optimization requires the arrays to have the same type as checked by
-	  // Object.prototype.toString (aka pToString). Never perform binary
-	  // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
-	  // bit patterns are not identical.
-	  } else if (isView(actual) && isView(expected) &&
-	             pToString(actual) === pToString(expected) &&
-	             !(actual instanceof Float32Array ||
-	               actual instanceof Float64Array)) {
-	    return compare(new Uint8Array(actual.buffer),
-	                   new Uint8Array(expected.buffer)) === 0;
-
-	  // 7.5 For all other Object pairs, including Array objects, equivalence is
-	  // determined by having the same number of owned properties (as verified
-	  // with Object.prototype.hasOwnProperty.call), the same set of keys
-	  // (although not necessarily the same order), equivalent values for every
-	  // corresponding key, and an identical 'prototype' property. Note: this
-	  // accounts for both named and indexed properties on Arrays.
-	  } else if (isBuffer(actual) !== isBuffer(expected)) {
-	    return false;
-	  } else {
-	    memos = memos || {actual: [], expected: []};
-
-	    var actualIndex = memos.actual.indexOf(actual);
-	    if (actualIndex !== -1) {
-	      if (actualIndex === memos.expected.indexOf(expected)) {
-	        return true;
-	      }
-	    }
-
-	    memos.actual.push(actual);
-	    memos.expected.push(expected);
-
-	    return objEquiv(actual, expected, strict, memos);
-	  }
-	}
-
-	function isArguments(object) {
-	  return Object.prototype.toString.call(object) == '[object Arguments]';
-	}
-
-	function objEquiv(a, b, strict, actualVisitedObjects) {
-	  if (a === null || a === undefined || b === null || b === undefined)
-	    return false;
-	  // if one is a primitive, the other must be same
-	  if (util.isPrimitive(a) || util.isPrimitive(b))
-	    return a === b;
-	  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b))
-	    return false;
-	  var aIsArgs = isArguments(a);
-	  var bIsArgs = isArguments(b);
-	  if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs))
-	    return false;
-	  if (aIsArgs) {
-	    a = pSlice.call(a);
-	    b = pSlice.call(b);
-	    return _deepEqual(a, b, strict);
-	  }
-	  var ka = objectKeys(a);
-	  var kb = objectKeys(b);
-	  var key, i;
-	  // having the same number of owned properties (keys incorporates
-	  // hasOwnProperty)
-	  if (ka.length !== kb.length)
-	    return false;
-	  //the same set of keys (although not necessarily the same order),
-	  ka.sort();
-	  kb.sort();
-	  //~~~cheap key test
-	  for (i = ka.length - 1; i >= 0; i--) {
-	    if (ka[i] !== kb[i])
-	      return false;
-	  }
-	  //equivalent values for every corresponding key, and
-	  //~~~possibly expensive deep test
-	  for (i = ka.length - 1; i >= 0; i--) {
-	    key = ka[i];
-	    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects))
-	      return false;
-	  }
-	  return true;
-	}
-
-	// 8. The non-equivalence assertion tests for any deep inequality.
-	// assert.notDeepEqual(actual, expected, message_opt);
-
-	assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
-	  if (_deepEqual(actual, expected, false)) {
-	    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
-	  }
-	};
-
-	assert.notDeepStrictEqual = notDeepStrictEqual;
-	function notDeepStrictEqual(actual, expected, message) {
-	  if (_deepEqual(actual, expected, true)) {
-	    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
-	  }
-	}
-
-
-	// 9. The strict equality assertion tests strict equality, as determined by ===.
-	// assert.strictEqual(actual, expected, message_opt);
-
-	assert.strictEqual = function strictEqual(actual, expected, message) {
-	  if (actual !== expected) {
-	    fail(actual, expected, message, '===', assert.strictEqual);
-	  }
-	};
-
-	// 10. The strict non-equality assertion tests for strict inequality, as
-	// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
-
-	assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
-	  if (actual === expected) {
-	    fail(actual, expected, message, '!==', assert.notStrictEqual);
-	  }
-	};
-
-	function expectedException(actual, expected) {
-	  if (!actual || !expected) {
-	    return false;
-	  }
-
-	  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
-	    return expected.test(actual);
-	  }
-
-	  try {
-	    if (actual instanceof expected) {
-	      return true;
-	    }
-	  } catch (e) {
-	    // Ignore.  The instanceof check doesn't work for arrow functions.
-	  }
-
-	  if (Error.isPrototypeOf(expected)) {
-	    return false;
-	  }
-
-	  return expected.call({}, actual) === true;
-	}
-
-	function _tryBlock(block) {
-	  var error;
-	  try {
-	    block();
-	  } catch (e) {
-	    error = e;
-	  }
-	  return error;
-	}
-
-	function _throws(shouldThrow, block, expected, message) {
-	  var actual;
-
-	  if (typeof block !== 'function') {
-	    throw new TypeError('"block" argument must be a function');
-	  }
-
-	  if (typeof expected === 'string') {
-	    message = expected;
-	    expected = null;
-	  }
-
-	  actual = _tryBlock(block);
-
-	  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
-	            (message ? ' ' + message : '.');
-
-	  if (shouldThrow && !actual) {
-	    fail(actual, expected, 'Missing expected exception' + message);
-	  }
-
-	  var userProvidedMessage = typeof message === 'string';
-	  var isUnwantedException = !shouldThrow && util.isError(actual);
-	  var isUnexpectedException = !shouldThrow && actual && !expected;
-
-	  if ((isUnwantedException &&
-	      userProvidedMessage &&
-	      expectedException(actual, expected)) ||
-	      isUnexpectedException) {
-	    fail(actual, expected, 'Got unwanted exception' + message);
-	  }
-
-	  if ((shouldThrow && actual && expected &&
-	      !expectedException(actual, expected)) || (!shouldThrow && actual)) {
-	    throw actual;
-	  }
-	}
-
-	// 11. Expected to throw an error:
-	// assert.throws(block, Error_opt, message_opt);
-
-	assert.throws = function(block, /*optional*/error, /*optional*/message) {
-	  _throws(true, block, error, message);
-	};
-
-	// EXTENSION! This is annoying to write outside this module.
-	assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
-	  _throws(false, block, error, message);
-	};
-
-	assert.ifError = function(err) { if (err) throw err; };
-
-	var objectKeys = Object.keys || function (obj) {
-	  var keys = [];
-	  for (var key in obj) {
-	    if (hasOwn.call(obj, key)) keys.push(key);
-	  }
-	  return keys;
-	};
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	module.exports = Flow;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+	/* WEBPACK VAR INJECTION */(function(process) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var formatRegExp = /%[sdj%]/g;
-	exports.format = function(f) {
-	  if (!isString(f)) {
-	    var objects = [];
-	    for (var i = 0; i < arguments.length; i++) {
-	      objects.push(inspect(arguments[i]));
+	var _Util = __webpack_require__(5);
+
+	var _Util2 = _interopRequireDefault(_Util);
+
+	var _events = __webpack_require__(6);
+
+	var _events2 = _interopRequireDefault(_events);
+
+	var _Port = __webpack_require__(7);
+
+	var _Port2 = _interopRequireDefault(_Port);
+
+	var _Variable = __webpack_require__(8);
+
+	var _Variable2 = _interopRequireDefault(_Variable);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Component = function () {
+	  function Component() {
+	    _classCallCheck(this, Component);
+
+	    // Icon URL is the URL of an Icon in SVG that can be showed in the UI.
+	    this._iconUrl = '';
+
+	    // These are number of outports.
+	    this._ports = [];
+
+	    // A short description of the component.
+	    this._description = '';
+
+	    // List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc.
+	    this._outPorts = {};
+
+	    // A socket object to communicate with other components.
+	    this._socket = new _events2.default();
+
+	    // Genere a new ID for this instance.
+	    this._id = _Util2.default.generateId();
+
+	    this._socket.on('execute-component-' + this.id, this.execute);
+
+	    this._variables = [];
+
+	    // check if the env is NodeJS
+	    this._platform = 'browser';
+	    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+	      this._platform = 'node';
 	    }
-	    return objects.join(' ');
+
+	    this._isProcessingTask = false;
 	  }
 
-	  var i = 1;
-	  var args = arguments;
-	  var len = args.length;
-	  var str = String(f).replace(formatRegExp, function(x) {
-	    if (x === '%%') return '%';
-	    if (i >= len) return x;
-	    switch (x) {
-	      case '%s': return String(args[i++]);
-	      case '%d': return Number(args[i++]);
-	      case '%j':
-	        try {
-	          return JSON.stringify(args[i++]);
-	        } catch (_) {
-	          return '[Circular]';
+	  _createClass(Component, [{
+	    key: 'addVariable',
+	    value: function addVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
 	        }
-	      default:
-	        return x;
-	    }
-	  });
-	  for (var x = args[i]; i < len; x = args[++i]) {
-	    if (isNull(x) || !isObject(x)) {
-	      str += ' ' + x;
-	    } else {
-	      str += ' ' + inspect(x);
-	    }
-	  }
-	  return str;
-	};
 
-
-	// Mark that a method should not be used.
-	// Returns a modified function which warns once by default.
-	// If --no-deprecation is set, then it is a no-op.
-	exports.deprecate = function(fn, msg) {
-	  // Allow for deprecating things in the process of starting up.
-	  if (isUndefined(global.process)) {
-	    return function() {
-	      return exports.deprecate(fn, msg).apply(this, arguments);
-	    };
-	  }
-
-	  if (process.noDeprecation === true) {
-	    return fn;
-	  }
-
-	  var warned = false;
-	  function deprecated() {
-	    if (!warned) {
-	      if (process.throwDeprecation) {
-	        throw new Error(msg);
-	      } else if (process.traceDeprecation) {
-	        console.trace(msg);
-	      } else {
-	        console.error(msg);
-	      }
-	      warned = true;
-	    }
-	    return fn.apply(this, arguments);
-	  }
-
-	  return deprecated;
-	};
-
-
-	var debugs = {};
-	var debugEnviron;
-	exports.debuglog = function(set) {
-	  if (isUndefined(debugEnviron))
-	    debugEnviron = process.env.NODE_DEBUG || '';
-	  set = set.toUpperCase();
-	  if (!debugs[set]) {
-	    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-	      var pid = process.pid;
-	      debugs[set] = function() {
-	        var msg = exports.format.apply(exports, arguments);
-	        console.error('%s %d: %s', set, pid, msg);
-	      };
-	    } else {
-	      debugs[set] = function() {};
-	    }
-	  }
-	  return debugs[set];
-	};
-
-
-	/**
-	 * Echos the value of a value. Trys to print the value out
-	 * in the best way possible given the different types.
-	 *
-	 * @param {Object} obj The object to print out.
-	 * @param {Object} opts Optional options object that alters the output.
-	 */
-	/* legacy: obj, showHidden, depth, colors*/
-	function inspect(obj, opts) {
-	  // default options
-	  var ctx = {
-	    seen: [],
-	    stylize: stylizeNoColor
-	  };
-	  // legacy...
-	  if (arguments.length >= 3) ctx.depth = arguments[2];
-	  if (arguments.length >= 4) ctx.colors = arguments[3];
-	  if (isBoolean(opts)) {
-	    // legacy...
-	    ctx.showHidden = opts;
-	  } else if (opts) {
-	    // got an "options" object
-	    exports._extend(ctx, opts);
-	  }
-	  // set default options
-	  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-	  if (isUndefined(ctx.depth)) ctx.depth = 2;
-	  if (isUndefined(ctx.colors)) ctx.colors = false;
-	  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-	  if (ctx.colors) ctx.stylize = stylizeWithColor;
-	  return formatValue(ctx, obj, ctx.depth);
-	}
-	exports.inspect = inspect;
-
-
-	// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-	inspect.colors = {
-	  'bold' : [1, 22],
-	  'italic' : [3, 23],
-	  'underline' : [4, 24],
-	  'inverse' : [7, 27],
-	  'white' : [37, 39],
-	  'grey' : [90, 39],
-	  'black' : [30, 39],
-	  'blue' : [34, 39],
-	  'cyan' : [36, 39],
-	  'green' : [32, 39],
-	  'magenta' : [35, 39],
-	  'red' : [31, 39],
-	  'yellow' : [33, 39]
-	};
-
-	// Don't use 'blue' not visible on cmd.exe
-	inspect.styles = {
-	  'special': 'cyan',
-	  'number': 'yellow',
-	  'boolean': 'yellow',
-	  'undefined': 'grey',
-	  'null': 'bold',
-	  'string': 'green',
-	  'date': 'magenta',
-	  // "name": intentionally not styling
-	  'regexp': 'red'
-	};
-
-
-	function stylizeWithColor(str, styleType) {
-	  var style = inspect.styles[styleType];
-
-	  if (style) {
-	    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
-	           '\u001b[' + inspect.colors[style][1] + 'm';
-	  } else {
-	    return str;
-	  }
-	}
-
-
-	function stylizeNoColor(str, styleType) {
-	  return str;
-	}
-
-
-	function arrayToHash(array) {
-	  var hash = {};
-
-	  array.forEach(function(val, idx) {
-	    hash[val] = true;
-	  });
-
-	  return hash;
-	}
-
-
-	function formatValue(ctx, value, recurseTimes) {
-	  // Provide a hook for user-specified inspect functions.
-	  // Check that value is an object with an inspect function on it
-	  if (ctx.customInspect &&
-	      value &&
-	      isFunction(value.inspect) &&
-	      // Filter out the util module, it's inspect function is special
-	      value.inspect !== exports.inspect &&
-	      // Also filter out any prototype objects using the circular check.
-	      !(value.constructor && value.constructor.prototype === value)) {
-	    var ret = value.inspect(recurseTimes, ctx);
-	    if (!isString(ret)) {
-	      ret = formatValue(ctx, ret, recurseTimes);
-	    }
-	    return ret;
-	  }
-
-	  // Primitive types cannot have properties
-	  var primitive = formatPrimitive(ctx, value);
-	  if (primitive) {
-	    return primitive;
-	  }
-
-	  // Look up the keys of the object.
-	  var keys = Object.keys(value);
-	  var visibleKeys = arrayToHash(keys);
-
-	  if (ctx.showHidden) {
-	    keys = Object.getOwnPropertyNames(value);
-	  }
-
-	  // IE doesn't make error fields non-enumerable
-	  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-	  if (isError(value)
-	      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-	    return formatError(value);
-	  }
-
-	  // Some type of object without properties can be shortcutted.
-	  if (keys.length === 0) {
-	    if (isFunction(value)) {
-	      var name = value.name ? ': ' + value.name : '';
-	      return ctx.stylize('[Function' + name + ']', 'special');
-	    }
-	    if (isRegExp(value)) {
-	      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-	    }
-	    if (isDate(value)) {
-	      return ctx.stylize(Date.prototype.toString.call(value), 'date');
-	    }
-	    if (isError(value)) {
-	      return formatError(value);
-	    }
-	  }
-
-	  var base = '', array = false, braces = ['{', '}'];
-
-	  // Make Array say that they are Array
-	  if (isArray(value)) {
-	    array = true;
-	    braces = ['[', ']'];
-	  }
-
-	  // Make functions say that they are functions
-	  if (isFunction(value)) {
-	    var n = value.name ? ': ' + value.name : '';
-	    base = ' [Function' + n + ']';
-	  }
-
-	  // Make RegExps say that they are RegExps
-	  if (isRegExp(value)) {
-	    base = ' ' + RegExp.prototype.toString.call(value);
-	  }
-
-	  // Make dates with properties first say the date
-	  if (isDate(value)) {
-	    base = ' ' + Date.prototype.toUTCString.call(value);
-	  }
-
-	  // Make error with message first say the error
-	  if (isError(value)) {
-	    base = ' ' + formatError(value);
-	  }
-
-	  if (keys.length === 0 && (!array || value.length == 0)) {
-	    return braces[0] + base + braces[1];
-	  }
-
-	  if (recurseTimes < 0) {
-	    if (isRegExp(value)) {
-	      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-	    } else {
-	      return ctx.stylize('[Object]', 'special');
-	    }
-	  }
-
-	  ctx.seen.push(value);
-
-	  var output;
-	  if (array) {
-	    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-	  } else {
-	    output = keys.map(function(key) {
-	      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-	    });
-	  }
-
-	  ctx.seen.pop();
-
-	  return reduceToSingleString(output, base, braces);
-	}
-
-
-	function formatPrimitive(ctx, value) {
-	  if (isUndefined(value))
-	    return ctx.stylize('undefined', 'undefined');
-	  if (isString(value)) {
-	    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
-	                                             .replace(/'/g, "\\'")
-	                                             .replace(/\\"/g, '"') + '\'';
-	    return ctx.stylize(simple, 'string');
-	  }
-	  if (isNumber(value))
-	    return ctx.stylize('' + value, 'number');
-	  if (isBoolean(value))
-	    return ctx.stylize('' + value, 'boolean');
-	  // For some reason typeof null is "object", so special case here.
-	  if (isNull(value))
-	    return ctx.stylize('null', 'null');
-	}
-
-
-	function formatError(value) {
-	  return '[' + Error.prototype.toString.call(value) + ']';
-	}
-
-
-	function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-	  var output = [];
-	  for (var i = 0, l = value.length; i < l; ++i) {
-	    if (hasOwnProperty(value, String(i))) {
-	      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-	          String(i), true));
-	    } else {
-	      output.push('');
-	    }
-	  }
-	  keys.forEach(function(key) {
-	    if (!key.match(/^\d+$/)) {
-	      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-	          key, true));
-	    }
-	  });
-	  return output;
-	}
-
-
-	function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-	  var name, str, desc;
-	  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-	  if (desc.get) {
-	    if (desc.set) {
-	      str = ctx.stylize('[Getter/Setter]', 'special');
-	    } else {
-	      str = ctx.stylize('[Getter]', 'special');
-	    }
-	  } else {
-	    if (desc.set) {
-	      str = ctx.stylize('[Setter]', 'special');
-	    }
-	  }
-	  if (!hasOwnProperty(visibleKeys, key)) {
-	    name = '[' + key + ']';
-	  }
-	  if (!str) {
-	    if (ctx.seen.indexOf(desc.value) < 0) {
-	      if (isNull(recurseTimes)) {
-	        str = formatValue(ctx, desc.value, null);
-	      } else {
-	        str = formatValue(ctx, desc.value, recurseTimes - 1);
-	      }
-	      if (str.indexOf('\n') > -1) {
-	        if (array) {
-	          str = str.split('\n').map(function(line) {
-	            return '  ' + line;
-	          }).join('\n').substr(2);
-	        } else {
-	          str = '\n' + str.split('\n').map(function(line) {
-	            return '   ' + line;
-	          }).join('\n');
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            throw new Error('Variable with the same name or id already exists.');
+	          }
 	        }
+
+	        this._variables.push(variable);
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
 	      }
-	    } else {
-	      str = ctx.stylize('[Circular]', 'special');
 	    }
-	  }
-	  if (isUndefined(name)) {
-	    if (array && key.match(/^\d+$/)) {
-	      return str;
+	  }, {
+	    key: 'removeVariable',
+	    value: function removeVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              this._variables.slice(i, 1);
+	            }
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              this._variables.slice(i, 1);
+	            }
+	          }
+	        }
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
 	    }
-	    name = JSON.stringify('' + key);
-	    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-	      name = name.substr(1, name.length - 2);
-	      name = ctx.stylize(name, 'name');
-	    } else {
-	      name = name.replace(/'/g, "\\'")
-	                 .replace(/\\"/g, '"')
-	                 .replace(/(^"|"$)/g, "'");
-	      name = ctx.stylize(name, 'string');
+	  }, {
+	    key: 'updateVariable',
+	    value: function updateVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            this._variables[i] = variable;
+	            return;
+	          }
+	        }
+
+	        throw new Error('Variable not found and is not updated.');
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
 	    }
-	  }
+	  }, {
+	    key: 'getVariable',
+	    value: function getVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	  return name + ': ' + str;
-	}
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return this._variables[i];
+	            }
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return this._variables[i];
+	            }
+	          }
+	        }
+
+	        throw new Error('Variable not found.');
+	      } else {
+	        throw new Error('Variable should be an instance of variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'hasVariable',
+	    value: function hasVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return true;
+	            }
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return true;
+	            }
+	          }
+	        }
+	        return false;
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+
+	    // execute the component task.
+
+	  }, {
+	    key: 'execute',
+	    value: function execute() {
+	      // check if task is attached and if its actually a function.
+	      if (this._isProcessingTask) {
+	        throw new Error('Component is already processing a task.');
+	      }
+
+	      if (this._task && _Util2.default.validateType(this._task === 'function')) {
+	        this._isProcessingTask = true;
+	        this._task();
+	      }
+	    }
+	  }, {
+	    key: 'taskComplete',
+	    value: function taskComplete() {
+	      // Task is complete, and this component is no longer processing.
+	      this._isProcessingTask = false;
+	    }
+	    // Task is a custom code as a function that runs when the component executes.
+
+	  }, {
+	    key: 'attachTask',
+	    value: function attachTask(task) {
+	      if (!_Util2.default.validateType(task, 'function')) {
+	        throw new Error('Task must be a function.');
+	      }
+
+	      this._task = task;
+	    }
+
+	    // Task is a custom code as a function that runs when the component executes.
+
+	  }, {
+	    key: 'detachTask',
+	    value: function detachTask() {
+	      this._task = null;
+	    }
+	  }, {
+	    key: 'serialize',
+	    value: function serialize() {
+	      return JSON.stringify(this);
+	    }
+	  }, {
+	    key: 'addPort',
+	    value: function addPort(port) {
+	      if (port instanceof _Port2.default) {
+	        if (!port.id) {
+	          throw new Error('Port does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._ports.length; i++) {
+	          if (port.name === this._ports[i].name || port.id === this._ports[i].id) {
+	            throw new Error('Port with the same name or id already exists.');
+	          }
+	        }
+
+	        if (port._componentAttachedTo) {
+	          throw new Error('This port is already attached with other component');
+	        }
+
+	        port._componentAttachedTo = this;
+	        this._ports.push(port);
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'removePort',
+	    value: function removePort(port) {
+	      if (port instanceof _Port2.default) {
+	        if (!port.id) {
+	          throw new Error('Port does not have an ID.');
+	        }
+	        if (this._ports.indexOf(port) < 0) {
+	          throw new Error('Port not found in the component.');
+	        }
+	        this._ports.slice(this._ports.indexOf(port), 1);
+	        port._componentAttachedTo = null;
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'getPort',
+	    value: function getPort(port) {
+	      if (port instanceof _Port2.default || typeof port === 'string') {
+	        if (port instanceof _Port2.default) {
+	          if (!port.id) {
+	            throw new Error('Port does not have an ID.');
+	          }
+
+	          if (this._ports.indexOf(port) < 0) {
+	            throw new Error('Port not found in the component.');
+	          }
+
+	          return this._ports[this._ports.indexOf(port)];
+	        }
+
+	        if (typeof port === 'string') {
+	          for (var i = 0; i < this._ports.length; i++) {
+	            if (this._ports[i].name === port) {
+	              return this._ports[i];
+	            }
+	          }
+
+	          throw new Error('Port with name ' + port + ' not found in the component.');
+	        }
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'hasPort',
+	    value: function hasPort(port) {
+	      if (port instanceof _Port2.default) {
+	        if (!port.id) {
+	          throw new Error('Port does not have an ID.');
+	        }
+	        if (this._ports.indexOf(port) < 0) {
+	          return false;
+	        }
+
+	        return true;
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'getPorts',
+	    value: function getPorts() {
+	      return this._ports;
+	    }
+
+	    // getters and setters
+
+	  }, {
+	    key: 'description',
+	    get: function get() {
+	      return this._description;
+	    },
+	    set: function set(description) {
+	      if (!_Util2.default.validateType(description, 'string')) {
+	        throw new Error('Description must be a string.');
+	      }
+
+	      this._description = description;
+	    }
+	  }, {
+	    key: 'task',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(task) {
+	      this.attachTask(task);
+	    }
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
+	  }, {
+	    key: 'iconUrl',
+	    get: function get() {
+	      return this._iconUrl;
+	    },
+	    set: function set(iconUrl) {
+	      if (!_Util2.default.validateType(iconUrl, 'url')) {
+	        throw new Error('iconUrl must be a URL.');
+	      }
+	      this._iconUrl = iconUrl;
+	    }
+	  }, {
+	    key: 'outPorts',
+	    get: function get() {
+	      return this._outPorts;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }]);
+
+	  return Component;
+	}();
+
+	// export.
 
 
-	function reduceToSingleString(output, base, braces) {
-	  var numLinesEst = 0;
-	  var length = output.reduce(function(prev, cur) {
-	    numLinesEst++;
-	    if (cur.indexOf('\n') >= 0) numLinesEst++;
-	    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
-	  }, 0);
-
-	  if (length > 60) {
-	    return braces[0] +
-	           (base === '' ? '' : base + '\n ') +
-	           ' ' +
-	           output.join(',\n  ') +
-	           ' ' +
-	           braces[1];
-	  }
-
-	  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
-	}
-
-
-	// NOTE: These type checking functions intentionally don't use `instanceof`
-	// because it is fragile and can be easily faked with `Object.create()`.
-	function isArray(ar) {
-	  return Array.isArray(ar);
-	}
-	exports.isArray = isArray;
-
-	function isBoolean(arg) {
-	  return typeof arg === 'boolean';
-	}
-	exports.isBoolean = isBoolean;
-
-	function isNull(arg) {
-	  return arg === null;
-	}
-	exports.isNull = isNull;
-
-	function isNullOrUndefined(arg) {
-	  return arg == null;
-	}
-	exports.isNullOrUndefined = isNullOrUndefined;
-
-	function isNumber(arg) {
-	  return typeof arg === 'number';
-	}
-	exports.isNumber = isNumber;
-
-	function isString(arg) {
-	  return typeof arg === 'string';
-	}
-	exports.isString = isString;
-
-	function isSymbol(arg) {
-	  return typeof arg === 'symbol';
-	}
-	exports.isSymbol = isSymbol;
-
-	function isUndefined(arg) {
-	  return arg === void 0;
-	}
-	exports.isUndefined = isUndefined;
-
-	function isRegExp(re) {
-	  return isObject(re) && objectToString(re) === '[object RegExp]';
-	}
-	exports.isRegExp = isRegExp;
-
-	function isObject(arg) {
-	  return typeof arg === 'object' && arg !== null;
-	}
-	exports.isObject = isObject;
-
-	function isDate(d) {
-	  return isObject(d) && objectToString(d) === '[object Date]';
-	}
-	exports.isDate = isDate;
-
-	function isError(e) {
-	  return isObject(e) &&
-	      (objectToString(e) === '[object Error]' || e instanceof Error);
-	}
-	exports.isError = isError;
-
-	function isFunction(arg) {
-	  return typeof arg === 'function';
-	}
-	exports.isFunction = isFunction;
-
-	function isPrimitive(arg) {
-	  return arg === null ||
-	         typeof arg === 'boolean' ||
-	         typeof arg === 'number' ||
-	         typeof arg === 'string' ||
-	         typeof arg === 'symbol' ||  // ES6 symbol
-	         typeof arg === 'undefined';
-	}
-	exports.isPrimitive = isPrimitive;
-
-	exports.isBuffer = __webpack_require__(5);
-
-	function objectToString(o) {
-	  return Object.prototype.toString.call(o);
-	}
-
-
-	function pad(n) {
-	  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-	}
-
-
-	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-	              'Oct', 'Nov', 'Dec'];
-
-	// 26 Feb 16:19:34
-	function timestamp() {
-	  var d = new Date();
-	  var time = [pad(d.getHours()),
-	              pad(d.getMinutes()),
-	              pad(d.getSeconds())].join(':');
-	  return [d.getDate(), months[d.getMonth()], time].join(' ');
-	}
-
-
-	// log is just a thin wrapper to console.log that prepends a timestamp
-	exports.log = function() {
-	  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-	};
-
-
-	/**
-	 * Inherit the prototype methods from one constructor into another.
-	 *
-	 * The Function.prototype.inherits from lang.js rewritten as a standalone
-	 * function (not on Function.prototype). NOTE: If this file is to be loaded
-	 * during bootstrapping this function needs to be rewritten using some native
-	 * functions as prototype setup using normal JavaScript does not work as
-	 * expected during bootstrapping (see mirror.js in r114903).
-	 *
-	 * @param {function} ctor Constructor function which needs to inherit the
-	 *     prototype.
-	 * @param {function} superCtor Constructor function to inherit prototype from.
-	 */
-	exports.inherits = __webpack_require__(6);
-
-	exports._extend = function(origin, add) {
-	  // Don't do anything if add isn't an object
-	  if (!add || !isObject(add)) return origin;
-
-	  var keys = Object.keys(add);
-	  var i = keys.length;
-	  while (i--) {
-	    origin[keys[i]] = add[keys[i]];
-	  }
-	  return origin;
-	};
-
-	function hasOwnProperty(obj, prop) {
-	  return Object.prototype.hasOwnProperty.call(obj, prop);
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(4)))
+	module.exports = Component;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 4 */
@@ -1522,489 +824,104 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = function isBuffer(arg) {
-	  return arg && typeof arg === 'object'
-	    && typeof arg.copy === 'function'
-	    && typeof arg.fill === 'function'
-	    && typeof arg.readUInt8 === 'function';
-	}
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _Component = __webpack_require__(8);
-
-	var _Component2 = _interopRequireDefault(_Component);
-
-	var _Port = __webpack_require__(11);
-
-	var _Port2 = _interopRequireDefault(_Port);
-
-	var _Variable = __webpack_require__(12);
-
-	var _Variable2 = _interopRequireDefault(_Variable);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Flow = {};
-	Flow.Component = _Component2.default;
-	Flow.Port = _Port2.default;
-	Flow.Variable = _Variable2.default;
-
-	module.exports = Flow;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Util = __webpack_require__(9);
-
-	var _Util2 = _interopRequireDefault(_Util);
-
-	var _events = __webpack_require__(10);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	var _Port = __webpack_require__(11);
-
-	var _Port2 = _interopRequireDefault(_Port);
-
-	var _Variable = __webpack_require__(12);
-
-	var _Variable2 = _interopRequireDefault(_Variable);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Component = function () {
-	    function Component() {
-	        _classCallCheck(this, Component);
-
-	        //Icon URL is the URL of an Icon in SVG that can be showed in the UI. 
-	        this._iconUrl = '';
-
-	        //These are number of outports.
-	        this._ports = [];
-
-	        //A short description of the component. 
-	        this._description = '';
-
-	        //List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc. 
-	        this._outPorts = {};
-
-	        //A socket object to communicate with other components. 
-	        this._socket = new _events2.default();
-
-	        //Genere a new ID for this instance. 
-	        this._id = _Util2.default.generateId();
-
-	        this._socket.on('execute-component-' + this.id, this.execute);
-
-	        this._variables = [];
-
-	        //check if the env is NodeJS
-	        this._platform = "browser";
-	        if (typeof process !== "undefined" && process.versions && process.versions.node) {
-	            this._platform = "node";
-	        }
-
-	        this._isProcessingTask = false;
-	    }
-
-	    _createClass(Component, [{
-	        key: 'addVariable',
-	        value: function addVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        throw "Variable with the same name or id already exists.";
-	                    }
-	                }
-
-	                this._variables.push(variable);
-	            } else {
-	                throw "variables should be an instance of Variable class.";
-	            }
-	        }
-	    }, {
-	        key: 'removeVariable',
-	        value: function removeVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    }
-	                }
-	            } else {
-	                throw "variables should be an instance of Variable class.";
-	            }
-	        }
-	    }, {
-	        key: 'updateVariable',
-	        value: function updateVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        this._variables[i] = variable;
-	                        return;
-	                    }
-	                }
-
-	                throw "Variable not found and is not updated.";
-	            } else {
-	                throw "variables should be an instance of Variable class.";
-	            }
-	        }
-	    }, {
-	        key: 'getVariable',
-	        value: function getVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return this._variables[i];
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return this._variables[i];
-	                        }
-	                    }
-	                }
-
-	                throw "Variable not found.";
-	            } else {
-	                throw "Variable should be an instance of variable class.";
-	            }
-	        }
-	    }, {
-	        key: 'hasVariable',
-	        value: function hasVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return true;
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return true;
-	                        }
-	                    }
-	                }
-	                return false;
-	            } else {
-	                throw "variables should be an instance of Variable class.";
-	            }
-	        }
-
-	        //execute the component task.
-
-	    }, {
-	        key: 'execute',
-	        value: function execute() {
-	            //check if task is attached and if its actually a function.
-	            if (this._isProcessingTask) throw "Component is already processing a task.";
-
-	            if (this._task && _Util2.default.validate(this._task === "function")) {
-	                this._isProcessingTask = true;
-	                this._task();
-	            }
-	        }
-	    }, {
-	        key: 'taskComplete',
-	        value: function taskComplete() {
-	            //Task is complete, and this component is no longer processing. 
-	            this._isProcessingTask = false;
-	        }
-	        //Task is a custom code as a function that runs when the component executes. 
-
-	    }, {
-	        key: 'attachTask',
-	        value: function attachTask(task) {
-
-	            if (!_Util2.default.validate(task, 'function')) {
-	                throw 'Task must be a function.';
-	            }
-
-	            this._task = task;
-	        }
-
-	        //Task is a custom code as a function that runs when the component executes. 
-
-	    }, {
-	        key: 'detachTask',
-	        value: function detachTask() {
-	            this._task = null;
-	        }
-	    }, {
-	        key: 'serialize',
-	        value: function serialize() {
-	            return JSON.stringify(this);
-	        }
-	    }, {
-	        key: 'addPort',
-	        value: function addPort(port) {
-	            if (port instanceof _Port2.default) {
-	                if (!port.id) throw "Port does not have an ID.";
-
-	                for (var i = 0; i < this._ports.length; i++) {
-	                    if (port.name === this._ports[i].name || port.id === this._ports[i].id) {
-	                        throw "Port with the same name or id already exists.";
-	                    }
-	                }
-
-	                if (port._componentAttachedTo) throw "This port is already attached with other component";
-
-	                port._componentAttachedTo = this;
-	                this._ports.push(port);
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'removePort',
-	        value: function removePort(port) {
-	            if (port instanceof _Port2.default) {
-	                if (!port.id) throw "Port does not have an ID.";
-	                if (this._ports.indexOf(port) < 0) {
-	                    throw "Port not found in the component.";
-	                }
-	                this._ports.slice(this._ports.indexOf(port), 1);
-	                port._componentAttachedTo = null;
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'getPort',
-	        value: function getPort(port) {
-	            if (port instanceof _Port2.default || typeof port === 'string') {
-	                if (port instanceof _Port2.default) {
-	                    if (!port.id) throw "Port does not have an ID.";
-
-	                    if (this._ports.indexOf(port) < 0) {
-	                        throw "Port not found in the component.";
-	                    }
-
-	                    return this._ports[this._ports.indexOf(port)];
-	                }
-
-	                if (typeof port === 'string') {
-
-	                    for (var i = 0; i < this._ports.length; i++) {
-
-	                        if (this._ports[i].name === port) {
-	                            return this._ports[i];
-	                        }
-	                    }
-
-	                    throw "Port with name " + port + " not found in the component.";
-	                }
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'hasPort',
-	        value: function hasPort(port) {
-	            if (port instanceof _Port2.default) {
-	                if (!port.id) throw "Port does not have an ID.";
-	                if (his._ports.indexOf(port) < 0) {
-	                    return false;
-	                }
-
-	                return true;
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'getPorts',
-	        value: function getPorts() {
-	            return this._ports;
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-
-	            return this._description;
-	        },
-	        set: function set(description) {
-
-	            if (!_Util2.default.validate(description, 'string')) {
-	                throw 'Description must be a string.';
-	            }
-
-	            this._description = description;
-	        }
-	    }, {
-	        key: 'task',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(task) {
-	            this.attachTask(task);
-	        }
-	    }, {
-	        key: 'name',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(name) {
-	            if (!_Util2.default.validate(name, 'string')) {
-	                throw 'Name must be a string.';
-	            }
-	            this._name = name;
-	        }
-	    }, {
-	        key: 'iconUrl',
-	        get: function get() {
-	            return this._iconUrl;
-	        },
-	        set: function set(iconUrl) {
-	            if (!_Util2.default.validate(name, 'url')) {
-	                throw 'iconUrl must be a URL.';
-	            }
-	            this._iconUrl = iconUrl;
-	        }
-	    }, {
-	        key: 'outPorts',
-	        get: function get() {
-	            return this._outPorts;
-	        }
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            return this._id;
-	        }
-	    }]);
-
-	    return Component;
-	}();
-
-	//export. 
-
-
-	module.exports = Component;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _events = __webpack_require__(10);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Util = function () {
-		function Util() {
-			_classCallCheck(this, Util);
-		}
+	  function Util() {
+	    _classCallCheck(this, Util);
+	  }
 
-		_createClass(Util, null, [{
-			key: "validate",
-			value: function validate(value, type) {
+	  _createClass(Util, null, [{
+	    key: 'validateType',
+	    value: function validateType(value, type) {
+	      // define types here.
+	      type = type.toLowerCase(); // lowercase type.
+	      var validTypes = ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function'];
 
-				//validate for URL.
-				if (type === "url" && this.validate(value, "string")) {
-					var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+	      if (validTypes.indexOf(type) < 0) {
+	        throw new Error(type + ' is not a valid type.');
+	      }
 
-					if (!re.test(value)) {
-						return false;
-					}
+	      if (type === 'text' || type === 'string' || type === 'url' || type === 'email') {
+	        if (typeof value !== 'string') {
+	          return false;
+	        }
+	      }
 
-					return true;
-				}
+	      if (type === 'number' || type === 'int' || type === 'integer' || type === 'decimal' || type === 'float' || type === 'double' || type === 'rating') {
+	        if (typeof value !== 'number') {
+	          return false;
+	        }
+	      }
 
-				if (value === undefined || value === null || value === '') return false;
+	      if (type === 'bool' || type === 'boolean') {
+	        if (typeof value !== 'boolean') {
+	          return false;
+	        }
+	      }
 
-				if (type && type != 'any') {
-					if ((typeof value === "undefined" ? "undefined" : _typeof(value)) != type) return false;
-				}
+	      if (type === 'function') {
+	        if (typeof value !== 'function') {
+	          return false;
+	        }
+	      }
 
-				return true;
-			}
-		}, {
-			key: "generateId",
-			value: function generateId() {
-				var id = "";
-				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-				for (var i = 0; i < 12; i++) {
-					id = id + possible.charAt(Math.floor(Math.random() * possible.length));
-				}
-				return id;
-			}
-		}]);
+	      if (type === 'date' || type === 'datetime' || type === 'time') {
+	        if (!(value instanceof type)) {
+	          return false;
+	        }
+	      }
 
-		return Util;
+	      if (type === 'rating') {
+	        if (value < 0 || value > 5) {
+	          return false;
+	        }
+	      }
+
+	      // validate for URL.
+	      if (type === 'url' && this.validate(value, 'text')) {
+	        var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9]+[a-zA-Z]{2,8}/;
+
+	        if (!re.test(value)) {
+	          return false;
+	        }
+
+	        return true;
+	      }
+
+	      // To-Do: Check for all the types here.
+	      return true;
+	    }
+	  }, {
+	    key: 'generateId',
+	    value: function generateId() {
+	      var id = '';
+	      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	      for (var i = 0; i < 12; i++) {
+	        id = id + possible.charAt(Math.floor(Math.random() * possible.length));
+	      }
+	      return id;
+	    }
+	  }, {
+	    key: 'isNotNull',
+	    value: function isNotNull(value) {
+	      if (value !== null && value !== '' && value !== undefined) {
+	        return true;
+	      }
+
+	      return false;
+	    }
+	  }]);
+
+	  return Util;
 	}();
 
-	var _exports = module.exports = Util;
+	module.exports = Util;
 
 /***/ },
-/* 10 */
+/* 6 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -2312,24 +1229,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Util = __webpack_require__(9);
+	var _Util = __webpack_require__(5);
 
 	var _Util2 = _interopRequireDefault(_Util);
 
-	var _Component = __webpack_require__(8);
+	var _Component = __webpack_require__(3);
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _Variable = __webpack_require__(12);
+	var _Variable = __webpack_require__(8);
 
 	var _Variable2 = _interopRequireDefault(_Variable);
 
-	var _events = __webpack_require__(10);
+	var _events = __webpack_require__(6);
 
 	var _events2 = _interopRequireDefault(_events);
 
@@ -2338,234 +1255,247 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Port = function () {
-	    function Port(name) {
-	        _classCallCheck(this, Port);
+	  function Port(name) {
+	    _classCallCheck(this, Port);
 
-	        //set initial properties
-	        if (!name) {
-	            throw "Port Name is required.";
-	        }
-
-	        this.name = name;
-	        this._id = _Util2.default.generateId();
-	        this._connectedComponents = [];
-	        this._componentAttachedTo = null;
-	        this._variables = [];
-	        this._socket = new _events2.default();
+	    // set initial properties
+	    if (!name) {
+	      throw new Error('Port Name is required.');
 	    }
 
-	    _createClass(Port, [{
-	        key: 'addVariable',
-	        value: function addVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
+	    this.name = name;
+	    this._id = _Util2.default.generateId();
+	    this._connectedComponents = [];
+	    this._componentAttachedTo = null;
+	    this._variables = [];
+	    this._socket = new _events2.default();
+	  }
 
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        throw "Variable with the same name or id already exists.";
-	                    }
-	                }
+	  _createClass(Port, [{
+	    key: 'addVariable',
+	    value: function addVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                this._variables.push(variable);
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            throw new Error('Variable with the same name or id already exists.');
+	          }
+	        }
+
+	        this._variables.push(variable);
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'removeVariable',
+	    value: function removeVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              this._variables.slice(i, 1);
 	            }
-	        }
-	    }, {
-	        key: 'removeVariable',
-	        value: function removeVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    }
-	                }
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              this._variables.slice(i, 1);
 	            }
+	          }
 	        }
-	    }, {
-	        key: 'updateVariable',
-	        value: function updateVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'updateVariable',
+	    value: function updateVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        this._variables[i] = variable;
-	                        return;
-	                    }
-	                }
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            this._variables[i] = variable;
+	            return;
+	          }
+	        }
 
-	                throw "Variable not found and is not updated.";
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        throw new Error('Variable not found and is not updated.');
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'hasVariable',
+	    value: function hasVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return true;
 	            }
-	        }
-	    }, {
-	        key: 'hasVariable',
-	        value: function hasVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return true;
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return true;
-	                        }
-	                    }
-	                }
-	                return false;
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return true;
 	            }
+	          }
+	        }
+	        return false;
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+
+	    // This passes the flow to components that this port is connected to.
+
+	  }, {
+	    key: 'emit',
+	    value: function emit() {
+	      for (var i = 0; i < this._connectedComponents; i++) {
+	        this._socket.emit('execute-component-' + this._connectedComponents[i]);
+	      }
+
+	      // Fire an onEmit Callback.
+	      if (this._onEmit) {
+	        this._onEmit();
+	      }
+	    }
+	  }, {
+	    key: 'onEmit',
+	    value: function onEmit(callback) {
+	      this._onEmit = callback;
+	    }
+	  }, {
+	    key: 'connectComponent',
+	    value: function connectComponent(component) {
+	      if (component instanceof _Component2.default) {
+	        if (!component.id) {
+	          throw new Error('Component does not have an ID.');
 	        }
 
-	        //This passes the flow to components that this port is connected to. 
+	        var componentId = component.id;
 
-	    }, {
-	        key: 'emit',
-	        value: function emit() {
-	            for (var i = 0; i < this._connectedComponents; i++) {
-	                this._socket.emit("execute-component-" + this._connectedComponents[i]);
+	        for (var i = 0; i < this._connectedComponents.length; i++) {
+	          if (componentId === this._connectedComponents[i]) {
+	            throw new Error('Port is already connected to ' + component.name + '.');
+	          }
+	        }
+
+	        this._connectedComponents.push(componentId);
+	      } else {
+	        throw new Error('component should be an instance of Component class.');
+	      }
+	    }
+	  }, {
+	    key: 'getVariable',
+	    value: function getVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return this._variables[i];
 	            }
-
-	            //Fire an onEmit Callback.
-	            if (this._onEmit) this._onEmit();
-	        }
-	    }, {
-	        key: 'onEmit',
-	        value: function onEmit(callback) {
-	            this._onEmit = callback;
-	        }
-	    }, {
-	        key: 'connectComponent',
-	        value: function connectComponent(component) {
-	            if (component instanceof _Component2.default) {
-	                if (!component.id) throw "Component does not have an ID.";
-
-	                var componentId = component.id;
-
-	                for (var i = 0; i < this._connectedComponents.length; i++) {
-	                    if (componentId === this._connectedComponents[i]) {
-	                        throw "Port is already connected to " + component.name + ".";
-	                    }
-	                }
-
-	                this._connectedComponents.push(componentId);
-	            } else {
-	                throw "component should be an instance of Component class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return this._variables[i];
 	            }
-	        }
-	    }, {
-	        key: 'getVariable',
-	        value: function getVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return this._variables[i];
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return this._variables[i];
-	                        }
-	                    }
-	                }
-
-	                throw "Variable not found.";
-	            } else {
-	                throw "Variable should be an instance of variable class.";
-	            }
-	        }
-	    }, {
-	        key: 'serialize',
-	        value: function serialize() {
-	            return JSON.stringify(this);
-	        }
-	    }, {
-	        key: 'disconnectComponent',
-	        value: function disconnectComponent(component) {
-	            if (component instanceof _Component2.default) {
-	                if (!component.id) throw "Component does not have an ID.";
-
-	                var componentId = component.id;
-	                if (this._connectedComponents.indexOf(componentId) < 0) {
-	                    throw "Component is not connected to the port.";
-	                }
-
-	                this._connectedComponents.slice(this._connectedComponents.indexOf(componentId), 1);
-	            } else {
-	                throw "component should be an instance of Component class.";
-	            }
-	        }
-	    }, {
-	        key: 'getConnectedComponentIds',
-	        value: function getConnectedComponentIds() {
-	            return this._connectedComponents;
+	          }
 	        }
 
-	        //getters and setters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(description) {
-
-	            if (!_Util2.default.validate(description, 'string')) {
-	                throw 'Description must be a string.';
-	            }
-
-	            this._description = description;
+	        throw new Error('Variable not found.');
+	      } else {
+	        throw new Error('Variable should be an instance of variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'serialize',
+	    value: function serialize() {
+	      return JSON.stringify(this);
+	    }
+	  }, {
+	    key: 'disconnectComponent',
+	    value: function disconnectComponent(component) {
+	      if (component instanceof _Component2.default) {
+	        if (!component.id) {
+	          throw new Error('Component does not have an ID.');
 	        }
-	    }, {
-	        key: 'name',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(name) {
-	            if (!_Util2.default.validate(name, 'string')) {
-	                throw 'Name must be a string.';
-	            }
-	            this._name = name;
-	        }
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            return this._id;
-	        }
-	    }]);
 
-	    return Port;
+	        var componentId = component.id;
+	        if (this._connectedComponents.indexOf(componentId) < 0) {
+	          throw new Error('Component is not connected to the port.');
+	        }
+
+	        this._connectedComponents.slice(this._connectedComponents.indexOf(componentId), 1);
+	      } else {
+	        throw new Error('component should be an instance of Component class.');
+	      }
+	    }
+	  }, {
+	    key: 'getConnectedComponentIds',
+	    value: function getConnectedComponentIds() {
+	      return this._connectedComponents;
+	    }
+
+	    // getters and setters
+
+	  }, {
+	    key: 'description',
+	    get: function get() {
+	      return this._description;
+	    },
+	    set: function set(description) {
+	      if (!_Util2.default.validateType(description, 'string')) {
+	        throw new Error('Description must be a string.');
+	      }
+
+	      this._description = description;
+	    }
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }]);
+
+	  return Port;
 	}();
 
 	module.exports = Port;
 
 /***/ },
-/* 12 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Util = __webpack_require__(9);
+	var _Util = __webpack_require__(5);
 
 	var _Util2 = _interopRequireDefault(_Util);
 
@@ -2574,110 +1504,108 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Variable = function () {
-	    function Variable(name, dataType) {
-	        _classCallCheck(this, Variable);
+	  function Variable(name, dataType) {
+	    _classCallCheck(this, Variable);
 
-	        if (!name) {
-	            throw "Name is required.";
-	        }
-
-	        if (!dataType) {
-	            throw "DataType is required.";
-	        }
-
-	        this.name = name;
-	        this.dataType = dataType;
-	        this.required = false;
-	        this._id = _Util2.default.generateId();
-	        this.data = null;
-	        this.index = null;
+	    if (!name) {
+	      throw new Error('Name is required.');
 	    }
 
-	    _createClass(Variable, [{
-	        key: "serialize",
-	        value: function serialize() {
-	            return JSON.stringify(this);
-	        }
-	    }, {
-	        key: "data",
-	        set: function set(data) {
-	            //ToDO: Check the DataType and Set Data.
-	            this._data = data;
-	        },
-	        get: function get() {
-	            return this._data;
-	        }
+	    if (!dataType) {
+	      throw new Error('DataType is required.');
+	    }
 
-	        //getters and setters
+	    this.name = name;
+	    this.dataType = dataType;
+	    this.required = false;
+	    this._id = _Util2.default.generateId();
+	    this.data = null;
+	    this.index = null;
+	  }
 
-	    }, {
-	        key: "description",
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(description) {
-	            if (!_Util2.default.validate(description, 'string')) {
-	                throw 'Description must be a string.';
-	            }
-	            this._description = description;
-	        }
+	  _createClass(Variable, [{
+	    key: 'serialize',
+	    value: function serialize() {
+	      return JSON.stringify(this);
+	    }
+	  }, {
+	    key: 'data',
+	    set: function set(data) {
+	      // ToDO: Check the DataType and Set Data.
+	      this._data = data;
+	    },
+	    get: function get() {
+	      return this._data;
+	    }
 
-	        //getters and setters
+	    // getters and setters
 
-	    }, {
-	        key: "name",
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(name) {
-	            if (!_Util2.default.validate(name, 'string')) {
-	                throw 'Name must be a string.';
-	            }
-	            this._name = name;
-	        }
+	  }, {
+	    key: 'description',
+	    get: function get() {
+	      return this._description;
+	    },
+	    set: function set(description) {
+	      if (!_Util2.default.validateType(description, 'string')) {
+	        throw new Error('Description must be a string.');
+	      }
+	      this._description = description;
+	    }
 
-	        //getters and setters
+	    // getters and setters
 
-	    }, {
-	        key: "dataType",
-	        get: function get() {
-	            return this._dataType;
-	        }
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
 
-	        //DataType can be an array too. Like a selector box or an object of Params. 
-	        ,
-	        set: function set(dataType) {
+	    // getters and setters
 
-	            if (!_Util2.default.validate(dataType, 'string') && !(dataType instanceof Array)) {
-	                throw 'DataType must be a string or an array.';
-	            }
+	  }, {
+	    key: 'dataType',
+	    get: function get() {
+	      return this._dataType;
+	    }
 
-	            this._dataType = dataType;
-	        }
-	    }, {
-	        key: "id",
-	        get: function get() {
-	            return this._id;
-	        }
-	    }, {
-	        key: "required",
-	        set: function set(required) {
+	    // DataType can be an array too. Like a selector box or an object of Params.
+	    ,
+	    set: function set(dataType) {
+	      if (!_Util2.default.validateType(dataType, 'string') && !(dataType instanceof Array)) {
+	        throw new Error('DataType must be a string or an array.');
+	      }
 
-	            if (!_Util2.default.validate(required, 'boolean')) {
-	                throw 'Required must be a string.';
-	            }
+	      this._dataType = dataType;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }, {
+	    key: 'required',
+	    set: function set(required) {
+	      if (!_Util2.default.validateType(required, 'boolean')) {
+	        throw new Error('Required must be a string.');
+	      }
 
-	            this._required = required;
-	        }
+	      this._required = required;
+	    }
 
-	        //getters and setters
-	        ,
-	        get: function get() {
-	            return this._required;
-	        }
-	    }]);
+	    // getters and setters
+	    ,
+	    get: function get() {
+	      return this._required;
+	    }
+	  }]);
 
-	    return Variable;
+	  return Variable;
 	}();
 
 	module.exports = Variable;

@@ -1,1 +1,4 @@
-import Component from './Component';
+import Component from './Component'
+
+var Flow = {}
+Flow.Component = Component

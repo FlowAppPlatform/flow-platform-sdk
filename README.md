@@ -60,4 +60,4 @@ If you want to build new components using Flow SDK. Please read out the document
 
 ## Contributing
 
-If you're contributing to the Flow SDK. Please read the docs [here.](/docs/Contributing)
+If you're contributing to the Flow SDK. Please read the docs [here.](/docs/contributing)

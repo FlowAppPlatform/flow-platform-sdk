@@ -102,333 +102,348 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Component = function () {
-	    function Component() {
-	        _classCallCheck(this, Component);
+	  function Component() {
+	    _classCallCheck(this, Component);
 
-	        //Icon URL is the URL of an Icon in SVG that can be showed in the UI. 
-	        this._iconUrl = '';
+	    // Icon URL is the URL of an Icon in SVG that can be showed in the UI.
+	    this._iconUrl = '';
 
-	        //These are number of outports.
-	        this._ports = [];
+	    // These are number of outports.
+	    this._ports = [];
 
-	        //A short description of the component. 
-	        this._description = '';
+	    // A short description of the component.
+	    this._description = '';
 
-	        //List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc. 
-	        this._outPorts = {};
+	    // List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc.
+	    this._outPorts = {};
 
-	        //A socket object to communicate with other components. 
-	        this._socket = new _events2.default();
+	    // A socket object to communicate with other components.
+	    this._socket = new _events2.default();
 
-	        //Genere a new ID for this instance. 
-	        this._id = _Util2.default.generateId();
+	    // Genere a new ID for this instance.
+	    this._id = _Util2.default.generateId();
 
-	        this._socket.on('execute-component-' + this.id, this.execute);
+	    this._socket.on('execute-component-' + this.id, this.execute);
 
-	        this._variables = [];
+	    this._variables = [];
 
-	        //check if the env is NodeJS
-	        this._platform = "browser";
-	        if (typeof process !== "undefined" && process.versions && process.versions.node) {
-	            this._platform = "node";
-	        }
-
-	        this._isProcessingTask = false;
+	    // check if the env is NodeJS
+	    this._platform = 'browser';
+	    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+	      this._platform = 'node';
 	    }
 
-	    _createClass(Component, [{
-	        key: 'addVariable',
-	        value: function addVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
+	    this._isProcessingTask = false;
+	  }
 
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        throw "Variable with the same name or id already exists.";
-	                    }
-	                }
+	  _createClass(Component, [{
+	    key: 'addVariable',
+	    value: function addVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                this._variables.push(variable);
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            throw new Error('Variable with the same name or id already exists.');
+	          }
+	        }
+
+	        this._variables.push(variable);
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'removeVariable',
+	    value: function removeVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              this._variables.slice(i, 1);
 	            }
-	        }
-	    }, {
-	        key: 'removeVariable',
-	        value: function removeVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    }
-	                }
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              this._variables.slice(i, 1);
 	            }
+	          }
 	        }
-	    }, {
-	        key: 'updateVariable',
-	        value: function updateVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'updateVariable',
+	    value: function updateVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        this._variables[i] = variable;
-	                        return;
-	                    }
-	                }
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            this._variables[i] = variable;
+	            return;
+	          }
+	        }
 
-	                throw "Variable not found and is not updated.";
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        throw new Error('Variable not found and is not updated.');
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'getVariable',
+	    value: function getVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return this._variables[i];
 	            }
-	        }
-	    }, {
-	        key: 'getVariable',
-	        value: function getVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return this._variables[i];
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return this._variables[i];
-	                        }
-	                    }
-	                }
-
-	                throw "Variable not found.";
-	            } else {
-	                throw "Variable should be an instance of variable class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return this._variables[i];
 	            }
+	          }
 	        }
-	    }, {
-	        key: 'hasVariable',
-	        value: function hasVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
 
-	                for (var i = 0; i < this._variables.length; i++) {
+	        throw new Error('Variable not found.');
+	      } else {
+	        throw new Error('Variable should be an instance of variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'hasVariable',
+	    value: function hasVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return true;
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return true;
-	                        }
-	                    }
-	                }
-	                return false;
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return true;
 	            }
-	        }
-
-	        //execute the component task.
-
-	    }, {
-	        key: 'execute',
-	        value: function execute() {
-	            //check if task is attached and if its actually a function.
-	            if (this._isProcessingTask) throw "Component is already processing a task.";
-
-	            if (this._task && _Util2.default.validate(this._task === "function")) {
-	                this._isProcessingTask = true;
-	                this._task();
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return true;
 	            }
+	          }
 	        }
-	    }, {
-	        key: 'taskComplete',
-	        value: function taskComplete() {
-	            //Task is complete, and this component is no longer processing. 
-	            this._isProcessingTask = false;
+	        return false;
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+
+	    // execute the component task.
+
+	  }, {
+	    key: 'execute',
+	    value: function execute() {
+	      // check if task is attached and if its actually a function.
+	      if (this._isProcessingTask) {
+	        throw new Error('Component is already processing a task.');
+	      }
+
+	      if (this._task && _Util2.default.validateType(this._task === 'function')) {
+	        this._isProcessingTask = true;
+	        this._task();
+	      }
+	    }
+	  }, {
+	    key: 'taskComplete',
+	    value: function taskComplete() {
+	      // Task is complete, and this component is no longer processing.
+	      this._isProcessingTask = false;
+	    }
+	    // Task is a custom code as a function that runs when the component executes.
+
+	  }, {
+	    key: 'attachTask',
+	    value: function attachTask(task) {
+	      if (!_Util2.default.validateType(task, 'function')) {
+	        throw new Error('Task must be a function.');
+	      }
+
+	      this._task = task;
+	    }
+
+	    // Task is a custom code as a function that runs when the component executes.
+
+	  }, {
+	    key: 'detachTask',
+	    value: function detachTask() {
+	      this._task = null;
+	    }
+	  }, {
+	    key: 'serialize',
+	    value: function serialize() {
+	      return JSON.stringify(this);
+	    }
+	  }, {
+	    key: 'addPort',
+	    value: function addPort(port) {
+	      if (port instanceof _Port2.default) {
+	        if (!port.id) {
+	          throw new Error('Port does not have an ID.');
 	        }
-	        //Task is a custom code as a function that runs when the component executes. 
 
-	    }, {
-	        key: 'attachTask',
-	        value: function attachTask(task) {
+	        for (var i = 0; i < this._ports.length; i++) {
+	          if (port.name === this._ports[i].name || port.id === this._ports[i].id) {
+	            throw new Error('Port with the same name or id already exists.');
+	          }
+	        }
 
-	            if (!_Util2.default.validate(task, 'function')) {
-	                throw 'Task must be a function.';
+	        if (port._componentAttachedTo) {
+	          throw new Error('This port is already attached with other component');
+	        }
+
+	        port._componentAttachedTo = this;
+	        this._ports.push(port);
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'removePort',
+	    value: function removePort(port) {
+	      if (port instanceof _Port2.default) {
+	        if (!port.id) {
+	          throw new Error('Port does not have an ID.');
+	        }
+	        if (this._ports.indexOf(port) < 0) {
+	          throw new Error('Port not found in the component.');
+	        }
+	        this._ports.slice(this._ports.indexOf(port), 1);
+	        port._componentAttachedTo = null;
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'getPort',
+	    value: function getPort(port) {
+	      if (port instanceof _Port2.default || typeof port === 'string') {
+	        if (port instanceof _Port2.default) {
+	          if (!port.id) {
+	            throw new Error('Port does not have an ID.');
+	          }
+
+	          if (this._ports.indexOf(port) < 0) {
+	            throw new Error('Port not found in the component.');
+	          }
+
+	          return this._ports[this._ports.indexOf(port)];
+	        }
+
+	        if (typeof port === 'string') {
+	          for (var i = 0; i < this._ports.length; i++) {
+	            if (this._ports[i].name === port) {
+	              return this._ports[i];
 	            }
+	          }
 
-	            this._task = task;
+	          throw new Error('Port with name ' + port + ' not found in the component.');
+	        }
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'hasPort',
+	    value: function hasPort(port) {
+	      if (port instanceof _Port2.default) {
+	        if (!port.id) {
+	          throw new Error('Port does not have an ID.');
+	        }
+	        if (this._ports.indexOf(port) < 0) {
+	          return false;
 	        }
 
-	        //Task is a custom code as a function that runs when the component executes. 
+	        return true;
+	      } else {
+	        throw new Error('Port should be an instance of Port class.');
+	      }
+	    }
+	  }, {
+	    key: 'getPorts',
+	    value: function getPorts() {
+	      return this._ports;
+	    }
 
-	    }, {
-	        key: 'detachTask',
-	        value: function detachTask() {
-	            this._task = null;
-	        }
-	    }, {
-	        key: 'serialize',
-	        value: function serialize() {
-	            return JSON.stringify(this);
-	        }
-	    }, {
-	        key: 'addPort',
-	        value: function addPort(port) {
-	            if (port instanceof _Port2.default) {
-	                if (!port.id) throw "Port does not have an ID.";
+	    // getters and setters
 
-	                for (var i = 0; i < this._ports.length; i++) {
-	                    if (port.name === this._ports[i].name || port.id === this._ports[i].id) {
-	                        throw "Port with the same name or id already exists.";
-	                    }
-	                }
+	  }, {
+	    key: 'description',
+	    get: function get() {
+	      return this._description;
+	    },
+	    set: function set(description) {
+	      if (!_Util2.default.validateType(description, 'string')) {
+	        throw new Error('Description must be a string.');
+	      }
 
-	                if (port._componentAttachedTo) throw "This port is already attached with other component";
+	      this._description = description;
+	    }
+	  }, {
+	    key: 'task',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(task) {
+	      this.attachTask(task);
+	    }
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
+	  }, {
+	    key: 'iconUrl',
+	    get: function get() {
+	      return this._iconUrl;
+	    },
+	    set: function set(iconUrl) {
+	      if (!_Util2.default.validateType(iconUrl, 'url')) {
+	        throw new Error('iconUrl must be a URL.');
+	      }
+	      this._iconUrl = iconUrl;
+	    }
+	  }, {
+	    key: 'outPorts',
+	    get: function get() {
+	      return this._outPorts;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }]);
 
-	                port._componentAttachedTo = this;
-	                this._ports.push(port);
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'removePort',
-	        value: function removePort(port) {
-	            if (port instanceof _Port2.default) {
-	                if (!port.id) throw "Port does not have an ID.";
-	                if (this._ports.indexOf(port) < 0) {
-	                    throw "Port not found in the component.";
-	                }
-	                this._ports.slice(this._ports.indexOf(port), 1);
-	                port._componentAttachedTo = null;
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'getPort',
-	        value: function getPort(port) {
-	            if (port instanceof _Port2.default || typeof port === 'string') {
-	                if (port instanceof _Port2.default) {
-	                    if (!port.id) throw "Port does not have an ID.";
-
-	                    if (this._ports.indexOf(port) < 0) {
-	                        throw "Port not found in the component.";
-	                    }
-
-	                    return this._ports[this._ports.indexOf(port)];
-	                }
-
-	                if (typeof port === 'string') {
-
-	                    for (var i = 0; i < this._ports.length; i++) {
-
-	                        if (this._ports[i].name === port) {
-	                            return this._ports[i];
-	                        }
-	                    }
-
-	                    throw "Port with name " + port + " not found in the component.";
-	                }
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'hasPort',
-	        value: function hasPort(port) {
-	            if (port instanceof _Port2.default) {
-	                if (!port.id) throw "Port does not have an ID.";
-	                if (his._ports.indexOf(port) < 0) {
-	                    return false;
-	                }
-
-	                return true;
-	            } else {
-	                throw "Port should be an instance of Port class.";
-	            }
-	        }
-	    }, {
-	        key: 'getPorts',
-	        value: function getPorts() {
-	            return this._ports;
-	        }
-
-	        //getters and setters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-
-	            return this._description;
-	        },
-	        set: function set(description) {
-
-	            if (!_Util2.default.validate(description, 'string')) {
-	                throw 'Description must be a string.';
-	            }
-
-	            this._description = description;
-	        }
-	    }, {
-	        key: 'task',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(task) {
-	            this.attachTask(task);
-	        }
-	    }, {
-	        key: 'name',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(name) {
-	            if (!_Util2.default.validate(name, 'string')) {
-	                throw 'Name must be a string.';
-	            }
-	            this._name = name;
-	        }
-	    }, {
-	        key: 'iconUrl',
-	        get: function get() {
-	            return this._iconUrl;
-	        },
-	        set: function set(iconUrl) {
-	            if (!_Util2.default.validate(name, 'url')) {
-	                throw 'iconUrl must be a URL.';
-	            }
-	            this._iconUrl = iconUrl;
-	        }
-	    }, {
-	        key: 'outPorts',
-	        get: function get() {
-	            return this._outPorts;
-	        }
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            return this._id;
-	        }
-	    }]);
-
-	    return Component;
+	  return Component;
 	}();
 
-	//export. 
+	// export.
 
 
 	module.exports = Component;
@@ -626,64 +641,103 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+/***/ function(module, exports) {
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _events = __webpack_require__(4);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Util = function () {
-		function Util() {
-			_classCallCheck(this, Util);
-		}
+	  function Util() {
+	    _classCallCheck(this, Util);
+	  }
 
-		_createClass(Util, null, [{
-			key: "validate",
-			value: function validate(value, type) {
+	  _createClass(Util, null, [{
+	    key: 'validateType',
+	    value: function validateType(value, type) {
+	      // define types here.
+	      type = type.toLowerCase(); // lowercase type.
+	      var validTypes = ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function'];
 
-				//validate for URL.
-				if (type === "url" && this.validate(value, "string")) {
-					var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+	      if (validTypes.indexOf(type) < 0) {
+	        throw new Error(type + ' is not a valid type.');
+	      }
 
-					if (!re.test(value)) {
-						return false;
-					}
+	      if (type === 'text' || type === 'string' || type === 'url' || type === 'email') {
+	        if (typeof value !== 'string') {
+	          return false;
+	        }
+	      }
 
-					return true;
-				}
+	      if (type === 'number' || type === 'int' || type === 'integer' || type === 'decimal' || type === 'float' || type === 'double' || type === 'rating') {
+	        if (typeof value !== 'number') {
+	          return false;
+	        }
+	      }
 
-				if (value === undefined || value === null || value === '') return false;
+	      if (type === 'bool' || type === 'boolean') {
+	        if (typeof value !== 'boolean') {
+	          return false;
+	        }
+	      }
 
-				if (type && type != 'any') {
-					if ((typeof value === "undefined" ? "undefined" : _typeof(value)) != type) return false;
-				}
+	      if (type === 'function') {
+	        if (typeof value !== 'function') {
+	          return false;
+	        }
+	      }
 
-				return true;
-			}
-		}, {
-			key: "generateId",
-			value: function generateId() {
-				var id = "";
-				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-				for (var i = 0; i < 12; i++) {
-					id = id + possible.charAt(Math.floor(Math.random() * possible.length));
-				}
-				return id;
-			}
-		}]);
+	      if (type === 'date' || type === 'datetime' || type === 'time') {
+	        if (!(value instanceof type)) {
+	          return false;
+	        }
+	      }
 
-		return Util;
+	      if (type === 'rating') {
+	        if (value < 0 || value > 5) {
+	          return false;
+	        }
+	      }
+
+	      // validate for URL.
+	      if (type === 'url' && this.validate(value, 'text')) {
+	        var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9]+[a-zA-Z]{2,8}/;
+
+	        if (!re.test(value)) {
+	          return false;
+	        }
+
+	        return true;
+	      }
+
+	      // To-Do: Check for all the types here.
+	      return true;
+	    }
+	  }, {
+	    key: 'generateId',
+	    value: function generateId() {
+	      var id = '';
+	      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	      for (var i = 0; i < 12; i++) {
+	        id = id + possible.charAt(Math.floor(Math.random() * possible.length));
+	      }
+	      return id;
+	    }
+	  }, {
+	    key: 'isNotNull',
+	    value: function isNotNull(value) {
+	      if (value !== null && value !== '' && value !== undefined) {
+	        return true;
+	      }
+
+	      return false;
+	    }
+	  }]);
+
+	  return Util;
 	}();
 
-	var _exports = module.exports = Util;
+	module.exports = Util;
 
 /***/ },
 /* 4 */
@@ -1020,223 +1074,236 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Port = function () {
-	    function Port(name) {
-	        _classCallCheck(this, Port);
+	  function Port(name) {
+	    _classCallCheck(this, Port);
 
-	        //set initial properties
-	        if (!name) {
-	            throw "Port Name is required.";
-	        }
-
-	        this.name = name;
-	        this._id = _Util2.default.generateId();
-	        this._connectedComponents = [];
-	        this._componentAttachedTo = null;
-	        this._variables = [];
-	        this._socket = new _events2.default();
+	    // set initial properties
+	    if (!name) {
+	      throw new Error('Port Name is required.');
 	    }
 
-	    _createClass(Port, [{
-	        key: 'addVariable',
-	        value: function addVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
+	    this.name = name;
+	    this._id = _Util2.default.generateId();
+	    this._connectedComponents = [];
+	    this._componentAttachedTo = null;
+	    this._variables = [];
+	    this._socket = new _events2.default();
+	  }
 
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        throw "Variable with the same name or id already exists.";
-	                    }
-	                }
+	  _createClass(Port, [{
+	    key: 'addVariable',
+	    value: function addVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                this._variables.push(variable);
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            throw new Error('Variable with the same name or id already exists.');
+	          }
+	        }
+
+	        this._variables.push(variable);
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'removeVariable',
+	    value: function removeVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              this._variables.slice(i, 1);
 	            }
-	        }
-	    }, {
-	        key: 'removeVariable',
-	        value: function removeVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            this._variables.slice(i, 1);
-	                        }
-	                    }
-	                }
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              this._variables.slice(i, 1);
 	            }
+	          }
 	        }
-	    }, {
-	        key: 'updateVariable',
-	        value: function updateVariable(variable) {
-	            if (variable instanceof _Variable2.default) {
-	                if (!variable.id) throw "Variable does not have an ID.";
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'updateVariable',
+	    value: function updateVariable(variable) {
+	      if (variable instanceof _Variable2.default) {
+	        if (!variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
 
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                        this._variables[i] = variable;
-	                        return;
-	                    }
-	                }
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	            this._variables[i] = variable;
+	            return;
+	          }
+	        }
 
-	                throw "Variable not found and is not updated.";
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	        throw new Error('Variable not found and is not updated.');
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'hasVariable',
+	    value: function hasVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return true;
 	            }
-	        }
-	    }, {
-	        key: 'hasVariable',
-	        value: function hasVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return true;
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return true;
-	                        }
-	                    }
-	                }
-	                return false;
-	            } else {
-	                throw "variables should be an instance of Variable class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return true;
 	            }
+	          }
+	        }
+	        return false;
+	      } else {
+	        throw new Error('variables should be an instance of Variable class.');
+	      }
+	    }
+
+	    // This passes the flow to components that this port is connected to.
+
+	  }, {
+	    key: 'emit',
+	    value: function emit() {
+	      for (var i = 0; i < this._connectedComponents; i++) {
+	        this._socket.emit('execute-component-' + this._connectedComponents[i]);
+	      }
+
+	      // Fire an onEmit Callback.
+	      if (this._onEmit) {
+	        this._onEmit();
+	      }
+	    }
+	  }, {
+	    key: 'onEmit',
+	    value: function onEmit(callback) {
+	      this._onEmit = callback;
+	    }
+	  }, {
+	    key: 'connectComponent',
+	    value: function connectComponent(component) {
+	      if (component instanceof _Component2.default) {
+	        if (!component.id) {
+	          throw new Error('Component does not have an ID.');
 	        }
 
-	        //This passes the flow to components that this port is connected to. 
+	        var componentId = component.id;
 
-	    }, {
-	        key: 'emit',
-	        value: function emit() {
-	            for (var i = 0; i < this._connectedComponents; i++) {
-	                this._socket.emit("execute-component-" + this._connectedComponents[i]);
+	        for (var i = 0; i < this._connectedComponents.length; i++) {
+	          if (componentId === this._connectedComponents[i]) {
+	            throw new Error('Port is already connected to ' + component.name + '.');
+	          }
+	        }
+
+	        this._connectedComponents.push(componentId);
+	      } else {
+	        throw new Error('component should be an instance of Component class.');
+	      }
+	    }
+	  }, {
+	    key: 'getVariable',
+	    value: function getVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return this._variables[i];
 	            }
-
-	            //Fire an onEmit Callback.
-	            if (this._onEmit) this._onEmit();
-	        }
-	    }, {
-	        key: 'onEmit',
-	        value: function onEmit(callback) {
-	            this._onEmit = callback;
-	        }
-	    }, {
-	        key: 'connectComponent',
-	        value: function connectComponent(component) {
-	            if (component instanceof _Component2.default) {
-	                if (!component.id) throw "Component does not have an ID.";
-
-	                var componentId = component.id;
-
-	                for (var i = 0; i < this._connectedComponents.length; i++) {
-	                    if (componentId === this._connectedComponents[i]) {
-	                        throw "Port is already connected to " + component.name + ".";
-	                    }
-	                }
-
-	                this._connectedComponents.push(componentId);
-	            } else {
-	                throw "component should be an instance of Component class.";
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return this._variables[i];
 	            }
-	        }
-	    }, {
-	        key: 'getVariable',
-	        value: function getVariable(variable) {
-	            if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	                if (variable instanceof _Variable2.default && !variable.id) throw "Variable does not have an ID.";
-
-	                for (var i = 0; i < this._variables.length; i++) {
-	                    if (typeof variable === 'string') {
-	                        if (variable === this._variables[i].name) {
-	                            return this._variables[i];
-	                        }
-	                    } else {
-	                        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	                            return this._variables[i];
-	                        }
-	                    }
-	                }
-
-	                throw "Variable not found.";
-	            } else {
-	                throw "Variable should be an instance of variable class.";
-	            }
-	        }
-	    }, {
-	        key: 'serialize',
-	        value: function serialize() {
-	            return JSON.stringify(this);
-	        }
-	    }, {
-	        key: 'disconnectComponent',
-	        value: function disconnectComponent(component) {
-	            if (component instanceof _Component2.default) {
-	                if (!component.id) throw "Component does not have an ID.";
-
-	                var componentId = component.id;
-	                if (this._connectedComponents.indexOf(componentId) < 0) {
-	                    throw "Component is not connected to the port.";
-	                }
-
-	                this._connectedComponents.slice(this._connectedComponents.indexOf(componentId), 1);
-	            } else {
-	                throw "component should be an instance of Component class.";
-	            }
-	        }
-	    }, {
-	        key: 'getConnectedComponentIds',
-	        value: function getConnectedComponentIds() {
-	            return this._connectedComponents;
+	          }
 	        }
 
-	        //getters and setters
-
-	    }, {
-	        key: 'description',
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(description) {
-
-	            if (!_Util2.default.validate(description, 'string')) {
-	                throw 'Description must be a string.';
-	            }
-
-	            this._description = description;
+	        throw new Error('Variable not found.');
+	      } else {
+	        throw new Error('Variable should be an instance of variable class.');
+	      }
+	    }
+	  }, {
+	    key: 'serialize',
+	    value: function serialize() {
+	      return JSON.stringify(this);
+	    }
+	  }, {
+	    key: 'disconnectComponent',
+	    value: function disconnectComponent(component) {
+	      if (component instanceof _Component2.default) {
+	        if (!component.id) {
+	          throw new Error('Component does not have an ID.');
 	        }
-	    }, {
-	        key: 'name',
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(name) {
-	            if (!_Util2.default.validate(name, 'string')) {
-	                throw 'Name must be a string.';
-	            }
-	            this._name = name;
-	        }
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            return this._id;
-	        }
-	    }]);
 
-	    return Port;
+	        var componentId = component.id;
+	        if (this._connectedComponents.indexOf(componentId) < 0) {
+	          throw new Error('Component is not connected to the port.');
+	        }
+
+	        this._connectedComponents.slice(this._connectedComponents.indexOf(componentId), 1);
+	      } else {
+	        throw new Error('component should be an instance of Component class.');
+	      }
+	    }
+	  }, {
+	    key: 'getConnectedComponentIds',
+	    value: function getConnectedComponentIds() {
+	      return this._connectedComponents;
+	    }
+
+	    // getters and setters
+
+	  }, {
+	    key: 'description',
+	    get: function get() {
+	      return this._description;
+	    },
+	    set: function set(description) {
+	      if (!_Util2.default.validateType(description, 'string')) {
+	        throw new Error('Description must be a string.');
+	      }
+
+	      this._description = description;
+	    }
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }]);
+
+	  return Port;
 	}();
 
 	module.exports = Port;
@@ -1256,110 +1323,108 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Variable = function () {
-	    function Variable(name, dataType) {
-	        _classCallCheck(this, Variable);
+	  function Variable(name, dataType) {
+	    _classCallCheck(this, Variable);
 
-	        if (!name) {
-	            throw "Name is required.";
-	        }
-
-	        if (!dataType) {
-	            throw "DataType is required.";
-	        }
-
-	        this.name = name;
-	        this.dataType = dataType;
-	        this.required = false;
-	        this._id = _Util2.default.generateId();
-	        this.data = null;
-	        this.index = null;
+	    if (!name) {
+	      throw new Error('Name is required.');
 	    }
 
-	    _createClass(Variable, [{
-	        key: "serialize",
-	        value: function serialize() {
-	            return JSON.stringify(this);
-	        }
-	    }, {
-	        key: "data",
-	        set: function set(data) {
-	            //ToDO: Check the DataType and Set Data.
-	            this._data = data;
-	        },
-	        get: function get() {
-	            return this._data;
-	        }
+	    if (!dataType) {
+	      throw new Error('DataType is required.');
+	    }
 
-	        //getters and setters
+	    this.name = name;
+	    this.dataType = dataType;
+	    this.required = false;
+	    this._id = _Util2.default.generateId();
+	    this.data = null;
+	    this.index = null;
+	  }
 
-	    }, {
-	        key: "description",
-	        get: function get() {
-	            return this._description;
-	        },
-	        set: function set(description) {
-	            if (!_Util2.default.validate(description, 'string')) {
-	                throw 'Description must be a string.';
-	            }
-	            this._description = description;
-	        }
+	  _createClass(Variable, [{
+	    key: 'serialize',
+	    value: function serialize() {
+	      return JSON.stringify(this);
+	    }
+	  }, {
+	    key: 'data',
+	    set: function set(data) {
+	      // ToDO: Check the DataType and Set Data.
+	      this._data = data;
+	    },
+	    get: function get() {
+	      return this._data;
+	    }
 
-	        //getters and setters
+	    // getters and setters
 
-	    }, {
-	        key: "name",
-	        get: function get() {
-	            return this._name;
-	        },
-	        set: function set(name) {
-	            if (!_Util2.default.validate(name, 'string')) {
-	                throw 'Name must be a string.';
-	            }
-	            this._name = name;
-	        }
+	  }, {
+	    key: 'description',
+	    get: function get() {
+	      return this._description;
+	    },
+	    set: function set(description) {
+	      if (!_Util2.default.validateType(description, 'string')) {
+	        throw new Error('Description must be a string.');
+	      }
+	      this._description = description;
+	    }
 
-	        //getters and setters
+	    // getters and setters
 
-	    }, {
-	        key: "dataType",
-	        get: function get() {
-	            return this._dataType;
-	        }
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
 
-	        //DataType can be an array too. Like a selector box or an object of Params. 
-	        ,
-	        set: function set(dataType) {
+	    // getters and setters
 
-	            if (!_Util2.default.validate(dataType, 'string') && !(dataType instanceof Array)) {
-	                throw 'DataType must be a string or an array.';
-	            }
+	  }, {
+	    key: 'dataType',
+	    get: function get() {
+	      return this._dataType;
+	    }
 
-	            this._dataType = dataType;
-	        }
-	    }, {
-	        key: "id",
-	        get: function get() {
-	            return this._id;
-	        }
-	    }, {
-	        key: "required",
-	        set: function set(required) {
+	    // DataType can be an array too. Like a selector box or an object of Params.
+	    ,
+	    set: function set(dataType) {
+	      if (!_Util2.default.validateType(dataType, 'string') && !(dataType instanceof Array)) {
+	        throw new Error('DataType must be a string or an array.');
+	      }
 
-	            if (!_Util2.default.validate(required, 'boolean')) {
-	                throw 'Required must be a string.';
-	            }
+	      this._dataType = dataType;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }, {
+	    key: 'required',
+	    set: function set(required) {
+	      if (!_Util2.default.validateType(required, 'boolean')) {
+	        throw new Error('Required must be a string.');
+	      }
 
-	            this._required = required;
-	        }
+	      this._required = required;
+	    }
 
-	        //getters and setters
-	        ,
-	        get: function get() {
-	            return this._required;
-	        }
-	    }]);
+	    // getters and setters
+	    ,
+	    get: function get() {
+	      return this._required;
+	    }
+	  }]);
 
-	    return Variable;
+	  return Variable;
 	}();
 
 	module.exports = Variable;
