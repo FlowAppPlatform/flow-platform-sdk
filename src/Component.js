@@ -145,13 +145,19 @@ class Component {
 
   // execute the component task.
   execute () {
-    if (!this._task) { throw new Error('No task attached.') }
-    // check if task is attached and if its actually a function.
-    if (this._isProcessingTask) { throw new Error('Component is already processing a task.') }
+    var component = this
 
-    if (this._task && Util.validateType(this._task, 'function')) {
-      this._isProcessingTask = true
-      this._task()
+    if (arguments[0] && arguments[0]._type && arguments[0]._type === 'component') {
+      component = arguments[0]
+    }
+
+    if (!component._task) { throw new Error('No task attached.') }
+    // check if task is attached and if its actually a function.
+    if (component._isProcessingTask) { throw new Error('Component is already processing a task.') }
+
+    if (component._task && Util.validateType(component._task, 'function')) {
+      component._isProcessingTask = true
+      component._task()
     }
   }
 
@@ -255,7 +261,10 @@ class Component {
 
   _attachSocket (socket) {
     this._socket = socket
-    this._socket.on('execute-component-' + this.id, this.execute)
+    var component = this
+    this._socket.on('execute-component-' + this.id, function () {
+      component.execute(component)
+    })
   }
 
   _detachSocket () {

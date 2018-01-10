@@ -475,17 +475,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'execute',
 	    value: function execute() {
-	      if (!this._task) {
+	      var component = this;
+
+	      if (arguments[0] && arguments[0]._type && arguments[0]._type === 'component') {
+	        component = arguments[0];
+	      }
+
+	      if (!component._task) {
 	        throw new Error('No task attached.');
 	      }
 	      // check if task is attached and if its actually a function.
-	      if (this._isProcessingTask) {
+	      if (component._isProcessingTask) {
 	        throw new Error('Component is already processing a task.');
 	      }
 
-	      if (this._task && _Util2.default.validateType(this._task, 'function')) {
-	        this._isProcessingTask = true;
-	        this._task();
+	      if (component._task && _Util2.default.validateType(component._task, 'function')) {
+	        component._isProcessingTask = true;
+	        component._task();
 	      }
 	    }
 	  }, {
@@ -613,7 +619,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_attachSocket',
 	    value: function _attachSocket(socket) {
 	      this._socket = socket;
-	      this._socket.on('execute-component-' + this.id, this.execute);
+	      var component = this;
+	      this._socket.on('execute-component-' + this.id, function () {
+	        component.execute(component);
+	      });
 	    }
 	  }, {
 	    key: '_detachSocket',
