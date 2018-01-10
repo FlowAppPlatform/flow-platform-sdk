@@ -6,12 +6,14 @@
   "keywords": [],
   "scripts": {
     "build": "echo 'Bulding library...' && ./node_modules/.bin/eslint src --fix &&  webpack && echo 'Done.'",
-    "test": "echo 'Bulding library...' && ./node_modules/.bin/eslint src --fix && webpack && echo 'Bulding tests...' && ./node_modules/.bin/eslint test/src --fix && cd test && webpack && cd dist && istanbul cover ../../node_modules/mocha/bin/_mocha --reporter index.js -- -R spec && codecov",
+    "test": "echo 'Bulding library...' && ./node_modules/.bin/eslint src --fix && webpack && echo 'Bulding tests...' && ./node_modules/.bin/eslint test/src --fix && cd test && webpack && cd dist && istanbul cover ../../node_modules/mocha/bin/_mocha --reporter index.js -- -R spec",
     "debug-test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js --debug-brk"
   },
   "author": "hello@cloudboost.io",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "event-emitter": "^0.3.5"
+  },
   "devDependencies": {
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",

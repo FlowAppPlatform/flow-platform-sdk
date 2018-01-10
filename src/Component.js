@@ -1,5 +1,4 @@
 import Util from './Util'
-import EventEmitter from 'events'
 import Port from './Port'
 import Variable from './Variable'
 
@@ -19,14 +18,12 @@ class Component {
     this._outPorts = {}
 
     // A socket object to communicate with other components.
-    this._socket = new EventEmitter()
+    this._socket = null
 
     // Genere a new ID for this instance.
     this._id = Util.generateId()
 
     this._task = null
-
-    this._socket.on('execute-component-' + this.id, this.execute)
 
     this._variables = []
 
@@ -39,6 +36,15 @@ class Component {
     }
 
     this._isProcessingTask = false
+  }
+
+  isOnGraph () {
+    // The Socket belongs to a Graph. If this component has a socket. It's on the graph.
+    if (this._socket) {
+      return true
+    } else {
+      return false
+    }
   }
 
   addVariable (variable) {
@@ -184,6 +190,7 @@ class Component {
       if (port._componentAttachedTo) { throw new Error('This port is already attached with other component') }
 
       port._componentAttachedTo = this
+
       this._ports.push(port)
     } else {
       throw new Error('Port should be an instance of Port class.')
@@ -244,6 +251,18 @@ class Component {
 
   getPorts () {
     return this._ports
+  }
+
+  _attachSocket (socket) {
+    this._socket = socket
+    this._socket.on('execute-component-' + this.id, this.execute)
+  }
+
+  _detachSocket () {
+    if (this._socket) {
+      this._socket.off('execute-component-' + this.id, this.execute)
+      this._socket = null
+    }
   }
 
   // getters and setters

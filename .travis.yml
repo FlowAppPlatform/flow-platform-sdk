@@ -15,6 +15,7 @@ install:
 - npm install -g istanbul # For test coverage. 
 - npm install -g codecov # For test coverage. 
 - npm test # Run tests 
+- codecov #Run code coverage. 
 after_success:
   # publish to npm
   - npm cache clean

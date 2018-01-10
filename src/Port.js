@@ -1,7 +1,6 @@
 import Util from './Util'
 import Component from './Component'
 import Variable from './Variable'
-import EventEmitter from 'events'
 
 class Port {
   constructor (name) {
@@ -17,7 +16,7 @@ class Port {
     this._connectedComponents = []
     this._componentAttachedTo = null
     this._variables = []
-    this._socket = new EventEmitter()
+    this._socket = null
   }
 
   addVariable (variable) {
@@ -96,12 +95,16 @@ class Port {
 
   // This passes the flow to components that this port is connected to.
   emit () {
-    for (var i = 0; i < this._connectedComponents; i++) {
-      this._socket.emit('execute-component-' + this._connectedComponents[i])
-    }
+    if (this._componentAttachedTo) {
+      for (var i = 0; i < this._connectedComponents.length; i++) {
+        if (this._componentAttachedTo.isOnGraph()) { this._componentAttachedTo._socket.emit('execute-component-' + this._connectedComponents[i]) } else { throw new Error('Port cannot be emitted because the component it belongs to does not belong to a graph.') }
+      }
 
-    // Fire an onEmit Callback.
-    if (this._onEmit) { this._onEmit() }
+      // Fire an onEmit Callback.
+      if (this._onEmit) { this._onEmit() }
+    } else {
+      throw new Error('This port cannot emit because it does not belong to any component')
+    }
   }
 
   onEmit (callback) {

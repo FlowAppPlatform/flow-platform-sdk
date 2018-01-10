@@ -46,7 +46,7 @@ describe('Component Tests', function () {
     addComponent.execute()
   })
 
-  it('Connect two components together and process data.', function (done) {
+  it('Should not execute a connected component if it does not belong to a graph.', function (done) {
     var addComponent = new AddComponent()
     addComponent.getVariable('Variable 1').data = 1
     addComponent.getVariable('Variable 2').data = 2
@@ -59,11 +59,44 @@ describe('Component Tests', function () {
 
     subComponent.getPort('Result').onEmit(function () {
       if (subComponent.getPort('Result').getVariable('Variable 3').data === 2) {
-        done()
+
       } else {
-        done('Failed')
+
       }
     })
+    try {
+      addComponent.execute()
+      done('Component executed without a graph.')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('Connect two components and execute.', function (done) {
+    var graph = new Flow.Graph('Math')
+
+    var addComponent = new AddComponent()
+    addComponent.getVariable('Variable 1').data = 1
+    addComponent.getVariable('Variable 2').data = 2
+
+    graph.addComponent(addComponent)
+
+    var subComponent = new SubtractComponent()
+    subComponent.getVariable('Variable 1').data = addComponent.getPort('Result').data
+    subComponent.getVariable('Variable 2').data = 2
+
+    graph.addComponent(subComponent)
+
+    addComponent.getPort('Result').connectComponent(subComponent)
+
+    subComponent.getPort('Result').onEmit(function () {
+      if (subComponent.getPort('Result').getVariable('Variable 3').data === 2) {
+        done()
+      } else {
+        done('Result failed.')
+      }
+    })
+
     addComponent.execute()
   })
 })

@@ -58,13 +58,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _Port = __webpack_require__(5);
+	var _Port = __webpack_require__(4);
 
 	var _Port2 = _interopRequireDefault(_Port);
 
-	var _Variable = __webpack_require__(6);
+	var _Variable = __webpack_require__(5);
 
 	var _Variable2 = _interopRequireDefault(_Variable);
+
+	var _Graph = __webpack_require__(6);
+
+	var _Graph2 = _interopRequireDefault(_Graph);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72,6 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Flow.Component = _Component2.default;
 	Flow.Port = _Port2.default;
 	Flow.Variable = _Variable2.default;
+	Flow.Graph = _Graph2.default;
 
 	module.exports = Flow;
 
@@ -85,15 +90,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Util2 = _interopRequireDefault(_Util);
 
-	var _events = __webpack_require__(4);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	var _Port = __webpack_require__(5);
+	var _Port = __webpack_require__(4);
 
 	var _Port2 = _interopRequireDefault(_Port);
 
-	var _Variable = __webpack_require__(6);
+	var _Variable = __webpack_require__(5);
 
 	var _Variable2 = _interopRequireDefault(_Variable);
 
@@ -119,14 +120,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._outPorts = {};
 
 	    // A socket object to communicate with other components.
-	    this._socket = new _events2.default();
+	    this._socket = null;
 
 	    // Genere a new ID for this instance.
 	    this._id = _Util2.default.generateId();
 
 	    this._task = null;
-
-	    this._socket.on('execute-component-' + this.id, this.execute);
 
 	    this._variables = [];
 
@@ -140,6 +139,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Component, [{
+	    key: 'isOnGraph',
+	    value: function isOnGraph() {
+	      // The Socket belongs to a Graph. If this component has a socket. It's on the graph.
+	      if (this._socket) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    }
+	  }, {
 	    key: 'addVariable',
 	    value: function addVariable(variable) {
 	      if (variable instanceof _Variable2.default) {
@@ -318,6 +327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        port._componentAttachedTo = this;
+
 	        this._ports.push(port);
 	      } else {
 	        throw new Error('Port should be an instance of Port class.');
@@ -388,6 +398,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getPorts',
 	    value: function getPorts() {
 	      return this._ports;
+	    }
+	  }, {
+	    key: '_attachSocket',
+	    value: function _attachSocket(socket) {
+	      this._socket = socket;
+	      this._socket.on('execute-component-' + this.id, this.execute);
+	    }
+	  }, {
+	    key: '_detachSocket',
+	    value: function _detachSocket() {
+	      if (this._socket) {
+	        this._socket.off('execute-component-' + this.id, this.execute);
+	        this._socket = null;
+	      }
 	    }
 
 	    // getters and setters
@@ -747,314 +771,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
-
-	// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-	function EventEmitter() {
-	  this._events = this._events || {};
-	  this._maxListeners = this._maxListeners || undefined;
-	}
-	module.exports = EventEmitter;
-
-	// Backwards-compat with node 0.10.x
-	EventEmitter.EventEmitter = EventEmitter;
-
-	EventEmitter.prototype._events = undefined;
-	EventEmitter.prototype._maxListeners = undefined;
-
-	// By default EventEmitters will print a warning if more than 10 listeners are
-	// added to it. This is a useful default which helps finding memory leaks.
-	EventEmitter.defaultMaxListeners = 10;
-
-	// Obviously not all Emitters should be limited to 10. This function allows
-	// that to be increased. Set to zero for unlimited.
-	EventEmitter.prototype.setMaxListeners = function(n) {
-	  if (!isNumber(n) || n < 0 || isNaN(n))
-	    throw TypeError('n must be a positive number');
-	  this._maxListeners = n;
-	  return this;
-	};
-
-	EventEmitter.prototype.emit = function(type) {
-	  var er, handler, len, args, i, listeners;
-
-	  if (!this._events)
-	    this._events = {};
-
-	  // If there is no 'error' event listener then throw.
-	  if (type === 'error') {
-	    if (!this._events.error ||
-	        (isObject(this._events.error) && !this._events.error.length)) {
-	      er = arguments[1];
-	      if (er instanceof Error) {
-	        throw er; // Unhandled 'error' event
-	      } else {
-	        // At least give some kind of context to the user
-	        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-	        err.context = er;
-	        throw err;
-	      }
-	    }
-	  }
-
-	  handler = this._events[type];
-
-	  if (isUndefined(handler))
-	    return false;
-
-	  if (isFunction(handler)) {
-	    switch (arguments.length) {
-	      // fast cases
-	      case 1:
-	        handler.call(this);
-	        break;
-	      case 2:
-	        handler.call(this, arguments[1]);
-	        break;
-	      case 3:
-	        handler.call(this, arguments[1], arguments[2]);
-	        break;
-	      // slower
-	      default:
-	        args = Array.prototype.slice.call(arguments, 1);
-	        handler.apply(this, args);
-	    }
-	  } else if (isObject(handler)) {
-	    args = Array.prototype.slice.call(arguments, 1);
-	    listeners = handler.slice();
-	    len = listeners.length;
-	    for (i = 0; i < len; i++)
-	      listeners[i].apply(this, args);
-	  }
-
-	  return true;
-	};
-
-	EventEmitter.prototype.addListener = function(type, listener) {
-	  var m;
-
-	  if (!isFunction(listener))
-	    throw TypeError('listener must be a function');
-
-	  if (!this._events)
-	    this._events = {};
-
-	  // To avoid recursion in the case that type === "newListener"! Before
-	  // adding it to the listeners, first emit "newListener".
-	  if (this._events.newListener)
-	    this.emit('newListener', type,
-	              isFunction(listener.listener) ?
-	              listener.listener : listener);
-
-	  if (!this._events[type])
-	    // Optimize the case of one listener. Don't need the extra array object.
-	    this._events[type] = listener;
-	  else if (isObject(this._events[type]))
-	    // If we've already got an array, just append.
-	    this._events[type].push(listener);
-	  else
-	    // Adding the second element, need to change to array.
-	    this._events[type] = [this._events[type], listener];
-
-	  // Check for listener leak
-	  if (isObject(this._events[type]) && !this._events[type].warned) {
-	    if (!isUndefined(this._maxListeners)) {
-	      m = this._maxListeners;
-	    } else {
-	      m = EventEmitter.defaultMaxListeners;
-	    }
-
-	    if (m && m > 0 && this._events[type].length > m) {
-	      this._events[type].warned = true;
-	      console.error('(node) warning: possible EventEmitter memory ' +
-	                    'leak detected. %d listeners added. ' +
-	                    'Use emitter.setMaxListeners() to increase limit.',
-	                    this._events[type].length);
-	      if (typeof console.trace === 'function') {
-	        // not supported in IE 10
-	        console.trace();
-	      }
-	    }
-	  }
-
-	  return this;
-	};
-
-	EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-	EventEmitter.prototype.once = function(type, listener) {
-	  if (!isFunction(listener))
-	    throw TypeError('listener must be a function');
-
-	  var fired = false;
-
-	  function g() {
-	    this.removeListener(type, g);
-
-	    if (!fired) {
-	      fired = true;
-	      listener.apply(this, arguments);
-	    }
-	  }
-
-	  g.listener = listener;
-	  this.on(type, g);
-
-	  return this;
-	};
-
-	// emits a 'removeListener' event iff the listener was removed
-	EventEmitter.prototype.removeListener = function(type, listener) {
-	  var list, position, length, i;
-
-	  if (!isFunction(listener))
-	    throw TypeError('listener must be a function');
-
-	  if (!this._events || !this._events[type])
-	    return this;
-
-	  list = this._events[type];
-	  length = list.length;
-	  position = -1;
-
-	  if (list === listener ||
-	      (isFunction(list.listener) && list.listener === listener)) {
-	    delete this._events[type];
-	    if (this._events.removeListener)
-	      this.emit('removeListener', type, listener);
-
-	  } else if (isObject(list)) {
-	    for (i = length; i-- > 0;) {
-	      if (list[i] === listener ||
-	          (list[i].listener && list[i].listener === listener)) {
-	        position = i;
-	        break;
-	      }
-	    }
-
-	    if (position < 0)
-	      return this;
-
-	    if (list.length === 1) {
-	      list.length = 0;
-	      delete this._events[type];
-	    } else {
-	      list.splice(position, 1);
-	    }
-
-	    if (this._events.removeListener)
-	      this.emit('removeListener', type, listener);
-	  }
-
-	  return this;
-	};
-
-	EventEmitter.prototype.removeAllListeners = function(type) {
-	  var key, listeners;
-
-	  if (!this._events)
-	    return this;
-
-	  // not listening for removeListener, no need to emit
-	  if (!this._events.removeListener) {
-	    if (arguments.length === 0)
-	      this._events = {};
-	    else if (this._events[type])
-	      delete this._events[type];
-	    return this;
-	  }
-
-	  // emit removeListener for all listeners on all events
-	  if (arguments.length === 0) {
-	    for (key in this._events) {
-	      if (key === 'removeListener') continue;
-	      this.removeAllListeners(key);
-	    }
-	    this.removeAllListeners('removeListener');
-	    this._events = {};
-	    return this;
-	  }
-
-	  listeners = this._events[type];
-
-	  if (isFunction(listeners)) {
-	    this.removeListener(type, listeners);
-	  } else if (listeners) {
-	    // LIFO order
-	    while (listeners.length)
-	      this.removeListener(type, listeners[listeners.length - 1]);
-	  }
-	  delete this._events[type];
-
-	  return this;
-	};
-
-	EventEmitter.prototype.listeners = function(type) {
-	  var ret;
-	  if (!this._events || !this._events[type])
-	    ret = [];
-	  else if (isFunction(this._events[type]))
-	    ret = [this._events[type]];
-	  else
-	    ret = this._events[type].slice();
-	  return ret;
-	};
-
-	EventEmitter.prototype.listenerCount = function(type) {
-	  if (this._events) {
-	    var evlistener = this._events[type];
-
-	    if (isFunction(evlistener))
-	      return 1;
-	    else if (evlistener)
-	      return evlistener.length;
-	  }
-	  return 0;
-	};
-
-	EventEmitter.listenerCount = function(emitter, type) {
-	  return emitter.listenerCount(type);
-	};
-
-	function isFunction(arg) {
-	  return typeof arg === 'function';
-	}
-
-	function isNumber(arg) {
-	  return typeof arg === 'number';
-	}
-
-	function isObject(arg) {
-	  return typeof arg === 'object' && arg !== null;
-	}
-
-	function isUndefined(arg) {
-	  return arg === void 0;
-	}
-
-
-/***/ },
-/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1067,13 +783,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _Variable = __webpack_require__(6);
+	var _Variable = __webpack_require__(5);
 
 	var _Variable2 = _interopRequireDefault(_Variable);
-
-	var _events = __webpack_require__(4);
-
-	var _events2 = _interopRequireDefault(_events);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1095,7 +807,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._connectedComponents = [];
 	    this._componentAttachedTo = null;
 	    this._variables = [];
-	    this._socket = new _events2.default();
+	    this._socket = null;
 	  }
 
 	  _createClass(Port, [{
@@ -1190,13 +902,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'emit',
 	    value: function emit() {
-	      for (var i = 0; i < this._connectedComponents; i++) {
-	        this._socket.emit('execute-component-' + this._connectedComponents[i]);
-	      }
+	      if (this._componentAttachedTo) {
+	        for (var i = 0; i < this._connectedComponents.length; i++) {
+	          if (this._componentAttachedTo.isOnGraph()) {
+	            this._componentAttachedTo._socket.emit('execute-component-' + this._connectedComponents[i]);
+	          } else {
+	            throw new Error('Port cannot be emitted because the component it belongs to does not belong to a graph.');
+	          }
+	        }
 
-	      // Fire an onEmit Callback.
-	      if (this._onEmit) {
-	        this._onEmit();
+	        // Fire an onEmit Callback.
+	        if (this._onEmit) {
+	          this._onEmit();
+	        }
+	      } else {
+	        throw new Error('This port cannot emit because it does not belong to any component');
 	      }
 	    }
 	  }, {
@@ -1207,7 +927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'connectComponent',
 	    value: function connectComponent(component) {
-	      if (component._type === 'component') {
+	      if (component && component._type && component._type === 'component') {
 	        if (!component.id) {
 	          throw new Error('Component does not have an ID.');
 	        }
@@ -1317,7 +1037,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Port;
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1438,6 +1158,522 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	module.exports = Variable;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _eventEmitter = __webpack_require__(7);
+
+	var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+
+	var _Util = __webpack_require__(3);
+
+	var _Util2 = _interopRequireDefault(_Util);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Graph = function () {
+	  function Graph(name) {
+	    _classCallCheck(this, Graph);
+
+	    this._socket = new _eventEmitter2.default();
+	    this._type = 'graph';
+	    this.name = name;
+	    // Genere a new ID for this instance.
+	    this._id = _Util2.default.generateId();
+	    this._components = {};
+	  }
+
+	  _createClass(Graph, [{
+	    key: 'addComponent',
+	    value: function addComponent(component) {
+	      if ((typeof component === 'undefined' ? 'undefined' : _typeof(component)) === 'object' && component._type && component._type === 'component') {
+	        if (!component.id) {
+	          throw new Error('Component does not have an id. Please instantiate the component.');
+	        }
+
+	        this._components[component.id] = component;
+	        component._attachSocket(this._socket);
+	      } else {
+	        throw new Error('Argument 1 is not of type Component');
+	      }
+	    }
+	  }, {
+	    key: 'removeComponent',
+	    value: function removeComponent(component) {
+	      if ((typeof component === 'undefined' ? 'undefined' : _typeof(component)) === 'object' && component._type && component._type === 'component') {
+	        if (!component.id) {
+	          throw new Error('Component does not have an id. Please instantiate the component.');
+	        }
+
+	        delete this._components[component.id];
+	        component._detachSocket();
+	      } else {
+	        throw new Error('Argument 1 is not of type Component');
+	      }
+	    }
+
+	    // getters and setters.
+
+	  }, {
+	    key: 'name',
+	    get: function get() {
+	      return this._name;
+	    },
+	    set: function set(name) {
+	      if (!_Util2.default.validateType(name, 'string')) {
+	        throw new Error('Name must be a string.');
+	      }
+	      this._name = name;
+	    }
+	  }, {
+	    key: 'id',
+	    get: function get() {
+	      return this._id;
+	    }
+	  }]);
+
+	  return Graph;
+	}();
+
+	module.exports = Graph;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var d        = __webpack_require__(8)
+	  , callable = __webpack_require__(23)
+
+	  , apply = Function.prototype.apply, call = Function.prototype.call
+	  , create = Object.create, defineProperty = Object.defineProperty
+	  , defineProperties = Object.defineProperties
+	  , hasOwnProperty = Object.prototype.hasOwnProperty
+	  , descriptor = { configurable: true, enumerable: false, writable: true }
+
+	  , on, once, off, emit, methods, descriptors, base;
+
+	on = function (type, listener) {
+		var data;
+
+		callable(listener);
+
+		if (!hasOwnProperty.call(this, '__ee__')) {
+			data = descriptor.value = create(null);
+			defineProperty(this, '__ee__', descriptor);
+			descriptor.value = null;
+		} else {
+			data = this.__ee__;
+		}
+		if (!data[type]) data[type] = listener;
+		else if (typeof data[type] === 'object') data[type].push(listener);
+		else data[type] = [data[type], listener];
+
+		return this;
+	};
+
+	once = function (type, listener) {
+		var once, self;
+
+		callable(listener);
+		self = this;
+		on.call(this, type, once = function () {
+			off.call(self, type, once);
+			apply.call(listener, this, arguments);
+		});
+
+		once.__eeOnceListener__ = listener;
+		return this;
+	};
+
+	off = function (type, listener) {
+		var data, listeners, candidate, i;
+
+		callable(listener);
+
+		if (!hasOwnProperty.call(this, '__ee__')) return this;
+		data = this.__ee__;
+		if (!data[type]) return this;
+		listeners = data[type];
+
+		if (typeof listeners === 'object') {
+			for (i = 0; (candidate = listeners[i]); ++i) {
+				if ((candidate === listener) ||
+						(candidate.__eeOnceListener__ === listener)) {
+					if (listeners.length === 2) data[type] = listeners[i ? 0 : 1];
+					else listeners.splice(i, 1);
+				}
+			}
+		} else {
+			if ((listeners === listener) ||
+					(listeners.__eeOnceListener__ === listener)) {
+				delete data[type];
+			}
+		}
+
+		return this;
+	};
+
+	emit = function (type) {
+		var i, l, listener, listeners, args;
+
+		if (!hasOwnProperty.call(this, '__ee__')) return;
+		listeners = this.__ee__[type];
+		if (!listeners) return;
+
+		if (typeof listeners === 'object') {
+			l = arguments.length;
+			args = new Array(l - 1);
+			for (i = 1; i < l; ++i) args[i - 1] = arguments[i];
+
+			listeners = listeners.slice();
+			for (i = 0; (listener = listeners[i]); ++i) {
+				apply.call(listener, this, args);
+			}
+		} else {
+			switch (arguments.length) {
+			case 1:
+				call.call(listeners, this);
+				break;
+			case 2:
+				call.call(listeners, this, arguments[1]);
+				break;
+			case 3:
+				call.call(listeners, this, arguments[1], arguments[2]);
+				break;
+			default:
+				l = arguments.length;
+				args = new Array(l - 1);
+				for (i = 1; i < l; ++i) {
+					args[i - 1] = arguments[i];
+				}
+				apply.call(listeners, this, args);
+			}
+		}
+	};
+
+	methods = {
+		on: on,
+		once: once,
+		off: off,
+		emit: emit
+	};
+
+	descriptors = {
+		on: d(on),
+		once: d(once),
+		off: d(off),
+		emit: d(emit)
+	};
+
+	base = defineProperties({}, descriptors);
+
+	module.exports = exports = function (o) {
+		return (o == null) ? create(base) : defineProperties(Object(o), descriptors);
+	};
+	exports.methods = methods;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var assign        = __webpack_require__(9)
+	  , normalizeOpts = __webpack_require__(18)
+	  , isCallable    = __webpack_require__(19)
+	  , contains      = __webpack_require__(20)
+
+	  , d;
+
+	d = module.exports = function (dscr, value/*, options*/) {
+		var c, e, w, options, desc;
+		if ((arguments.length < 2) || (typeof dscr !== 'string')) {
+			options = value;
+			value = dscr;
+			dscr = null;
+		} else {
+			options = arguments[2];
+		}
+		if (dscr == null) {
+			c = w = true;
+			e = false;
+		} else {
+			c = contains.call(dscr, 'c');
+			e = contains.call(dscr, 'e');
+			w = contains.call(dscr, 'w');
+		}
+
+		desc = { value: value, configurable: c, enumerable: e, writable: w };
+		return !options ? desc : assign(normalizeOpts(options), desc);
+	};
+
+	d.gs = function (dscr, get, set/*, options*/) {
+		var c, e, options, desc;
+		if (typeof dscr !== 'string') {
+			options = set;
+			set = get;
+			get = dscr;
+			dscr = null;
+		} else {
+			options = arguments[3];
+		}
+		if (get == null) {
+			get = undefined;
+		} else if (!isCallable(get)) {
+			options = get;
+			get = set = undefined;
+		} else if (set == null) {
+			set = undefined;
+		} else if (!isCallable(set)) {
+			options = set;
+			set = undefined;
+		}
+		if (dscr == null) {
+			c = true;
+			e = false;
+		} else {
+			c = contains.call(dscr, 'c');
+			e = contains.call(dscr, 'e');
+		}
+
+		desc = { get: get, set: set, configurable: c, enumerable: e };
+		return !options ? desc : assign(normalizeOpts(options), desc);
+	};
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = __webpack_require__(10)()
+		? Object.assign
+		: __webpack_require__(11);
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function () {
+		var assign = Object.assign, obj;
+		if (typeof assign !== "function") return false;
+		obj = { foo: "raz" };
+		assign(obj, { bar: "dwa" }, { trzy: "trzy" });
+		return (obj.foo + obj.bar + obj.trzy) === "razdwatrzy";
+	};
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var keys  = __webpack_require__(12)
+	  , value = __webpack_require__(17)
+	  , max   = Math.max;
+
+	module.exports = function (dest, src /*, …srcn*/) {
+		var error, i, length = max(arguments.length, 2), assign;
+		dest = Object(value(dest));
+		assign = function (key) {
+			try {
+				dest[key] = src[key];
+			} catch (e) {
+				if (!error) error = e;
+			}
+		};
+		for (i = 1; i < length; ++i) {
+			src = arguments[i];
+			keys(src).forEach(assign);
+		}
+		if (error !== undefined) throw error;
+		return dest;
+	};
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = __webpack_require__(13)()
+		? Object.keys
+		: __webpack_require__(14);
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function () {
+		try {
+			Object.keys("primitive");
+			return true;
+		} catch (e) {
+	 return false;
+	}
+	};
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var isValue = __webpack_require__(15);
+
+	var keys = Object.keys;
+
+	module.exports = function (object) {
+		return keys(isValue(object) ? Object(object) : object);
+	};
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _undefined = __webpack_require__(16)(); // Support ES3 engines
+
+	module.exports = function (val) {
+	 return (val !== _undefined) && (val !== null);
+	};
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	// eslint-disable-next-line no-empty-function
+	module.exports = function () {};
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var isValue = __webpack_require__(15);
+
+	module.exports = function (value) {
+		if (!isValue(value)) throw new TypeError("Cannot use null or undefined");
+		return value;
+	};
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var isValue = __webpack_require__(15);
+
+	var forEach = Array.prototype.forEach, create = Object.create;
+
+	var process = function (src, obj) {
+		var key;
+		for (key in src) obj[key] = src[key];
+	};
+
+	// eslint-disable-next-line no-unused-vars
+	module.exports = function (opts1 /*, …options*/) {
+		var result = create(null);
+		forEach.call(arguments, function (options) {
+			if (!isValue(options)) return;
+			process(Object(options), result);
+		});
+		return result;
+	};
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	// Deprecated
+
+	"use strict";
+
+	module.exports = function (obj) {
+	 return typeof obj === "function";
+	};
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = __webpack_require__(21)()
+		? String.prototype.contains
+		: __webpack_require__(22);
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var str = "razdwatrzy";
+
+	module.exports = function () {
+		if (typeof str.contains !== "function") return false;
+		return (str.contains("dwa") === true) && (str.contains("foo") === false);
+	};
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var indexOf = String.prototype.indexOf;
+
+	module.exports = function (searchString/*, position*/) {
+		return indexOf.call(this, searchString, arguments[1]) > -1;
+	};
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function (fn) {
+		if (typeof fn !== "function") throw new TypeError(fn + " is not a function");
+		return fn;
+	};
+
 
 /***/ }
 /******/ ])

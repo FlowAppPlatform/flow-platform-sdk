@@ -38,7 +38,7 @@ $ npm install cloudboost-flow --save
 CloudBoost Flow requires a reasonably recent version of [Node.js](http://nodejs.org/), and some [npm](http://npmjs.org/) packages. Ensure that you have CloudBoost Flow checked out from Git, and all NPM dependencies installed. Build and test CloudBoost Flow with:
 
 ```bash
-$ npm test
+$ npm run-script test
 ```
 
 CloudBoost Flow is available from [GitHub](https://github.com/cloudboost/flow-sdk) under the MIT license.
@@ -51,7 +51,7 @@ CloudBoost Flow development happens on GitHub. Just fork the [main repository](h
 We have an extensive suite of tests available for CloudBoost Flow. Run them with:
 
 ```bash
-$ npm test
+$ npm run-script test
 ```
 
 ## Docs
