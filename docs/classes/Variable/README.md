@@ -13,6 +13,7 @@ var var1 = new Flow.Variable('Variable 1', 'number')
 Params: 
 - name is of type string
 - DataType is of type string, but should be from a list of pre-defined Flow Data Types. For more information on this. Please check the next section.
+
 Returns: 
 - a new Variable Object
 
@@ -54,6 +55,7 @@ component.addVariable(variable);
 
 Params: 
 - variable is an instance of a Variable class. 
+
 Returns: 
 - void
 
@@ -67,6 +69,7 @@ port.addVariable(variable);
 
 Params: 
 - variable is an instance of a Variable class. 
+
 Returns: 
 - void
 
@@ -80,6 +83,7 @@ variableA.linkToVariable(varbaleB);
 
 Params: 
 - variable is an instance of a Variable class. 
+
 Returns: 
 - void
 
