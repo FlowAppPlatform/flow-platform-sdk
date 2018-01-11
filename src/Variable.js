@@ -1,3 +1,7 @@
+/**
+ * Documentation at /docs/classes/Variable/README.md
+ */
+
 import Util from './Util'
 
 class Variable {
@@ -16,7 +20,7 @@ class Variable {
     this.dataType = dataType
     this.required = false
     this._id = Util.generateId()
-    this.data = null
+    this._data = {}
     this.index = null
   }
 
@@ -24,13 +28,20 @@ class Variable {
     return JSON.stringify(this)
   }
 
+  linkToVariable (variable) {
+    if (variable && variable._type === 'variable') { this._data = variable._data }
+  }
+
   set data (data) {
-    // ToDO: Check the DataType and Set Data.
-    this._data = data
+    if (Util.validateType(data, this.dataType)) {
+      this._data._value = data
+    } else {
+      throw new Error('Data is not of type ' + this.dataType)
+    }
   }
 
   get data () {
-    return this._data
+    return this._data._value
   }
 
   // getters and setters
@@ -64,15 +75,28 @@ class Variable {
 
   // DataType can be an array too. Like a selector box or an object of Params.
   set dataType (dataType) {
-    if (!Util.validateType(dataType, 'string') && !(dataType instanceof Array)) {
-      throw new Error('DataType must be a string or an array.')
+    if (!Util.validateType(dataType, 'string')) {
+      throw new Error('DataType must be a string')
     }
-
+    if (this._data && this._data._value) { delete this._data._value } // delete data which was there before if the type changes.
     this._dataType = dataType
   }
 
   get id () {
     return this._id
+  }
+
+  // DataType can be an array too. Like a selector box or an object of Params.
+  set values (values) {
+    if (!Util.validateType(values, 'list')) {
+      throw new Error('Values must be an array.')
+    }
+
+    if (this.dataType === 'select-single' || this.dataType === 'select-multiple') { this._values = values } else { throw new Error('To use this property, the DataType should be select-single or select-multiple.') }
+  }
+
+  get values () {
+    return this._values
   }
 
   set required (required) {

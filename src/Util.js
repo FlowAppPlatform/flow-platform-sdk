@@ -3,7 +3,7 @@ class Util {
   static validateType (value, type) {
     // define types here.
     type = type.toLowerCase() // lowercase type.
-    var validTypes = ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function']
+    var validTypes = this.getValidDataTypes()
 
     if (validTypes.indexOf(type) < 0) { throw new Error(type + ' is not a valid type.') }
 
@@ -42,7 +42,18 @@ class Util {
       return true
     }
 
-    // To-Do: Check for all the types here.
+    if (type === 'select-single') {
+      if (value instanceof Array && value.length <= 1) { return false }
+    }
+
+    if (type === 'select-nultiple') {
+      if (value instanceof Array) { return false }
+    }
+
+    if (type === 'list') {
+      if (value instanceof Array) { return false }
+    }
+
     return true
   }
 
@@ -61,6 +72,10 @@ class Util {
     }
 
     return false
+  }
+
+  static getValidDataTypes () {
+    return ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single']
   }
 }
 

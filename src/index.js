@@ -1,3 +1,7 @@
+/**
+ * Documentation at /docs/README.md
+ */
+
 import Component from './Component'
 import Port from './Port'
 import Variable from './Variable'

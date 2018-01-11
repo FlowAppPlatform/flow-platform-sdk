@@ -72,6 +72,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	/**
+	 * Documentation at /docs/README.md
+	 */
+
 	var Flow = {};
 	Flow.Component = _Component2.default;
 	Flow.Port = _Port2.default;
@@ -84,7 +88,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	/* WEBPACK VAR INJECTION */(function(process) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Documentation at /docs/classes/Component/README.md
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 	var _Util = __webpack_require__(3);
 
@@ -696,7 +702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function validateType(value, type) {
 	      // define types here.
 	      type = type.toLowerCase(); // lowercase type.
-	      var validTypes = ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function'];
+	      var validTypes = this.getValidDataTypes();
 
 	      if (validTypes.indexOf(type) < 0) {
 	        throw new Error(type + ' is not a valid type.');
@@ -749,7 +755,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return true;
 	      }
 
-	      // To-Do: Check for all the types here.
+	      if (type === 'select-single') {
+	        if (value instanceof Array && value.length <= 1) {
+	          return false;
+	        }
+	      }
+
+	      if (type === 'select-nultiple') {
+	        if (value instanceof Array) {
+	          return false;
+	        }
+	      }
+
+	      if (type === 'list') {
+	        if (value instanceof Array) {
+	          return false;
+	        }
+	      }
+
 	      return true;
 	    }
 	  }, {
@@ -771,6 +794,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return false;
 	    }
+	  }, {
+	    key: 'getValidDataTypes',
+	    value: function getValidDataTypes() {
+	      return ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single'];
+	    }
 	  }]);
 
 	  return Util;
@@ -782,7 +810,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Documentation at /docs/classes/Port/README.md
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 	var _Util = __webpack_require__(3);
 
@@ -1049,7 +1079,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Documentation at /docs/classes/Variable/README.md
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 	var _Util = __webpack_require__(3);
 
@@ -1077,7 +1109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.dataType = dataType;
 	    this.required = false;
 	    this._id = _Util2.default.generateId();
-	    this.data = null;
+	    this._data = {};
 	    this.index = null;
 	  }
 
@@ -1087,13 +1119,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return JSON.stringify(this);
 	    }
 	  }, {
+	    key: 'linkToVariable',
+	    value: function linkToVariable(variable) {
+	      if (variable && variable._type === 'variable') {
+	        this._data = variable._data;
+	      }
+	    }
+	  }, {
 	    key: 'data',
 	    set: function set(data) {
-	      // ToDO: Check the DataType and Set Data.
-	      this._data = data;
+	      if (_Util2.default.validateType(data, this.dataType)) {
+	        this._data._value = data;
+	      } else {
+	        throw new Error('Data is not of type ' + this.dataType);
+	      }
 	    },
 	    get: function get() {
-	      return this._data;
+	      return this._data._value;
 	    }
 
 	    // getters and setters
@@ -1135,16 +1177,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // DataType can be an array too. Like a selector box or an object of Params.
 	    ,
 	    set: function set(dataType) {
-	      if (!_Util2.default.validateType(dataType, 'string') && !(dataType instanceof Array)) {
-	        throw new Error('DataType must be a string or an array.');
+	      if (!_Util2.default.validateType(dataType, 'string')) {
+	        throw new Error('DataType must be a string');
 	      }
-
+	      if (this._data && this._data._value) {
+	        delete this._data._value;
+	      } // delete data which was there before if the type changes.
 	      this._dataType = dataType;
 	    }
 	  }, {
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    }
+
+	    // DataType can be an array too. Like a selector box or an object of Params.
+
+	  }, {
+	    key: 'values',
+	    set: function set(values) {
+	      if (!_Util2.default.validateType(values, 'list')) {
+	        throw new Error('Values must be an array.');
+	      }
+
+	      if (this.dataType === 'select-single' || this.dataType === 'select-multiple') {
+	        this._values = values;
+	      } else {
+	        throw new Error('To use this property, the DataType should be select-single or select-multiple.');
+	      }
+	    },
+	    get: function get() {
+	      return this._values;
 	    }
 	  }, {
 	    key: 'required',
@@ -1174,7 +1237,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Documentation at /docs/classes/Graph/README.md
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 	var _eventEmitter = __webpack_require__(7);
 

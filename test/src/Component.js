@@ -52,13 +52,13 @@ describe('Component Tests', function () {
     addComponent.getVariable('Variable 2').data = 2
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').data = addComponent.getPort('Result').data
+    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
     subComponent.getVariable('Variable 2').data = 2
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
     subComponent.getPort('Result').onEmit(function () {
-      if (subComponent.getPort('Result').getVariable('Variable 3').data === 2) {
+      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
 
       } else {
 
@@ -82,7 +82,7 @@ describe('Component Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').data = addComponent.getPort('Result').data
+    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
     subComponent.getVariable('Variable 2').data = 2
 
     graph.addComponent(subComponent)
@@ -90,7 +90,7 @@ describe('Component Tests', function () {
     addComponent.getPort('Result').connectComponent(subComponent)
 
     subComponent.getPort('Result').onEmit(function () {
-      if (subComponent.getPort('Result').getVariable('Variable 3').data === 2) {
+      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
         done()
       } else {
         done('Result failed.')

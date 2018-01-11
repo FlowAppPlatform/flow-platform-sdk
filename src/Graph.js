@@ -1,3 +1,7 @@
+/**
+ * Documentation at /docs/classes/Graph/README.md
+ */
+
 import EventEmitter from 'event-emitter'
 import Util from './Util'
 
