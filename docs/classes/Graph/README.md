@@ -12,6 +12,7 @@ var graph = new Flow.Graph("Math");
 
 Params: 
 - name is of type string. 
+
 Returns: 
 - a new [Graph](../Graph/README.md) object. 
 
@@ -25,6 +26,7 @@ graph.addComponent(component);
 
 Params: 
 - component is of type [Component](../Component/README.md)
+
 Returns: 
 - void
 
@@ -38,6 +40,7 @@ graph.removeComponent(component);
 
 Params: 
 - component is of type [Component](../Component/README.md)
+
 Returns: 
 - void
 
