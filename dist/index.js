@@ -482,6 +482,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    },
+	    set: function set(id) {
+	      throw new Error('ID is read-only');
 	    }
 	  }]);
 
@@ -1189,6 +1192,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    },
+	    set: function set(id) {
+	      throw new Error('ID is read-only');
 	    }
 
 	    // DataType can be an array too. Like a selector box or an object of Params.
@@ -1311,6 +1317,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    },
+	    set: function set(id) {
+	      throw new Error('ID is read-only');
 	    }
 	  }]);
 

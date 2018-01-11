@@ -1,4 +1,6 @@
 import Flow from '../../src/index'
+import AddComponent from './components/AddComponent'
+import SubtractComponent from './components/SubtractComponent'
 
 describe('Component Tests', function () {
   it('Attach and run a task.', function (done) {
@@ -100,71 +102,3 @@ describe('Component Tests', function () {
     addComponent.execute()
   })
 })
-
-class AddComponent extends Flow.Component {
-  constructor () {
-    super()
-
-    // construct the component.
-    this.name = 'Add'
-
-    var var1 = new Flow.Variable('Variable 1', 'number')
-    var1.required = true
-
-    this.addVariable(var1)
-
-    var var2 = new Flow.Variable('Variable 2', 'number')
-    var2.required = true
-
-    this.addVariable(var2)
-
-    var port = new Flow.Port('Result')
-
-    var var3 = new Flow.Variable('Variable 3', 'number')
-    var3.required = true
-
-    port.addVariable(var3)
-
-    this.addPort(port)
-
-    this.attachTask(function () {
-      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data + this.getVariable('Variable 2').data
-      this.getPort('Result').emit()
-      this.taskComplete()
-    })
-  }
-}
-
-class SubtractComponent extends Flow.Component {
-  constructor () {
-    super()
-
-    // construct the component.
-    this.name = 'Subtract'
-
-    var var1 = new Flow.Variable('Variable 1', 'number')
-    var1.required = true
-
-    this.addVariable(var1)
-
-    var var2 = new Flow.Variable('Variable 2', 'number')
-    var2.required = true
-
-    this.addVariable(var2)
-
-    var port = new Flow.Port('Result')
-
-    var var3 = new Flow.Variable('Variable 3', 'number')
-    var3.required = true
-
-    port.addVariable(var3)
-
-    this.addPort(port)
-
-    this.attachTask(function () {
-      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data - this.getVariable('Variable 2').data
-      this.getPort('Result').emit()
-      this.taskComplete()
-    })
-  }
-};

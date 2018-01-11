@@ -328,6 +328,10 @@ class Component {
   get id () {
     return this._id
   }
+
+  set id (id) {
+    throw new Error('ID is read-only')
+  }
 }
 
 // export.

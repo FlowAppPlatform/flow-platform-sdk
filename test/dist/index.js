@@ -58,10 +58,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
+	var _Graph = __webpack_require__(28);
+
+	var _Graph2 = _interopRequireDefault(_Graph);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Flow = {};
 	Flow.Component = _Component2.default;
+	Flow.Graph = _Graph2.default;
 
 /***/ },
 /* 1 */
@@ -71,13 +76,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _index2 = _interopRequireDefault(_index);
 
+	var _AddComponent = __webpack_require__(26);
+
+	var _AddComponent2 = _interopRequireDefault(_AddComponent);
+
+	var _SubtractComponent = __webpack_require__(27);
+
+	var _SubtractComponent2 = _interopRequireDefault(_SubtractComponent);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	describe('Component Tests', function () {
 	  it('Attach and run a task.', function (done) {
@@ -111,7 +118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 
 	  it('Create a simple add component', function (done) {
-	    var addComponent = new AddComponent();
+	    var addComponent = new _AddComponent2.default();
 	    addComponent.getVariable('Variable 1').data = 1;
 	    addComponent.getVariable('Variable 2').data = 2;
 	    addComponent.getPort('Result').onEmit(function () {
@@ -126,11 +133,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 
 	  it('Should not execute a connected component if it does not belong to a graph.', function (done) {
-	    var addComponent = new AddComponent();
+	    var addComponent = new _AddComponent2.default();
 	    addComponent.getVariable('Variable 1').data = 1;
 	    addComponent.getVariable('Variable 2').data = 2;
 
-	    var subComponent = new SubtractComponent();
+	    var subComponent = new _SubtractComponent2.default();
 	    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'));
 	    subComponent.getVariable('Variable 2').data = 2;
 
@@ -150,13 +157,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  it('Connect two components and execute.', function (done) {
 	    var graph = new _index2.default.Graph('Math');
 
-	    var addComponent = new AddComponent();
+	    var addComponent = new _AddComponent2.default();
 	    addComponent.getVariable('Variable 1').data = 1;
 	    addComponent.getVariable('Variable 2').data = 2;
 
 	    graph.addComponent(addComponent);
 
-	    var subComponent = new SubtractComponent();
+	    var subComponent = new _SubtractComponent2.default();
 	    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'));
 	    subComponent.getVariable('Variable 2').data = 2;
 
@@ -175,90 +182,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    addComponent.execute();
 	  });
 	});
-
-	var AddComponent = function (_Flow$Component) {
-	  _inherits(AddComponent, _Flow$Component);
-
-	  function AddComponent() {
-	    _classCallCheck(this, AddComponent);
-
-	    // construct the component.
-	    var _this = _possibleConstructorReturn(this, (AddComponent.__proto__ || Object.getPrototypeOf(AddComponent)).call(this));
-
-	    _this.name = 'Add';
-
-	    var var1 = new _index2.default.Variable('Variable 1', 'number');
-	    var1.required = true;
-
-	    _this.addVariable(var1);
-
-	    var var2 = new _index2.default.Variable('Variable 2', 'number');
-	    var2.required = true;
-
-	    _this.addVariable(var2);
-
-	    var port = new _index2.default.Port('Result');
-
-	    var var3 = new _index2.default.Variable('Variable 3', 'number');
-	    var3.required = true;
-
-	    port.addVariable(var3);
-
-	    _this.addPort(port);
-
-	    _this.attachTask(function () {
-	      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data + this.getVariable('Variable 2').data;
-	      this.getPort('Result').emit();
-	      this.taskComplete();
-	    });
-	    return _this;
-	  }
-
-	  return AddComponent;
-	}(_index2.default.Component);
-
-	var SubtractComponent = function (_Flow$Component2) {
-	  _inherits(SubtractComponent, _Flow$Component2);
-
-	  function SubtractComponent() {
-	    _classCallCheck(this, SubtractComponent);
-
-	    // construct the component.
-	    var _this2 = _possibleConstructorReturn(this, (SubtractComponent.__proto__ || Object.getPrototypeOf(SubtractComponent)).call(this));
-
-	    _this2.name = 'Subtract';
-
-	    var var1 = new _index2.default.Variable('Variable 1', 'number');
-	    var1.required = true;
-
-	    _this2.addVariable(var1);
-
-	    var var2 = new _index2.default.Variable('Variable 2', 'number');
-	    var2.required = true;
-
-	    _this2.addVariable(var2);
-
-	    var port = new _index2.default.Port('Result');
-
-	    var var3 = new _index2.default.Variable('Variable 3', 'number');
-	    var3.required = true;
-
-	    port.addVariable(var3);
-
-	    _this2.addPort(port);
-
-	    _this2.attachTask(function () {
-	      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data - this.getVariable('Variable 2').data;
-	      this.getPort('Result').emit();
-	      this.taskComplete();
-	    });
-	    return _this2;
-	  }
-
-	  return SubtractComponent;
-	}(_index2.default.Component);
-
-	;
 
 /***/ },
 /* 2 */
@@ -692,6 +615,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    },
+	    set: function set(id) {
+	      throw new Error('ID is read-only');
 	    }
 	  }]);
 
@@ -1399,6 +1325,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    },
+	    set: function set(id) {
+	      throw new Error('ID is read-only');
 	    }
 
 	    // DataType can be an array too. Like a selector box or an object of Params.
@@ -1521,6 +1450,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'id',
 	    get: function get() {
 	      return this._id;
+	    },
+	    set: function set(id) {
+	      throw new Error('ID is read-only');
 	    }
 	  }]);
 
@@ -1958,6 +1890,326 @@ return /******/ (function(modules) { // webpackBootstrap
 		return fn;
 	};
 
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _index = __webpack_require__(2);
+
+	var _index2 = _interopRequireDefault(_index);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AddComponent = function (_Flow$Component) {
+	  _inherits(AddComponent, _Flow$Component);
+
+	  function AddComponent() {
+	    _classCallCheck(this, AddComponent);
+
+	    // construct the component.
+	    var _this = _possibleConstructorReturn(this, (AddComponent.__proto__ || Object.getPrototypeOf(AddComponent)).call(this));
+
+	    _this.name = 'Add';
+
+	    var var1 = new _index2.default.Variable('Variable 1', 'number');
+	    var1.required = true;
+
+	    _this.addVariable(var1);
+
+	    var var2 = new _index2.default.Variable('Variable 2', 'number');
+	    var2.required = true;
+
+	    _this.addVariable(var2);
+
+	    var port = new _index2.default.Port('Result');
+
+	    var var3 = new _index2.default.Variable('Variable 3', 'number');
+	    var3.required = true;
+
+	    port.addVariable(var3);
+
+	    _this.addPort(port);
+
+	    _this.attachTask(function () {
+	      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data + this.getVariable('Variable 2').data;
+	      this.getPort('Result').emit();
+	      this.taskComplete();
+	    });
+	    return _this;
+	  }
+
+	  return AddComponent;
+	}(_index2.default.Component);
+
+	module.exports = AddComponent;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _index = __webpack_require__(2);
+
+	var _index2 = _interopRequireDefault(_index);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SubtractComponent = function (_Flow$Component) {
+	  _inherits(SubtractComponent, _Flow$Component);
+
+	  function SubtractComponent() {
+	    _classCallCheck(this, SubtractComponent);
+
+	    // construct the component.
+	    var _this = _possibleConstructorReturn(this, (SubtractComponent.__proto__ || Object.getPrototypeOf(SubtractComponent)).call(this));
+
+	    _this.name = 'Subtract';
+
+	    var var1 = new _index2.default.Variable('Variable 1', 'number');
+	    var1.required = true;
+
+	    _this.addVariable(var1);
+
+	    var var2 = new _index2.default.Variable('Variable 2', 'number');
+	    var2.required = true;
+
+	    _this.addVariable(var2);
+
+	    var port = new _index2.default.Port('Result');
+
+	    var var3 = new _index2.default.Variable('Variable 3', 'number');
+	    var3.required = true;
+
+	    port.addVariable(var3);
+
+	    _this.addPort(port);
+
+	    _this.attachTask(function () {
+	      this.getPort('Result').getVariable('Variable 3').data = this.getVariable('Variable 1').data - this.getVariable('Variable 2').data;
+	      this.getPort('Result').emit();
+	      this.taskComplete();
+	    });
+	    return _this;
+	  }
+
+	  return SubtractComponent;
+	}(_index2.default.Component);
+
+	;
+
+	module.exports = SubtractComponent;
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _index = __webpack_require__(2);
+
+	var _index2 = _interopRequireDefault(_index);
+
+	var _AddComponent = __webpack_require__(26);
+
+	var _AddComponent2 = _interopRequireDefault(_AddComponent);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	describe('Graph Tests', function () {
+	  it('A new graph should have an ID', function (done) {
+	    var graph = new _index2.default.Graph('Name');
+	    if (graph.id) {
+	      done();
+	    } else {
+	      done('Graph does not have an ID');
+	    }
+	  });
+
+	  it('Graph should not be created without a name', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      if (graph.id) {
+	        done('Graph created and has an id');
+	      } else {
+	        done('Graph created but does not have an ID');
+	      }
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Graph should add any object in place of a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.addComponent('Component');
+	      done('Added string in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Graph should remove any object in place of a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.removeComponent('Component');
+	      done('Removed string in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Should not add null as a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.addComponent();
+	      done('Added null in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Should not remove null as a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.removeComponent();
+	      done('Removed null in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Should not add any object in place of component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.addComponent({});
+	      done('Added an object in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Should not remove object as a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.removeComponent({});
+	      done('Removed an object in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Should add a component to the graph', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+
+	      var addComponent = new _AddComponent2.default();
+	      addComponent.getVariable('Variable 1').data = 1;
+	      addComponent.getVariable('Variable 2').data = 2;
+
+	      graph.addComponent(addComponent);
+
+	      done();
+	    } catch (e) {
+	      done('Error: Component cannot be removed.');
+	    }
+	  });
+
+	  it('Should remove a component to the graph', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+
+	      var addComponent = new _AddComponent2.default();
+	      addComponent.getVariable('Variable 1').data = 1;
+	      addComponent.getVariable('Variable 2').data = 2;
+
+	      graph.addComponent(addComponent);
+	      graph.removeComponent(addComponent);
+
+	      done();
+	    } catch (e) {
+	      done('Error: Component cannot be removed.');
+	    }
+	  });
+
+	  it('should not throw an error when you try to remove a component which is not added. ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+
+	      var addComponent = new _AddComponent2.default();
+	      addComponent.getVariable('Variable 1').data = 1;
+	      addComponent.getVariable('Variable 2').data = 2;
+
+	      graph.removeComponent(addComponent);
+
+	      done();
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
+
+	  it('should set a name ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      graph.name = 'New name';
+
+	      if (graph.name === 'New name') {
+	        done();
+	      } else {
+	        done('Graph has a wrong name');
+	      }
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
+
+	  it('should set any other datatype other than string as name ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      graph.name = 1;
+
+	      if (graph.name === 1) {
+	        done('Number set as name');
+	      } else {
+	        done('Graph has a wrong name');
+	      }
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('should get an id. ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      if (graph.id) {
+	        done();
+	      } else {
+	        done('Does not have an ID');
+	      }
+	    } catch (e) {
+	      done('Error thrown');
+	    }
+	  });
+
+	  it('should not set an id ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      graph.id = 'New id';
+	      done('ID is set');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+	});
 
 /***/ }
 /******/ ])

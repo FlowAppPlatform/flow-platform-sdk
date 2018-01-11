@@ -86,6 +86,10 @@ class Variable {
     return this._id
   }
 
+  set id (id) {
+    throw new Error('ID is read-only')
+  }
+
   // DataType can be an array too. Like a selector box or an object of Params.
   set values (values) {
     if (!Util.validateType(values, 'list')) {
