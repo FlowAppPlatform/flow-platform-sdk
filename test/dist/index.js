@@ -54,19 +54,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _Component = __webpack_require__(1);
-
-	var _Component2 = _interopRequireDefault(_Component);
-
-	var _Graph = __webpack_require__(28);
+	var _Graph = __webpack_require__(1);
 
 	var _Graph2 = _interopRequireDefault(_Graph);
+
+	var _Variable = __webpack_require__(27);
+
+	var _Variable2 = _interopRequireDefault(_Variable);
+
+	var _Component = __webpack_require__(28);
+
+	var _Component2 = _interopRequireDefault(_Component);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Flow = {};
 	Flow.Component = _Component2.default;
 	Flow.Graph = _Graph2.default;
+	Flow.Variable = _Variable2.default;
 
 /***/ },
 /* 1 */
@@ -80,106 +85,191 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _AddComponent2 = _interopRequireDefault(_AddComponent);
 
-	var _SubtractComponent = __webpack_require__(27);
-
-	var _SubtractComponent2 = _interopRequireDefault(_SubtractComponent);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	describe('Component Tests', function () {
-	  it('Attach and run a task.', function (done) {
-	    var component = new _index2.default.Component();
-	    // attach a task.
-
-	    component.attachTask(function () {
-	      // do nothing.
-	    });
-
-	    component.execute();
-
-	    done();
+	describe('Graph Tests', function () {
+	  it('A new graph should have an ID', function (done) {
+	    var graph = new _index2.default.Graph('Name');
+	    if (graph.id) {
+	      done();
+	    } else {
+	      done('Graph does not have an ID');
+	    }
 	  });
 
-	  it('Do not run a task if its not attached. ', function (done) {
-	    var component = new _index2.default.Component();
-
-	    // Task is commented and not attached.
-	    // component.attachTask = function(){
-	    //       console.log("This is a task.");
-	    // };
-	    // This should throw an error.
-
+	  it('Graph should not be created without a name', function (done) {
 	    try {
-	      component.execute();
-	      done(new Error('Component Executed without a task.'));
+	      var graph = new _index2.default.Graph();
+	      if (graph.id) {
+	        done('Graph created and has an id');
+	      } else {
+	        done('Graph created but does not have an ID');
+	      }
 	    } catch (e) {
 	      done();
 	    }
 	  });
 
-	  it('Create a simple add component', function (done) {
-	    var addComponent = new _AddComponent2.default();
-	    addComponent.getVariable('Variable 1').data = 1;
-	    addComponent.getVariable('Variable 2').data = 2;
-	    addComponent.getPort('Result').onEmit(function () {
-	      addComponent.getVariable('Variable 1');
-	      if (addComponent.getPort('Result').getVariable('Variable 3').data === 3) {
-	        done();
-	      } else {
-	        done('Failed');
-	      }
-	    });
-	    addComponent.execute();
-	  });
-
-	  it('Should not execute a connected component if it does not belong to a graph.', function (done) {
-	    var addComponent = new _AddComponent2.default();
-	    addComponent.getVariable('Variable 1').data = 1;
-	    addComponent.getVariable('Variable 2').data = 2;
-
-	    var subComponent = new _SubtractComponent2.default();
-	    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'));
-	    subComponent.getVariable('Variable 2').data = 2;
-
-	    addComponent.getPort('Result').connectComponent(subComponent);
-
-	    subComponent.getPort('Result').onEmit(function () {
-	      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {} else {}
-	    });
+	  it('Graph should add any object in place of a component', function (done) {
 	    try {
-	      addComponent.execute();
-	      done('Component executed without a graph.');
+	      var graph = new _index2.default.Graph();
+	      graph.addComponent('Component');
+	      done('Added string in place of a component.');
 	    } catch (e) {
 	      done();
 	    }
 	  });
 
-	  it('Connect two components and execute.', function (done) {
-	    var graph = new _index2.default.Graph('Math');
+	  it('Graph should remove any object in place of a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.removeComponent('Component');
+	      done('Removed string in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
 
-	    var addComponent = new _AddComponent2.default();
-	    addComponent.getVariable('Variable 1').data = 1;
-	    addComponent.getVariable('Variable 2').data = 2;
+	  it('Should not add null as a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.addComponent();
+	      done('Added null in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
 
-	    graph.addComponent(addComponent);
+	  it('Should not remove null as a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.removeComponent();
+	      done('Removed null in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
 
-	    var subComponent = new _SubtractComponent2.default();
-	    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'));
-	    subComponent.getVariable('Variable 2').data = 2;
+	  it('Should not add any object in place of component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.addComponent({});
+	      done('Added an object in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
 
-	    graph.addComponent(subComponent);
+	  it('Should not remove object as a component', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph();
+	      graph.removeComponent({});
+	      done('Removed an object in place of a component.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
 
-	    addComponent.getPort('Result').connectComponent(subComponent);
+	  it('Should add a component to the graph', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
 
-	    subComponent.getPort('Result').onEmit(function () {
-	      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
+	      var addComponent = new _AddComponent2.default();
+	      addComponent.getVariable('Variable 1').data = 1;
+	      addComponent.getVariable('Variable 2').data = 2;
+
+	      graph.addComponent(addComponent);
+
+	      done();
+	    } catch (e) {
+	      done('Error: Component cannot be removed.');
+	    }
+	  });
+
+	  it('Should remove a component to the graph', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+
+	      var addComponent = new _AddComponent2.default();
+	      addComponent.getVariable('Variable 1').data = 1;
+	      addComponent.getVariable('Variable 2').data = 2;
+
+	      graph.addComponent(addComponent);
+	      graph.removeComponent(addComponent);
+
+	      done();
+	    } catch (e) {
+	      done('Error: Component cannot be removed.');
+	    }
+	  });
+
+	  it('should not throw an error when you try to remove a component which is not added. ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+
+	      var addComponent = new _AddComponent2.default();
+	      addComponent.getVariable('Variable 1').data = 1;
+	      addComponent.getVariable('Variable 2').data = 2;
+
+	      graph.removeComponent(addComponent);
+
+	      done();
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
+
+	  it('should set a name ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      graph.name = 'New name';
+
+	      if (graph.name === 'New name') {
 	        done();
 	      } else {
-	        done('Result failed.');
+	        done('Graph has a wrong name');
 	      }
-	    });
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
 
-	    addComponent.execute();
+	  it('should set any other datatype other than string as name ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      graph.name = 1;
+
+	      if (graph.name === 1) {
+	        done('Number set as name');
+	      } else {
+	        done('Graph has a wrong name');
+	      }
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('should get an id. ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      if (graph.id) {
+	        done();
+	      } else {
+	        done('Does not have an ID');
+	      }
+	    } catch (e) {
+	      done('Error thrown');
+	    }
+	  });
+
+	  it('should not set an id ', function (done) {
+	    try {
+	      var graph = new _index2.default.Graph('Math');
+	      graph.id = 'New id';
+	      done('ID is set');
+	    } catch (e) {
+	      done();
+	    }
 	  });
 	});
 
@@ -933,7 +1023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getValidDataTypes',
 	    value: function getValidDataTypes() {
-	      return ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single'];
+	      return ['number', 'decimal', 'text', 'date', 'datetime', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single'];
 	    }
 	  }]);
 
@@ -1250,11 +1340,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Variable, [{
-	    key: 'serialize',
-	    value: function serialize() {
-	      return JSON.stringify(this);
-	    }
-	  }, {
 	    key: 'linkToVariable',
 	    value: function linkToVariable(variable) {
 	      if (variable && variable._type === 'variable') {
@@ -1960,6 +2045,319 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	describe('Variable Tests', function () {
+	  it('A new variable should have an ID', function (done) {
+	    var variable = new _index2.default.Variable('Name', 'datatype');
+	    if (variable.id) {
+	      done();
+	    } else {
+	      done('variable does not have an ID');
+	    }
+	  });
+
+	  it('variable should not be created without a name', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable();
+	      if (variable.id) {
+	        done('variable created and has an id');
+	      } else {
+	        done('variable created but does not have an ID');
+	      }
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('variable should not be created without a datatype', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('name', null);
+	      if (variable.id) {
+	        done('variable created and has an id');
+	      } else {
+	        done('variable created but does not have an ID');
+	      }
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('should set a name ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'string');
+	      variable.name = 'New name';
+
+	      if (variable.name === 'New name') {
+	        done();
+	      } else {
+	        done('variable has a wrong name');
+	      }
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
+
+	  it('should get an id. ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'string');
+	      if (variable.id) {
+	        done();
+	      } else {
+	        done('Does not have an ID');
+	      }
+	    } catch (e) {
+	      done('Error thrown');
+	    }
+	  });
+
+	  it('should set a description ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'string');
+	      variable.description = 'New description';
+
+	      if (variable.description === 'New description') {
+	        done();
+	      } else {
+	        done('variable has a wrong description');
+	      }
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
+
+	  it('should set required ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'string');
+	      variable.required = true;
+
+	      if (variable.required) {
+	        done();
+	      } else {
+	        done('variable has a wrong required field.');
+	      }
+	    } catch (e) {
+	      done('Error thrown.');
+	    }
+	  });
+
+	  it('should get an id. ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'string');
+	      if (variable.id) {
+	        done();
+	      } else {
+	        done('Does not have an ID');
+	      }
+	    } catch (e) {
+	      done('Error thrown');
+	    }
+	  });
+
+	  it('should set values - select single', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Country', 'select-single');
+	      variable.values = ['India', 'USA'];
+	      done();
+	    } catch (e) {
+	      done('Error thrown');
+	    }
+	  });
+
+	  it('should set values - select multiple ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Country', 'select-multiple');
+	      variable.values = ['India', 'USA'];
+	      done();
+	    } catch (e) {
+	      done('Error thrown');
+	    }
+	  });
+
+	  it('should not set values when datatype is somethign else from select-single or select multiple', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Country', 'string');
+	      variable.values = ['India', 'USA'];
+	      done('Values set.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('should not set an id ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'string');
+	      variable.id = 'New id';
+	      done('ID is set');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('should not set data of type text', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'text');
+	      variable.data = 'New data';
+	      done();
+	    } catch (e) {
+	      done('Data cannot be set');
+	    }
+	  });
+
+	  it('should not set incorrect data of type text ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'text');
+	      variable.data = 1;
+	      done('Incorrect data of type text');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('should not set data of type number', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'number');
+	      variable.data = 1;
+	      done();
+	    } catch (e) {
+	      done('Data cannot be set');
+	    }
+	  });
+
+	  it('should not set incorrect data of type number ', function (done) {
+	    try {
+	      var variable = new _index2.default.Variable('Sample', 'number');
+	      variable.data = 'Sample';
+	      done('Incorrect data of type number');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+	});
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _index = __webpack_require__(2);
+
+	var _index2 = _interopRequireDefault(_index);
+
+	var _AddComponent = __webpack_require__(26);
+
+	var _AddComponent2 = _interopRequireDefault(_AddComponent);
+
+	var _SubtractComponent = __webpack_require__(29);
+
+	var _SubtractComponent2 = _interopRequireDefault(_SubtractComponent);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	describe('Component Tests', function () {
+	  it('Attach and run a task.', function (done) {
+	    var component = new _index2.default.Component();
+	    // attach a task.
+
+	    component.attachTask(function () {
+	      // do nothing.
+	    });
+
+	    component.execute();
+
+	    done();
+	  });
+
+	  it('Do not run a task if its not attached. ', function (done) {
+	    var component = new _index2.default.Component();
+
+	    // Task is commented and not attached.
+	    // component.attachTask = function(){
+	    //       console.log("This is a task.");
+	    // };
+	    // This should throw an error.
+
+	    try {
+	      component.execute();
+	      done(new Error('Component Executed without a task.'));
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Create a simple add component', function (done) {
+	    var addComponent = new _AddComponent2.default();
+	    addComponent.getVariable('Variable 1').data = 1;
+	    addComponent.getVariable('Variable 2').data = 2;
+	    addComponent.getPort('Result').onEmit(function () {
+	      addComponent.getVariable('Variable 1');
+	      if (addComponent.getPort('Result').getVariable('Variable 3').data === 3) {
+	        done();
+	      } else {
+	        done('Failed');
+	      }
+	    });
+	    addComponent.execute();
+	  });
+
+	  it('Should not execute a connected component if it does not belong to a graph.', function (done) {
+	    var addComponent = new _AddComponent2.default();
+	    addComponent.getVariable('Variable 1').data = 1;
+	    addComponent.getVariable('Variable 2').data = 2;
+
+	    var subComponent = new _SubtractComponent2.default();
+	    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'));
+	    subComponent.getVariable('Variable 2').data = 2;
+
+	    addComponent.getPort('Result').connectComponent(subComponent);
+
+	    subComponent.getPort('Result').onEmit(function () {
+	      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {} else {}
+	    });
+	    try {
+	      addComponent.execute();
+	      done('Component executed without a graph.');
+	    } catch (e) {
+	      done();
+	    }
+	  });
+
+	  it('Connect two components and execute.', function (done) {
+	    var graph = new _index2.default.Graph('Math');
+
+	    var addComponent = new _AddComponent2.default();
+	    addComponent.getVariable('Variable 1').data = 1;
+	    addComponent.getVariable('Variable 2').data = 2;
+
+	    graph.addComponent(addComponent);
+
+	    var subComponent = new _SubtractComponent2.default();
+	    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'));
+	    subComponent.getVariable('Variable 2').data = 2;
+
+	    graph.addComponent(subComponent);
+
+	    addComponent.getPort('Result').connectComponent(subComponent);
+
+	    subComponent.getPort('Result').onEmit(function () {
+	      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
+	        done();
+	      } else {
+	        done('Result failed.');
+	      }
+	    });
+
+	    addComponent.execute();
+	  });
+	});
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _index = __webpack_require__(2);
+
+	var _index2 = _interopRequireDefault(_index);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -2010,206 +2408,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	;
 
 	module.exports = SubtractComponent;
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _index = __webpack_require__(2);
-
-	var _index2 = _interopRequireDefault(_index);
-
-	var _AddComponent = __webpack_require__(26);
-
-	var _AddComponent2 = _interopRequireDefault(_AddComponent);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	describe('Graph Tests', function () {
-	  it('A new graph should have an ID', function (done) {
-	    var graph = new _index2.default.Graph('Name');
-	    if (graph.id) {
-	      done();
-	    } else {
-	      done('Graph does not have an ID');
-	    }
-	  });
-
-	  it('Graph should not be created without a name', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      if (graph.id) {
-	        done('Graph created and has an id');
-	      } else {
-	        done('Graph created but does not have an ID');
-	      }
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Graph should add any object in place of a component', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      graph.addComponent('Component');
-	      done('Added string in place of a component.');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Graph should remove any object in place of a component', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      graph.removeComponent('Component');
-	      done('Removed string in place of a component.');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Should not add null as a component', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      graph.addComponent();
-	      done('Added null in place of a component.');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Should not remove null as a component', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      graph.removeComponent();
-	      done('Removed null in place of a component.');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Should not add any object in place of component', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      graph.addComponent({});
-	      done('Added an object in place of a component.');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Should not remove object as a component', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph();
-	      graph.removeComponent({});
-	      done('Removed an object in place of a component.');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('Should add a component to the graph', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-
-	      var addComponent = new _AddComponent2.default();
-	      addComponent.getVariable('Variable 1').data = 1;
-	      addComponent.getVariable('Variable 2').data = 2;
-
-	      graph.addComponent(addComponent);
-
-	      done();
-	    } catch (e) {
-	      done('Error: Component cannot be removed.');
-	    }
-	  });
-
-	  it('Should remove a component to the graph', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-
-	      var addComponent = new _AddComponent2.default();
-	      addComponent.getVariable('Variable 1').data = 1;
-	      addComponent.getVariable('Variable 2').data = 2;
-
-	      graph.addComponent(addComponent);
-	      graph.removeComponent(addComponent);
-
-	      done();
-	    } catch (e) {
-	      done('Error: Component cannot be removed.');
-	    }
-	  });
-
-	  it('should not throw an error when you try to remove a component which is not added. ', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-
-	      var addComponent = new _AddComponent2.default();
-	      addComponent.getVariable('Variable 1').data = 1;
-	      addComponent.getVariable('Variable 2').data = 2;
-
-	      graph.removeComponent(addComponent);
-
-	      done();
-	    } catch (e) {
-	      done('Error thrown.');
-	    }
-	  });
-
-	  it('should set a name ', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-	      graph.name = 'New name';
-
-	      if (graph.name === 'New name') {
-	        done();
-	      } else {
-	        done('Graph has a wrong name');
-	      }
-	    } catch (e) {
-	      done('Error thrown.');
-	    }
-	  });
-
-	  it('should set any other datatype other than string as name ', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-	      graph.name = 1;
-
-	      if (graph.name === 1) {
-	        done('Number set as name');
-	      } else {
-	        done('Graph has a wrong name');
-	      }
-	    } catch (e) {
-	      done();
-	    }
-	  });
-
-	  it('should get an id. ', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-	      if (graph.id) {
-	        done();
-	      } else {
-	        done('Does not have an ID');
-	      }
-	    } catch (e) {
-	      done('Error thrown');
-	    }
-	  });
-
-	  it('should not set an id ', function (done) {
-	    try {
-	      var graph = new _index2.default.Graph('Math');
-	      graph.id = 'New id';
-	      done('ID is set');
-	    } catch (e) {
-	      done();
-	    }
-	  });
-	});
 
 /***/ }
 /******/ ])

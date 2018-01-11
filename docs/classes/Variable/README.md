@@ -147,7 +147,7 @@ variable.required = true;
 Variables have DataType. You can set it by:
 
 ```
-variable.datatype = "number";
+variable.dataType = "number";
 ```
 
 

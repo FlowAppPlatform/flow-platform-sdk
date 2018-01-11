@@ -800,7 +800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getValidDataTypes',
 	    value: function getValidDataTypes() {
-	      return ['number', 'decimal', 'text', 'date', 'date', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single'];
+	      return ['number', 'decimal', 'text', 'date', 'datetime', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single'];
 	    }
 	  }]);
 
@@ -1117,11 +1117,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Variable, [{
-	    key: 'serialize',
-	    value: function serialize() {
-	      return JSON.stringify(this);
-	    }
-	  }, {
 	    key: 'linkToVariable',
 	    value: function linkToVariable(variable) {
 	      if (variable && variable._type === 'variable') {
