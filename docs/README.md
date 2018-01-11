@@ -25,7 +25,7 @@
 
 ### Contributing
 
-Please read the guide [here](./contributing)
+Please read the guide [here](./contributing/README.md)
 
 
 
