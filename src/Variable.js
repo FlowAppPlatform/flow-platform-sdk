@@ -24,10 +24,6 @@ class Variable {
     this.index = null
   }
 
-  serialize () {
-    return JSON.stringify(this)
-  }
-
   linkToVariable (variable) {
     if (variable && variable._type === 'variable') { this._data = variable._data }
   }

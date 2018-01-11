@@ -1,5 +1,15 @@
 # CloudBoost Flow Docs
 
+### Before you begin
+
+Install `cloudboost-flow` module in your project via NPM. 
+
+`npm install cloudboost-flow --save`
+
+Import it into your project. 
+
+`import Flow from cloudboost-flow`
+
 ### Glossary
 
 - [Component](./classes/Component/README.md): Think of a component as a function. It's a black-box that takes some inputs, processes something and sends out output. For example: We can have component for sending an email, addition of two numbers, getting data from an API, etc. 
