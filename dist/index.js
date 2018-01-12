@@ -2558,6 +2558,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new Error('variables should be an instance of Variable class.');
 	      }
 	    }
+	  }, {
+	    key: 'getVariable',
+	    value: function getVariable(variable) {
+	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
+	        if (variable instanceof _Variable2.default && !variable.id) {
+	          throw new Error('Variable does not have an ID.');
+	        }
+
+	        for (var i = 0; i < this._variables.length; i++) {
+	          if (typeof variable === 'string') {
+	            if (variable === this._variables[i].name) {
+	              return this._variables[i];
+	            }
+	          } else {
+	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+	              return this._variables[i];
+	            }
+	          }
+	        }
+
+	        throw new Error('Variable not found.');
+	      } else {
+	        throw new Error('Variable should be an instance of variable class.');
+	      }
+	    }
 
 	    // This passes the flow to components that this port is connected to.
 
@@ -2606,36 +2631,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        throw new Error('component should be an instance of Component class.');
 	      }
-	    }
-	  }, {
-	    key: 'getVariable',
-	    value: function getVariable(variable) {
-	      if (variable instanceof _Variable2.default || typeof variable === 'string') {
-	        if (variable instanceof _Variable2.default && !variable.id) {
-	          throw new Error('Variable does not have an ID.');
-	        }
-
-	        for (var i = 0; i < this._variables.length; i++) {
-	          if (typeof variable === 'string') {
-	            if (variable === this._variables[i].name) {
-	              return this._variables[i];
-	            }
-	          } else {
-	            if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-	              return this._variables[i];
-	            }
-	          }
-	        }
-
-	        throw new Error('Variable not found.');
-	      } else {
-	        throw new Error('Variable should be an instance of variable class.');
-	      }
-	    }
-	  }, {
-	    key: 'serialize',
-	    value: function serialize() {
-	      return JSON.stringify(this);
 	    }
 	  }, {
 	    key: 'disconnectComponent',

@@ -97,6 +97,28 @@ class Port {
     }
   }
 
+  getVariable (variable) {
+    if (variable instanceof Variable || typeof variable === 'string') {
+      if (variable instanceof Variable && !variable.id) { throw new Error('Variable does not have an ID.') }
+
+      for (let i = 0; i < this._variables.length; i++) {
+        if (typeof variable === 'string') {
+          if (variable === this._variables[i].name) {
+            return this._variables[i]
+          }
+        } else {
+          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+            return this._variables[i]
+          }
+        }
+      }
+
+      throw new Error('Variable not found.')
+    } else {
+      throw new Error('Variable should be an instance of variable class.')
+    }
+  }
+
   // This passes the flow to components that this port is connected to.
   emit () {
     if (this._componentAttachedTo) {
@@ -131,32 +153,6 @@ class Port {
     } else {
       throw new Error('component should be an instance of Component class.')
     }
-  }
-
-  getVariable (variable) {
-    if (variable instanceof Variable || typeof variable === 'string') {
-      if (variable instanceof Variable && !variable.id) { throw new Error('Variable does not have an ID.') }
-
-      for (let i = 0; i < this._variables.length; i++) {
-        if (typeof variable === 'string') {
-          if (variable === this._variables[i].name) {
-            return this._variables[i]
-          }
-        } else {
-          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-            return this._variables[i]
-          }
-        }
-      }
-
-      throw new Error('Variable not found.')
-    } else {
-      throw new Error('Variable should be an instance of variable class.')
-    }
-  }
-
-  serialize () {
-    return JSON.stringify(this)
   }
 
   disconnectComponent (component) {
