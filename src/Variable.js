@@ -28,9 +28,28 @@ class Variable {
     if (variable && variable._type === 'variable') { this._data = variable._data }
   }
 
+  unlinkVariable () {
+    this._data = JSON.parse(JSON.stringify(this._data))
+  }
+
   set data (data) {
     if (Util.validateType(data, this.dataType)) {
-      this._data._value = data
+      if (this.dataType === 'select-single' || this.dataType === 'select-multiple') {
+        if (!(data instanceof Array)) {
+          data = [data]
+        }
+        for (var i = 0; i < data.length; i++) {
+          if (this._values.indexOf(data[i]) < 0) {
+            throw new Error('Data does not belong to predefined values')
+          }
+        }
+        if (this.dataType === 'select-single' && data && data.length > 1) {
+          throw new Error('Only one item in the array can be saved with select-single datatype.')
+        }
+        this._data._value = data
+      } else {
+        this._data._value = data
+      }
     } else {
       throw new Error('Data is not of type ' + this.dataType)
     }

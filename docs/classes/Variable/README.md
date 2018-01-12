@@ -96,6 +96,14 @@ console.log(variableB.data); // this is also 1, because two variables are linked
 
 For a more complete example, Please refer to [Usage Guide](../usage/README.md)
 
+### Un-Link variable from other variables
+
+You can unlink variable from other variable.  
+
+```
+variable.unlinkVariable();
+```
+
 ### More Options
 
 #### Name 

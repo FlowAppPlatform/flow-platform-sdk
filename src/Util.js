@@ -1,3 +1,4 @@
+import UrlRegex from 'url-regex'
 
 class Util {
   static validateType (value, type) {
@@ -24,7 +25,11 @@ class Util {
     }
 
     if (type === 'date' || type === 'datetime' || type === 'time') {
-      if (!(value instanceof type)) { return false }
+      if (typeof value === 'string') {
+        value = new Date(value)
+        if (value.toString() === 'Invalid Date') { throw new Error(value + ' is not a valid ' + type) }
+      }
+      if (!(value instanceof Date)) { return false }
     }
 
     if (type === 'rating') {
@@ -32,8 +37,16 @@ class Util {
     }
 
     // validate for URL.
-    if (type === 'url' && this.validate(value, 'text')) {
-      var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9]+[a-zA-Z]{2,8}/
+    if (type === 'url') {
+      if (!UrlRegex({exact: true}).test(value)) {
+        return false
+      }
+      return true
+    }
+
+    // validate for Email.
+    if (type === 'email') {
+      let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
       if (!re.test(value)) {
         return false
@@ -51,7 +64,7 @@ class Util {
     }
 
     if (type === 'list') {
-      if (value instanceof Array) { return false }
+      if (!(value instanceof Array)) { return false }
     }
 
     return true

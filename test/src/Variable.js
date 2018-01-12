@@ -131,7 +131,7 @@ describe('Variable Tests', function () {
     }
   })
 
-  it('should not set data of type text', function (done) {
+  it('should set data of type text', function (done) {
     try {
       var variable = new Flow.Variable('Sample', 'text')
       variable.data = 'New data'
@@ -151,7 +151,7 @@ describe('Variable Tests', function () {
     }
   })
 
-  it('should not set data of type number', function (done) {
+  it('should set data of type number', function (done) {
     try {
       var variable = new Flow.Variable('Sample', 'number')
       variable.data = 1
@@ -168,6 +168,260 @@ describe('Variable Tests', function () {
       done('Incorrect data of type number')
     } catch (e) {
       done()
+    }
+  })
+
+  it('should set data of type URL', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'url')
+      variable.data = 'http://google.com'
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type URL ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'url')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set data of type Email', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'email')
+      variable.data = 'sample@smapl.com'
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type Email ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'email')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set data of type Date', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'date')
+      variable.data = new Date()
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should set string as dates', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'date')
+      variable.data = new Date().toString()
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type Date ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'date')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set data of type DateTime', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'datetime')
+      variable.data = new Date()
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type datetime ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'datetime')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set data of type time', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'time')
+      variable.data = new Date()
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type time ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'time')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set data of type boolean', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'boolean')
+      variable.data = true
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type boolean ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'boolean')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set data of type list', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'list')
+      variable.data = []
+      done()
+    } catch (e) {
+      done('Data cannot be set')
+    }
+  })
+
+  it('should not set incorrect data of type list ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'list')
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should not set incorrect data of type select-multiple ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'select-multiple')
+      variable.values = ['1', '2', '3']
+      variable.data = ['1']
+      done()
+    } catch (e) {
+      done('Incorrect data set')
+    }
+  })
+
+  it('should not set incorrect data of type select-multiple ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'select-multiple')
+      variable.values = ['1', '2', '3']
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set multiple values in select-multiple ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'select-multiple')
+      variable.values = ['1', '2', '3']
+      variable.data = ['1', '2']
+      done()
+    } catch (e) {
+      done('Incorrect data set')
+    }
+  })
+
+  it('should not set incorrect data of type select-single ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'select-single')
+      variable.values = ['1', '2', '3']
+      variable.data = ['1']
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should not set incorrect data of type select-single ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'select-single')
+      variable.values = ['1', '2', '3']
+      variable.data = 'Sample'
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should not set multiple values in select-single ', function (done) {
+    try {
+      var variable = new Flow.Variable('Sample', 'select-single')
+      variable.values = ['1', '2', '3']
+      variable.data = ['1', '2']
+      done('Incorrect data set')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('link variables ', function (done) {
+    try {
+      var variableA = new Flow.Variable('Sample', 'string')
+      var variableB = new Flow.Variable('Sample', 'string')
+      variableB.linkToVariable(variableA)
+      variableA.data = 'sample'
+      if (variableB.data === 'sample') {
+        done()
+      } else {
+        done('Variables cannot be linked. ')
+      }
+    } catch (e) {
+      done('Error thrown')
+    }
+  })
+
+  it('unlink variables ', function (done) {
+    try {
+      var variableA = new Flow.Variable('Sample', 'string')
+      var variableB = new Flow.Variable('Sample', 'string')
+      variableB.linkToVariable(variableA)
+      variableA.data = 'sample'
+      if (variableB.data === 'sample') {
+        variableB.unlinkVariable()
+        variableA.data = 'Sample1'
+        if (variableB.data === 'sample' && variableA.data === 'Sample1') {
+          done()
+        } else {
+          done('Variables cannot be unlinked.')
+        }
+      } else {
+        done('Variables cannot be linked. ')
+      }
+    } catch (e) {
+      done('Error thrown')
     }
   })
 })

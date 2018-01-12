@@ -205,6 +205,9 @@ class Port {
   get id () {
     return this._id
   }
+  set id (id) {
+    throw new Error('ID is read-only')
+  }
 }
 
 module.exports = Port
