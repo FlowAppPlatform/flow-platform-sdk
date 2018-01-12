@@ -92,10 +92,10 @@ Returns:
 
 ### Disconnect Components
 
-You can disconnect components from this port. Here `component` is an instance of [Component](../Component/README.md) class. 
+You can disconnect components from the port. Here `component` is an instance of [Component](../Component/README.md) class. 
 
 ```
-port.connectComponent(component);
+port.disconnectComponent(component);
 ```
 
 Params: 

@@ -3,7 +3,6 @@
  */
 
 import Util from './Util'
-import Component from './Component'
 import Variable from './Variable'
 
 class Port {
@@ -46,14 +45,18 @@ class Port {
       for (let i = 0; i < this._variables.length; i++) {
         if (typeof variable === 'string') {
           if (variable === this._variables[i].name) {
-            this._variables.slice(i, 1)
+            this._variables.splice(i, 1)
+            return
           }
         } else {
           if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-            this._variables.slice(i, 1)
+            this._variables.splice(i, 1)
+            return
           }
         }
       }
+
+      throw new Error('Variable not found.')
     } else {
       throw new Error('variables should be an instance of Variable class.')
     }
@@ -156,7 +159,7 @@ class Port {
   }
 
   disconnectComponent (component) {
-    if (component instanceof Component) {
+    if (component && component._type && component._type === 'component') {
       if (!component.id) { throw new Error('Component does not have an ID.') }
 
       var componentId = component.id
@@ -164,7 +167,7 @@ class Port {
         throw new Error('Component is not connected to the port.')
       }
 
-      this._connectedComponents.slice(this._connectedComponents.indexOf(componentId), 1)
+      this._connectedComponents.splice(this._connectedComponents.indexOf(componentId), 1)
     } else {
       throw new Error('component should be an instance of Component class.')
     }
