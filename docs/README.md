@@ -24,14 +24,13 @@ Import it into your project.
 
 ### Docs
 
-- [Building your first component](./getting-started/README.md)
-- [Using and running components](./usage/README.md)
+- [Building your first component](./getting-started/create-a-component.md)
+- [Using and running components](./getting-started/use-a-component.md)
 
 
 ### Examples
 
 - [Add Component](./examples/add.js)
-- [Sendgrid Send Email Component](./examples/sendgrid-send-email.js)
 
 ### Contributing
 
