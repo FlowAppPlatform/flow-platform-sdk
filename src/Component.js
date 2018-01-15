@@ -18,9 +18,6 @@ class Component {
     // A short description of the component.
     this._description = ''
 
-    // List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc.
-    this._outPorts = {}
-
     // A socket object to communicate with other components.
     this._socket = null
 
@@ -183,10 +180,6 @@ class Component {
     this._task = null
   }
 
-  serialize () {
-    return JSON.stringify(this)
-  }
-
   addPort (port) {
     if (port instanceof Port) {
       if (!port.id) { throw new Error('Port does not have an ID.') }
@@ -263,6 +256,8 @@ class Component {
     return this._ports
   }
 
+  // Private Functions.
+
   _attachSocket (socket) {
     this._socket = socket
     var component = this
@@ -292,7 +287,7 @@ class Component {
   }
 
   get task () {
-    return this._name
+    return this._task
   }
 
   set task (task) {
@@ -321,8 +316,8 @@ class Component {
     this._iconUrl = iconUrl
   }
 
-  get outPorts () {
-    return this._outPorts
+  get ports () {
+    return this._ports
   }
 
   get id () {

@@ -122,9 +122,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // A short description of the component.
 	    this._description = '';
 
-	    // List of all the outports. If we're building an email component. Ourports can be sent, bounced, error, etc.
-	    this._outPorts = {};
-
 	    // A socket object to communicate with other components.
 	    this._socket = null;
 
@@ -316,11 +313,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this._task = null;
 	    }
 	  }, {
-	    key: 'serialize',
-	    value: function serialize() {
-	      return JSON.stringify(this);
-	    }
-	  }, {
 	    key: 'addPort',
 	    value: function addPort(port) {
 	      if (port instanceof _Port2.default) {
@@ -411,6 +403,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getPorts() {
 	      return this._ports;
 	    }
+
+	    // Private Functions.
+
 	  }, {
 	    key: '_attachSocket',
 	    value: function _attachSocket(socket) {
@@ -446,7 +441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'task',
 	    get: function get() {
-	      return this._name;
+	      return this._task;
 	    },
 	    set: function set(task) {
 	      this.attachTask(task);
@@ -474,9 +469,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this._iconUrl = iconUrl;
 	    }
 	  }, {
-	    key: 'outPorts',
+	    key: 'ports',
 	    get: function get() {
-	      return this._outPorts;
+	      return this._ports;
 	    }
 	  }, {
 	    key: 'id',
