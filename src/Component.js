@@ -71,11 +71,11 @@ class Component {
       for (let i = 0; i < this._variables.length; i++) {
         if (typeof variable === 'string') {
           if (variable === this._variables[i].name) {
-            this._variables.slice(i, 1)
+            this._variables.splice(i, 1)
           }
         } else {
           if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-            this._variables.slice(i, 1)
+            this._variables.splice(i, 1)
           }
         }
       }
@@ -206,7 +206,7 @@ class Component {
       if (this._ports.indexOf(port) < 0) {
         throw new Error('Port not found in the component.')
       }
-      this._ports.slice(this._ports.indexOf(port), 1)
+      this._ports.splice(this._ports.indexOf(port), 1)
       port._componentAttachedTo = null
     } else {
       throw new Error('Port should be an instance of Port class.')
