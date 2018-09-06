@@ -1,4 +1,4 @@
-CloudBoost Flow: Flow-based programming for JavaScript 
+Flow: Flow-based programming for JavaScript 
 ========================================================
 [![Build Status](https://travis-ci.org/CloudBoost/flow-sdk.svg?branch=master)](https://travis-ci.org/CloudBoost/flow-sdk)
 [![codecov](https://codecov.io/gh/CloudBoost/flow-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/CloudBoost/flow-sdk)
