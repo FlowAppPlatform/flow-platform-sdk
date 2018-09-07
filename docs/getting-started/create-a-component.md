@@ -51,15 +51,6 @@ Every component has a name. Set your's here.
 this.name = "Add";
 ```
 
-#### Set a name
-
-Every component has a name. Set your's here. 
-
-```
-//In the constructor, after calling super()
-this.name = "Add";
-```
-
 #### Add variables
 
 Since we're creating an Add component. This will have two variables - Variable 1 and Variable 2. 
