@@ -26,10 +26,10 @@ CloudBoost Flow is not a web framework or a UI toolkit. It is a way to coordinat
 
 ## Requirements and installing
 
-CloudBoost Flow is available for Node.js [via NPM](https://npmjs.org/package/cloudboost-flow), so you can install it with:
+CloudBoost Flow is available for Node.js [via NPM](https://npmjs.org/package/flow-sdk), so you can install it with:
 
 ```bash
-$ npm install cloudboost-flow --save
+$ npm install flow-sdk --save
 ```
 
 

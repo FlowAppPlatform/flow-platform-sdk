@@ -1,4 +1,4 @@
-var Flow = require('cloudboost-flow');
+var Flow = require('flow-sdk');
 
 /*
 We're creating an Add component whcih adds two numbers. 

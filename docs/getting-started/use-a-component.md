@@ -11,7 +11,7 @@ Create a new NodeJS project. Create a new file called `index.js`. This is the en
 Import the CloudBoost Flow SDK into your project. 
 
 ```
-var Flow = require('cloudboost-flow');
+var Flow = require('flow-sdk');
 ```
 
 Now, import both add component and subtract component. 

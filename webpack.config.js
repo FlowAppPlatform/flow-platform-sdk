@@ -4,7 +4,7 @@ var config = {
     output: {
         path: './dist',
         filename: 'index.js',
-        library: "cloudboost-flow",
+        library: "flow-sdk",
         libraryTarget: 'umd',
         umdNamedDefine: true,
     },
