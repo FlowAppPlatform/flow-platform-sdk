@@ -2,13 +2,13 @@
 
 ### Before you begin
 
-Install `cloudboost-flow` module in your project via NPM. 
+Install `flow-sdk` module in your project via NPM. 
 
-`npm install cloudboost-flow --save`
+`npm install flow-sdk --save`
 
 Import it into your project. 
 
-`import Flow from cloudboost-flow`
+`import Flow from flow-sdk`
 
 ### Glossary
 

@@ -1,4 +1,4 @@
-import Flow from 'cloudboost-flow'
+import Flow from 'flow-sdk'
 import AddComponent from 'add.js'
 import SubtractComponent from 'subtract.js'
 
