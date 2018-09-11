@@ -7,10 +7,21 @@ import Port from './Port'
 import Variable from './Variable'
 import Graph from './Graph'
 
-var Flow = {}
-Flow.Component = Component
-Flow.Port = Port
-Flow.Variable = Variable
-Flow.Graph = Graph
+var Flow = {
+  Component,
+  Port,
+  Variable,
+  Graph,
+  isServer () {
+    if (typeof window !== 'undefined') {
+      return false
+    }
+
+    return true
+  },
+  isClient () {
+    return !this.isServer()
+  }
+}
 
 module.exports = Flow
