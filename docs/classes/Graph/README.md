@@ -64,4 +64,44 @@ Graph have ID. These are read-only. You can get the ID for your graph by:
 
 ```
 var id = graph.id;
+
+```
+
+### Map a graph
+
+You can create and store a JSON representation of your Graph by
+```javascript
+graph.init({
+    componentOne: 'AddComponent',
+    componentTwo: 'SubComponent'
+})
+```
+Params:
+* map is a JSON Object.
+
+Returns:
+* void
+
+Once you have created your Graph map, get it by
+```javascript
+graph.toJson()
+```
+
+Params:
+* none
+
+Returns:
+* a graph map
+
+You can also change your map by
+```javascript
+graph.map = {
+            componentOne: 'newComponent',
+            componentTwo: 'subComponent'
+            }
+```
+
+Or get your current map by
+```javascript
+var map = graph.map
 ```

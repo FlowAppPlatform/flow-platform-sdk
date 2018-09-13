@@ -18,14 +18,14 @@ Returns:
 
 ### Adding variables to ports
 
-You can add variables to [ports](../Port/README.md) for output processng. For example, A component that does addition has one output variables on its result port - Result. Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can add variables to [ports](../Port/README.md) for output processing. For example, A component that does addition has one output variable on its result port - Result. Here `variable` is an instance of [Variable](../Variable/README.md) class. 
 
 ```
 port.addVariable(variable);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md)] class. 
+- variable is an instance of a [Variable](../Variable/README.md) class. 
 
 Returns: 
 - void

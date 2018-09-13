@@ -62,10 +62,10 @@ Returns:
 
 ### Link variable to other variables
 
-You can link one variable to another. For example, If you've linked Variable A to Variable B. If the value of variable A changes, then the Value of variable B changes too (and vice-versa). This is very useful when you connect the output variable of one component to input vairable of another component. 
+You can link one variable to another. For example, If you've linked Variable A to Variable B. If the value of variable A changes, then the Value of variable B changes too (and vice-versa). This is very useful when you connect the output variable of one component to input variable of another component. 
 
-```
-variableA.linkToVariable(varbaleB);
+```javascript
+variableA.linkToVariable(variableB);
 ```
 
 Params: 

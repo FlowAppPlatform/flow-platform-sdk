@@ -13,6 +13,7 @@ class Graph {
     // Genere a new ID for this instance.
     this._id = Util.generateId()
     this._components = {}
+    this._graph = {}
   }
 
   addComponent (component) {
@@ -41,6 +42,17 @@ class Graph {
     }
   }
 
+  init (map) {
+    if (typeof component === 'object') this._graph = map
+    else {
+      throw new Error('Map is not a valid JSON object')
+    }
+  }
+
+  toJson () {
+    return this._graph
+  }
+
   // getters and setters.
   get name () {
     return this._name
@@ -59,6 +71,17 @@ class Graph {
 
   set id (id) {
     throw new Error('ID is read-only')
+  }
+
+  get map () {
+    return this._graph
+  }
+
+  set map (map) {
+    if (typeof component === 'object') this._graph = map
+    else {
+      throw new Error('Map is not a valid JSON object')
+    }
   }
 }
 

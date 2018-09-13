@@ -20,7 +20,7 @@ You can also inmport other NPM modules that you need to build your component.
 
 Create a new class. This class should extend `Flow.Component`
 
-```
+```javascript
 
 class AddComponent extends Flow.Component{
 
@@ -32,7 +32,7 @@ class AddComponent extends Flow.Component{
 
 Constructor is the most important piece of your component design. It helps construct your component. 
 
-```
+```javascript
 class AddComponent extends Flow.Component{
     constructor(){
         //DO NOT forget to call the constructor of Flow.Component class. 
@@ -46,7 +46,7 @@ class AddComponent extends Flow.Component{
 
 Every component has a name. Set your's here. 
 
-```
+```javascript
 //In the constructor, after calling super()
 this.name = "Add";
 ```
@@ -55,7 +55,7 @@ this.name = "Add";
 
 Since we're creating an Add component. This will have two variables - Variable 1 and Variable 2. 
 
-```
+```javascript
 //In the constructor, after calling super()
 
 //Create a new Variable - Variale 1
@@ -80,7 +80,7 @@ this.addVariable(var2);
 
 Since we're creating an Add component. This will have one output port - Result, and the result of the addition will be stored in - Variable 3. 
 
-```
+```javascript
 //In the constructor, after calling super()
 
 //Create a Result Output Port and Variable 3.
@@ -105,7 +105,7 @@ Every component has a task. This is the business logic of the component. In our 
 - Do not forget to `emit` the output after you're done with the output. 
 - Do not forget to mark the task as complete. 
 
-```
+```javascript
 //In the constructor, after calling super()
 
 //Attach task function is a business logic function that adds two functions. 

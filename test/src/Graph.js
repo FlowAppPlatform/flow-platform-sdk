@@ -175,4 +175,40 @@ describe('Graph Tests', function () {
       done()
     }
   })
+
+  it('should create a map', function (done) {
+    try {
+      var graph = new Flow.Graph('Math')
+      graph.map({
+        componentOne: 'AddComponent',
+        componentTwo: 'SubComponent'
+      })
+      done('Map was created')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should create a map with init()', function (done) {
+    try {
+      var graph = new Flow.Graph('Math')
+      graph.init({
+        componentOne: 'AddComponent',
+        componentTwo: 'SubComponent'
+      })
+      done('Map was created')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should not create a map', function (done) {
+    try {
+      var graph = new Flow.Graph('Math')
+      graph.map('Not an Object')
+      done('Map was created')
+    } catch (e) {
+      done()
+    }
+  })
 })

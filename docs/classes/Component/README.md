@@ -1,6 +1,6 @@
 # Components
 
-Components are units that does computation. Think of [component](../Component/README.md) as a function that takes in some params and returns an output. A component can have one or many [ports](../Port/README.md). *A component will never have no ports.* A port can than connect to other one or more components.
+Components are units that do computation. Think of [component](../Component/README.md) as a function that takes in some params and returns an output. A component can have one or many [ports](../Port/README.md). *A component will never have no ports.* A port can then connect to other one or more components.
 
 ### Create a new component
 
@@ -19,7 +19,7 @@ component.addVariable(variable);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md)] class. 
+- variable is an instance of a [Variable](../Variable/README.md) class. 
 
 Returns: 
 - void
@@ -71,14 +71,14 @@ Returns:
 
 ### Adding port to components
 
-You can add port to [component](../Component/README.md) for output processng. For example, A component that does addition has one output port - Result. Here `port` is an instance of [Port](../port/README.md) class. 
+You can add port to [component](../Component/README.md) for output processing. For example, A component that does addition has one output port - Result. Here `port` is an instance of [Port](../port/README.md) class. 
 
 ```
 component.addPort(port);
 ```
 
 Params: 
-- port is an instance of a [Port](../Port/README.md)] class. 
+- port is an instance of a [Port](../Port/README.md) class. 
 
 Returns: 
 - void
