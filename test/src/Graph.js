@@ -189,7 +189,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should create a map with init()', function (done) {
+  it('should create a graph with init()', function (done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.init({
@@ -202,7 +202,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should not create a map', function (done) {
+  it('should not create a graph', function (done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.map('Not an Object')

@@ -4,6 +4,7 @@
 
 import EventEmitter from 'event-emitter'
 import Util from './Util'
+import Start from './Start'
 
 class Graph {
   constructor (name) {
@@ -51,6 +52,10 @@ class Graph {
 
   toJson () {
     return this._graph
+  }
+
+  execute () {
+    Start.execute()
   }
 
   // getters and setters.

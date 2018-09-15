@@ -1,20 +1,18 @@
-var Flow = require('flow-sdk');
+import Component from './Component'
+import Port from './Port'
 
-class Start extends Flow.Component{
-    constructor(){
+class Start extends Component {
+  constructor () {
+    super()
 
-        super();
+    this.name = 'Start'
 
-        this.name = "Start";
+    this.id = 'start'
 
-        this.id = "start";
-    
-        var port = new Flow.Port("start");
+    var port = new Port('start')
 
-        this.addPort(port);
-
-    }
-
+    this.addPort(port)
+  }
 }
 
 module.exports = Start
