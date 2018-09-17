@@ -2,13 +2,13 @@
 
 ### Before you begin
 
-Install `flow-sdk` module in your project via NPM. 
+Install `flow-platform-sdk` module in your project via NPM. 
 
-`npm install flow-sdk --save`
+`npm install flow-platform-sdk --save`
 
 Import it into your project. 
 
-`import Flow from flow-sdk`
+`import Flow from flow-platform-sdk`
 
 ### Glossary
 

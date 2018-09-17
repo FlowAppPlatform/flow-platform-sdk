@@ -1,4 +1,4 @@
-import Flow from 'flow-sdk'
+import Flow from 'flow-platform-sdk'
 import AddComponent from 'add.js'
 import SubtractComponent from 'subtract.js'
 
