@@ -35,4 +35,4 @@ deploy:
      tags: false
 #Notify Team on Slack
 notifications:
-    slack: hackerbaycompany:Wwpzzm6F0A6DjQY8F1lebbee
+   slack: hackerbaycompany:Wwpzzm6F0A6DjQY8F1lebbee
