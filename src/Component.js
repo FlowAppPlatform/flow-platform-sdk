@@ -37,6 +37,9 @@ class Component {
     }
 
     this._isProcessingTask = false
+
+    // The execution platform
+    this._executionPlatform = []
   }
 
   isOnGraph () {
@@ -270,6 +273,23 @@ class Component {
     if (this._socket) {
       this._socket.off('execute-component-' + this.id, this.execute)
       this._socket = null
+    }
+  }
+
+  setExecutionPlatform (platform) {
+    if (Array.isArray(platform)) {
+      if (platform.length > 2) throw new Error('Too many elements in the array')
+
+      platform.forEach(arg => {
+        if (arg !== 'server' && arg !== 'client') throw new Error('Invalid argument')
+      })
+      this._executionPlatform = platform
+    } else {
+      if (typeof (platform) !== 'string') throw new Error('Platform should be a string')
+
+      if (platform !== 'server' && platform !== 'client') throw new Error('Invalid string')
+
+      this._executionPlatform = [platform]
     }
   }
 

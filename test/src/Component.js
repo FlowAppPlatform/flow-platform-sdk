@@ -530,4 +530,46 @@ describe('Component Tests', function () {
 
     addComponent.execute()
   })
+
+  it('should set the _executionPlatform with valid string', function (done) {
+    try {
+      let component = new Flow.Component()
+
+      component.setExecutionPlatform('server')
+      done()
+    } catch (e) {
+
+    }
+  })
+
+  it('should not set the _executionPlatform with an invalid string', function (done) {
+    try {
+      let component = new Flow.Component()
+
+      component.setExecutionPlatform('invalid string')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should set _executionPlatform with a valid array', function (done) {
+    try {
+      let component = new Flow.Component()
+
+      component.setExecutionPlatform(['server', 'client'])
+      done()
+    } catch (e) {
+
+    }
+  })
+
+  it('should not set _executionPlatform with an invalid array', function (done) {
+    try {
+      let component = new Flow.Component()
+
+      component.setExecutionPlatform(['serv', 'client'])
+    } catch (e) {
+      done()
+    }
+  })
 })
