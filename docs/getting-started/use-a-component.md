@@ -78,4 +78,4 @@ subComponent.getPort('Result').onEmit(function () {
 
 #### Conclusion
 
-And that's it! You've created your first graph. You can see the [complete code here](../examples/math.js). Please also check [this article](../examples/create-a-component.md) on how can you use your own custom components. 
+And that's it! You've created your first graph. You can see the [complete code here](../examples/math.js). Please also check [this article](.create-a-component.md) on how can you use your own custom components. 
