@@ -11,7 +11,7 @@ Create a new NodeJS project. Create a new file called `index.js`. This is the en
 Import the CloudBoost Flow SDK into your project. 
 
 ```
-var Flow = require('flow-sdk');
+var Flow = require('flow-platform-sdk');
 ```
 
 You can also inmport other NPM modules that you need to build your component. 
