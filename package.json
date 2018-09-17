@@ -1,5 +1,5 @@
 {
-  "name": "flow-sdk",
+  "name": "flow-platform-sdk",
   "version": "1.0.0",
   "description": "Cloudboost Flow",
   "main": "./dist/index.js",
