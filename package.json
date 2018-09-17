@@ -4,6 +4,7 @@
   "description": "Cloudboost Flow",
   "main": "./dist/index.js",
   "keywords": [],
+  "files": ["dist/"],
   "scripts": {
     "build": "echo 'Building library...' && eslint src --fix && webpack && echo 'Done.'",
     "test": "echo 'Bulding tests...' && cd test && eslint src --fix && webpack && cd dist && istanbul cover ../../node_modules/mocha/bin/_mocha --reporter index.js -- -R spec && npm run build",
