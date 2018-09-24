@@ -4,6 +4,7 @@
 
 import EventEmitter from 'event-emitter'
 import Util from './Util'
+import Start from './Start'
 
 class Graph {
   constructor (name) {
@@ -42,15 +43,19 @@ class Graph {
     }
   }
 
-  init (map) {
-    if (typeof component === 'object') this._graph = map
+  init (graph) {
+    if (typeof component === 'object') this._graph = graph
     else {
-      throw new Error('Map is not a valid JSON object')
+      throw new Error('Graph is not a valid JSON object')
     }
   }
 
   toJson () {
     return this._graph
+  }
+
+  execute () {
+    Start.execute()
   }
 
   // getters and setters.
@@ -73,14 +78,14 @@ class Graph {
     throw new Error('ID is read-only')
   }
 
-  get map () {
+  get graph () {
     return this._graph
   }
 
-  set map (map) {
-    if (typeof component === 'object') this._graph = map
+  set graph (graph) {
+    if (typeof component === 'object') this._graph = graph
     else {
-      throw new Error('Map is not a valid JSON object')
+      throw new Error('Graph is not a valid JSON object')
     }
   }
 }
