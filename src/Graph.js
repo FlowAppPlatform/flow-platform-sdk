@@ -4,7 +4,6 @@
 
 import EventEmitter from 'event-emitter'
 import Util from './Util'
-import Start from './Start'
 
 class Graph {
   constructor (name) {
@@ -55,7 +54,7 @@ class Graph {
   }
 
   execute () {
-    Start.execute()
+    //execute the graph.
   }
 
   // getters and setters.
