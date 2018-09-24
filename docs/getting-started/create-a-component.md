@@ -2,7 +2,7 @@
 
 *This documentation is intended for Flow [Component](../Component/README.md) developers*
 
-We're going to create a sample Add Component which adds two numbers. This component has two variables for inputs, and one port for output which sends out the result. 
+We're going to create a sample Add Component which adds two numbers. This component has two propertys for inputs, and one port for output which sends out the result. 
 
 ### Before you begin
 
@@ -51,45 +51,45 @@ Every component has a name. Set your's here.
 this.name = "Add";
 ```
 
-#### Add variables
+#### Add propertys
 
-Since we're creating an Add component. This will have two variables - Variable 1 and Variable 2. 
+Since we're creating an Add component. This will have two propertys - Property 1 and Property 2. 
 
 ```javascript
 //In the constructor, after calling super()
 
-//Create a new Variable - Variale 1
-var var1 = new Flow.Variable("Variable 1","number");
+//Create a new Property - Variale 1
+var var1 = new Flow.Property("Property 1","number");
 var1.required = true;
 
-//Add Variable 1 to component.
-this.addVariable(var1);
+//Add Property 1 to component.
+this.addProperty(var1);
 
-//Create a new Variable - Variale 2
-var var2 = new Flow.Variable("Variable 2", "number");
+//Create a new Property - Variale 2
+var var2 = new Flow.Property("Property 2", "number");
 var2.required = true;
 
-//Add Variable 1 to component.
-this.addVariable(var2);
+//Add Property 1 to component.
+this.addProperty(var2);
 ```
 
-[More information on variables.](../Variable/README.md)
+[More information on propertys.](../Property/README.md)
 
 
 #### Add port
 
-Since we're creating an Add component. This will have one output port - Result, and the result of the addition will be stored in - Variable 3. 
+Since we're creating an Add component. This will have one output port - Result, and the result of the addition will be stored in - Property 3. 
 
 ```javascript
 //In the constructor, after calling super()
 
-//Create a Result Output Port and Variable 3.
+//Create a Result Output Port and Property 3.
 var port = new Flow.Port("Result");
-var var3 = new Flow.Variable("Variable 3", "number");
+var var3 = new Flow.Property("Property 3", "number");
 var3.required = true;
 
-//Add Variable 3 to port. 
-port.addVariable(var3);
+//Add Property 3 to port. 
+port.addProperty(var3);
 
 //Add port to component.
 this.addPort(port);
@@ -111,8 +111,8 @@ Every component has a task. This is the business logic of the component. In our 
 //Attach task function is a business logic function that adds two functions. 
 this.attachTask(function(){
 
-    //Add two numbers and store it in result variable. 
-    this.getPort("Result").getVariable("Variable 3").data = this.getVariable("Variable 1").data + this.getVariable("Variable 2").data;
+    //Add two numbers and store it in result property. 
+    this.getPort("Result").getProperty("Property 3").data = this.getProperty("Property 1").data + this.getProperty("Property 2").data;
 
     //Emit the output from that port. 
     this.getPort("Result").emit();

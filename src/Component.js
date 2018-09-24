@@ -4,10 +4,10 @@
 
 import Util from './Util'
 import Port from './Port'
-import Variable from './Variable'
+import Property from './Property'
 
 class Component {
-  constructor () {
+  constructor(id) {
     // Icon URL is the URL of an Icon in SVG that can be showed in the UI.
     this._iconUrl = ''
     this._type = 'component'
@@ -22,17 +22,17 @@ class Component {
     this._socket = null
 
     // Genere a new ID for this instance.
-    this._id = Util.generateId()
+    this._id = id || Util.generateId();
 
     this._task = null
 
-    this._variables = []
+    this._propertys = []
 
     // check if the env is NodeJS
     this._platform = 'browser'
     if (typeof (process) !== 'undefined' &&
-            process.versions &&
-            process.versions.node) {
+      process.versions &&
+      process.versions.node) {
       this._platform = 'node'
     }
 
@@ -42,7 +42,7 @@ class Component {
     this._executionPlatform = []
   }
 
-  isOnGraph () {
+  isOnGraph() {
     // The Socket belongs to a Graph. If this component has a socket. It's on the graph.
     if (this._socket) {
       return true
@@ -51,104 +51,131 @@ class Component {
     }
   }
 
-  addVariable (variable) {
-    if (variable instanceof Variable) {
-      if (!variable.id) { throw new Error('Variable does not have an ID.') }
-
-      for (let i = 0; i < this._variables.length; i++) {
-        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-          throw new Error('Variable with the same name or id already exists.')
-        }
-      }
-
-      this._variables.push(variable)
-    } else {
-      throw new Error('variables should be an instance of Variable class.')
+  initProperties(properties) {
+    for (var key in properties) {
+      if(this.hasProperty(key))
+        this.getProperty(key).data = properties[key];
     }
   }
 
-  removeVariable (variable) {
-    if (variable instanceof Variable || typeof variable === 'string') {
-      if (variable instanceof Variable && !variable.id) { throw new Error('Variable does not have an ID.') }
 
-      for (let i = 0; i < this._variables.length; i++) {
-        if (typeof variable === 'string') {
-          if (variable === this._variables[i].name) {
-            this._variables.splice(i, 1)
+  initConnections(connections) {
+    for (var i=0; i<connections.length; i++) {
+      this.getPort(connections[i].fromPortId).connectComponentById(connections[i].toComponentId);
+    }
+  }
+
+
+  addProperties(properties) {
+    if (properties instanceof Property) {
+      this.addProperty(properties);
+    } else if (properties instanceof Array) {
+      for (let i = 0; i < properties.length; i++) {
+        this.addProperty(properties[i]);
+      }
+    } else {
+      throw new Error('propertys should be an instance of Property class.')
+    }
+  }
+
+  addProperty(property) {
+    if (property instanceof Property) {
+      if (!property.id) { throw new Error('Property does not have an ID.') }
+
+      for (let i = 0; i < this._propertys.length; i++) {
+        if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          throw new Error('Property with the same name or id already exists.')
+        }
+      }
+
+      this._propertys.push(property)
+    } else {
+      throw new Error('propertys should be an instance of Property class.')
+    }
+  }
+
+  removeProperty(property) {
+    if (property instanceof Property || typeof property === 'string') {
+      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+
+      for (let i = 0; i < this._propertys.length; i++) {
+        if (typeof property === 'string') {
+          if (property === this._propertys[i].name) {
+            this._propertys.splice(i, 1)
           }
         } else {
-          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-            this._variables.splice(i, 1)
+          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+            this._propertys.splice(i, 1)
           }
         }
       }
     } else {
-      throw new Error('variables should be an instance of Variable class.')
+      throw new Error('propertys should be an instance of Property class.')
     }
   }
 
-  updateVariable (variable) {
-    if (variable instanceof Variable) {
-      if (!variable.id) { throw new Error('Variable does not have an ID.') }
+  updateProperty(property) {
+    if (property instanceof Property) {
+      if (!property.id) { throw new Error('Property does not have an ID.') }
 
-      for (let i = 0; i < this._variables.length; i++) {
-        if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-          this._variables[i] = variable
+      for (let i = 0; i < this._propertys.length; i++) {
+        if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          this._propertys[i] = property
           return
         }
       }
 
-      throw new Error('Variable not found and is not updated.')
+      throw new Error('Property not found and is not updated.')
     } else {
-      throw new Error('variables should be an instance of Variable class.')
+      throw new Error('propertys should be an instance of Property class.')
     }
   }
 
-  getVariable (variable) {
-    if (variable instanceof Variable || typeof variable === 'string') {
-      if (variable instanceof Variable && !variable.id) { throw new Error('Variable does not have an ID.') }
+  getProperty(property) {
+    if (property instanceof Property || typeof property === 'string') {
+      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
 
-      for (let i = 0; i < this._variables.length; i++) {
-        if (typeof variable === 'string') {
-          if (variable === this._variables[i].name) {
-            return this._variables[i]
+      for (let i = 0; i < this._propertys.length; i++) {
+        if (typeof property === 'string') {
+          if (property === this._propertys[i].name) {
+            return this._propertys[i]
           }
         } else {
-          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
-            return this._variables[i]
+          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+            return this._propertys[i]
           }
         }
       }
 
-      throw new Error('Variable not found.')
+      throw new Error('Property not found.')
     } else {
-      throw new Error('Variable should be an instance of variable class.')
+      throw new Error('Property should be an instance of property class.')
     }
   }
 
-  hasVariable (variable) {
-    if (variable instanceof Variable || typeof variable === 'string') {
-      if (variable instanceof Variable && !variable.id) { throw new Error('Variable does not have an ID.') }
+  hasProperty(property) {
+    if (property instanceof Property || typeof property === 'string') {
+      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
 
-      for (let i = 0; i < this._variables.length; i++) {
-        if (typeof variable === 'string') {
-          if (variable === this._variables[i].name) {
+      for (let i = 0; i < this._propertys.length; i++) {
+        if (typeof property === 'string') {
+          if (property === this._propertys[i].name) {
             return true
           }
         } else {
-          if (variable.name === this._variables[i].name || variable.id === this._variables[i].id) {
+          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
             return true
           }
         }
       }
       return false
     } else {
-      throw new Error('variables should be an instance of Variable class.')
+      throw new Error('propertys should be an instance of Property class.')
     }
   }
 
   // execute the component task.
-  execute () {
+  execute() {
     var component = this
 
     if (arguments[0] && arguments[0]._type && arguments[0]._type === 'component') {
@@ -165,12 +192,12 @@ class Component {
     }
   }
 
-  taskComplete () {
+  taskComplete() {
     // Task is complete, and this component is no longer processing.
     this._isProcessingTask = false
   }
   // Task is a custom code as a function that runs when the component executes.
-  attachTask (task) {
+  attachTask(task) {
     if (!Util.validateType(task, 'function')) {
       throw new Error('Task must be a function.')
     }
@@ -179,11 +206,11 @@ class Component {
   }
 
   // Task is a custom code as a function that runs when the component executes.
-  detachTask () {
+  detachTask() {
     this._task = null
   }
 
-  addPort (port) {
+  addPort(port) {
     if (port instanceof Port) {
       if (!port.id) { throw new Error('Port does not have an ID.') }
 
@@ -203,7 +230,7 @@ class Component {
     }
   }
 
-  removePort (port) {
+  removePort(port) {
     if (port instanceof Port) {
       if (!port.id) { throw new Error('Port does not have an ID.') }
       if (this._ports.indexOf(port) < 0) {
@@ -216,7 +243,7 @@ class Component {
     }
   }
 
-  getPort (port) {
+  getPort(port) {
     if (port instanceof Port || typeof port === 'string') {
       if (port instanceof Port) {
         if (!port.id) { throw new Error('Port does not have an ID.') }
@@ -242,7 +269,7 @@ class Component {
     }
   }
 
-  hasPort (port) {
+  hasPort(port) {
     if (port instanceof Port) {
       if (!port.id) { throw new Error('Port does not have an ID.') }
       if (this._ports.indexOf(port) < 0) {
@@ -255,13 +282,13 @@ class Component {
     }
   }
 
-  getPorts () {
+  getPorts() {
     return this._ports
   }
 
   // Private Functions.
 
-  _attachSocket (socket) {
+  _attachSocket(socket) {
     this._socket = socket
     var component = this
     this._socket.on('execute-component-' + this.id, function () {
@@ -269,14 +296,14 @@ class Component {
     })
   }
 
-  _detachSocket () {
+  _detachSocket() {
     if (this._socket) {
       this._socket.off('execute-component-' + this.id, this.execute)
       this._socket = null
     }
   }
 
-  setExecutionPlatform (platform) {
+  setExecutionPlatform(platform) {
     if (Array.isArray(platform)) {
       if (platform.length > 2) throw new Error('Too many elements in the array')
 
@@ -294,11 +321,11 @@ class Component {
   }
 
   // getters and setters
-  get description () {
+  get description() {
     return this._description
   }
 
-  set description (description) {
+  set description(description) {
     if (!Util.validateType(description, 'string')) {
       throw new Error('Description must be a string.')
     }
@@ -306,45 +333,45 @@ class Component {
     this._description = description
   }
 
-  get task () {
+  get task() {
     return this._task
   }
 
-  set task (task) {
+  set task(task) {
     this.attachTask(task)
   }
 
-  get name () {
+  get name() {
     return this._name
   }
 
-  set name (name) {
+  set name(name) {
     if (!Util.validateType(name, 'string')) {
       throw new Error('Name must be a string.')
     }
     this._name = name
   }
 
-  get iconUrl () {
+  get iconUrl() {
     return this._iconUrl
   }
 
-  set iconUrl (iconUrl) {
+  set iconUrl(iconUrl) {
     if (!Util.validateType(iconUrl, 'url')) {
       throw new Error('iconUrl must be a URL.')
     }
     this._iconUrl = iconUrl
   }
 
-  get ports () {
+  get ports() {
     return this._ports
   }
 
-  get id () {
+  get id() {
     return this._id
   }
 
-  set id (id) {
+  set id(id) {
     throw new Error('ID is read-only')
   }
 }

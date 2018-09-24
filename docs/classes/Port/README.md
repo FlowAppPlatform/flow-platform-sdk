@@ -14,64 +14,64 @@ Params:
 Returns: 
 - a new Port Object
 
-## Variables and Ports
+## Properties and Ports
 
-### Adding variables to ports
+### Adding propertys to ports
 
-You can add variables to [ports](../Port/README.md) for output processing. For example, A component that does addition has one output variable on its result port - Result. Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can add propertys to [ports](../Port/README.md) for output processing. For example, A component that does addition has one output property on its result port - Result. Here `property` is an instance of [Property](../Property/README.md) class. 
 
 ```
-port.addVariable(variable);
+port.addProperty(property);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md) class. 
+- property is an instance of a [Property](../Property/README.md) class. 
 
 Returns: 
 - void
 
 
-### Remove variables from ports
+### Remove propertys from ports
 
-You can remove variables from [ports](../Port/README.md). Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can remove propertys from [ports](../Port/README.md). Here `property` is an instance of [Property](../Property/README.md) class. 
 
 ```
-port.removeVariable(variable);
+port.removeProperty(property);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md) class. 
+- property is an instance of a [Property](../Property/README.md) class. 
 
 Returns: 
 - void
 
-### Check if the port has the variable
+### Check if the port has the property
 
-You can check if the port has a variable. Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can check if the port has a property. Here `property` is an instance of [Property](../Property/README.md) class. 
 
 ```
-port.hasVariable(variable);
+port.hasProperty(property);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md) class. 
+- property is an instance of a [Property](../Property/README.md) class. 
 
 Returns: 
 - boolean
 
-### Get Variable
+### Get Property
 
-Get a variable in the port by it's name. 
+Get a property in the port by it's name. 
 
 ```
-port.getVariable(variableName);
+port.getProperty(propertyName);
 ```
 
 Params: 
-- variableName is the name of the variable and is of type `string` 
+- propertyName is the name of the property and is of type `string` 
 
 Returns: 
-- variable object which is of type [Variable](../Variable/README.md)
+- property object which is of type [Property](../Property/README.md)
 
 ## Ports and Components
 

@@ -8,64 +8,64 @@ Components are units that do computation. Think of [component](../Component/READ
 
 Once you have created a component. You can see the [complete code of the component](../examples/add.js) you've just created. Please also check [this article](../examples/use-a-component.md) on how can you use your new component. 
 
-## Variables and Ports
+## Properties and Ports
 
-### Adding variables to components
+### Adding propertys to components
 
-You can add variables to [component](../Component/README.md) for input processng. For example, A component that does addition has two input variables - Variable 1 and Variable 2. Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can add propertys to [component](../Component/README.md) for input processng. For example, A component that does addition has two input propertys - Property 1 and Property 2. Here `property` is an instance of [Property](../Property/README.md) class. 
 
 ```
-component.addVariable(variable);
+component.addProperty(property);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md) class. 
+- property is an instance of a [Property](../Property/README.md) class. 
 
 Returns: 
 - void
 
 
-### Remove variables from ports
+### Remove propertys from ports
 
-You can remove variables from [component](../Component/README.md). Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can remove propertys from [component](../Component/README.md). Here `property` is an instance of [Property](../Property/README.md) class. 
 
 ```
-component.removeVariable(variable);
+component.removeProperty(property);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md) class. 
+- property is an instance of a [Property](../Property/README.md) class. 
 
 Returns: 
 - void
 
-### Check if the component has the variable
+### Check if the component has the property
 
-You can check if the component has a variable. Here `variable` is an instance of [Variable](../Variable/README.md) class. 
+You can check if the component has a property. Here `property` is an instance of [Property](../Property/README.md) class. 
 
 ```
-component.hasVariable(variable);
+component.hasProperty(property);
 ```
 
 Params: 
-- variable is an instance of a [Variable](../Variable/README.md) class. 
+- property is an instance of a [Property](../Property/README.md) class. 
 
 Returns: 
 - boolean
 
-### Get Variable
+### Get Property
 
-Get a variable in the component by it's name. 
+Get a property in the component by it's name. 
 
 ```
-component.getVariable(variableName);
+component.getProperty(propertyName);
 ```
 
 Params: 
-- variableName is the name of the variable and is of type `string` 
+- propertyName is the name of the property and is of type `string` 
 
 Returns: 
-- variable object which is of type [Variable](../Variable/README.md)
+- property object which is of type [Property](../Property/README.md)
 
 ## Ports and Components
 

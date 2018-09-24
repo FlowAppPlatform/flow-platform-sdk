@@ -36,8 +36,8 @@ Now, we create an instance of AddComponent and an instance of SubtractComponent 
 ```
 //Create an add component
 var addComponent = new AddComponent()
-addComponent.getVariable('Variable 1').data = 1
-addComponent.getVariable('Variable 2').data = 2
+addComponent.getProperty('Property 1').data = 1
+addComponent.getProperty('Property 2').data = 2
 
 //add ADD component to the graph
 graph.addComponent(addComponent)
@@ -45,8 +45,8 @@ graph.addComponent(addComponent)
 
 //create a subtract component. 
 var subComponent = new SubtractComponent()
-subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-subComponent.getVariable('Variable 2').data = 2
+subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+subComponent.getProperty('Property 2').data = 2
 
 //Add subtract component to the graph.
 graph.addComponent(subComponent)
@@ -54,7 +54,7 @@ graph.addComponent(subComponent)
 
 ### Connecting components
 
-You need to connect the result port of add component to a variable of subtract component. 
+You need to connect the result port of add component to a property of subtract component. 
 
 ```
 addComponent.getPort('Result').connectComponent(subComponent)
@@ -72,7 +72,7 @@ You can also check the result by passing a callback to the onEmit function of th
 
 ```
 subComponent.getPort('Result').onEmit(function () {
-      console.log(subComponent.getPort('Result').getVariable('Variable 3').data); // Output: 1
+      console.log(subComponent.getPort('Result').getProperty('Property 3').data); // Output: 1
 })
 ```
 

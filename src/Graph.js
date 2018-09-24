@@ -13,7 +13,6 @@ class Graph {
     // Genere a new ID for this instance.
     this._id = Util.generateId()
     this._components = {}
-    this._graph = {}
   }
 
   addComponent (component) {
@@ -42,19 +41,32 @@ class Graph {
     }
   }
 
-  init (graph) {
+  init (graphJson, componentClasses) {
+
+    this.name = graphJson.name;
+
+    for(var i=0;i<graphJson.data.length; i++){
+      if(graphJson.data[i].graphComponentId && componentClasses[graphComponentId]){
+          let component = new componentClasses[graphJson.data[i].graphComponentId](graphJson.data[i].id);
+          //add property data
+          component.initProperties(graphJson.data[i].propertyData)
+          //add connections. 
+          component.initConnections(graphJson.data[i].connections)
+          this.addComponent(component);
+      }
+    }
+
     if (typeof component === 'object') this._graph = graph
     else {
       throw new Error('Graph is not a valid JSON object')
     }
   }
 
-  toJson () {
-    return this._graph
-  }
-
   execute () {
-    //execute the graph.
+    //execute the start component of a graph.
+    if(this._components['start']){
+      this._components['start'].execute();
+    }
   }
 
   // getters and setters.

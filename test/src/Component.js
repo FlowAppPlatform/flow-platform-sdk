@@ -137,154 +137,154 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Add variable to component', function (done) {
+  it('Add property to component', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      component.addVariable(var3)
+      component.addProperty(var3)
       done()
     } catch (e) {
       done('Error thrown' + JSON.stringify(e))
     }
   })
 
-  it('Remove variable from the  component', function (done) {
+  it('Remove property from the  component', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      component.addVariable(var3)
-      component.removeVariable(var3)
+      component.addProperty(var3)
+      component.removeProperty(var3)
       done()
     } catch (e) {
       done('Error thrown' + JSON.stringify(e))
     }
   })
 
-  it('Should not add any other object as variable', function (done) {
+  it('Should not add any other object as property', function (done) {
     try {
       var component = new Flow.Component()
 
-      component.addVariable('a')
-      done('Error added an object that was not a variable')
+      component.addProperty('a')
+      done('Error added an object that was not a property')
     } catch (e) {
       done()
     }
   })
 
-  it('Should not add same variable twice.', function (done) {
+  it('Should not add same property twice.', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      component.addVariable(var3)
-      component.addVariable(var3)
-      done('Error added same variable twice')
+      component.addProperty(var3)
+      component.addProperty(var3)
+      done('Error added same property twice')
     } catch (e) {
       done()
     }
   })
 
-  it('Shoud not remove same variable twice', function (done) {
+  it('Shoud not remove same property twice', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Component('Variable 3', 'number')
+      var var3 = new Flow.Component('Property 3', 'number')
       var3.required = true
 
-      component.addVariable(var3)
-      component.removeVariable(var3)
-      component.removeVariable(var3)
-      done('Removed same variable twice')
+      component.addProperty(var3)
+      component.removeProperty(var3)
+      component.removeProperty(var3)
+      done('Removed same property twice')
     } catch (e) {
       done()
     }
   })
 
-  it('Shoud return true if it has a variable', function (done) {
+  it('Shoud return true if it has a property', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      component.addVariable(var3)
-      if (component.hasVariable(var3)) {
+      component.addProperty(var3)
+      if (component.hasProperty(var3)) {
         done()
       } else {
-        done('Incorrect return type in hasVariable')
+        done('Incorrect return type in hasProperty')
       }
     } catch (e) {
       done('Error thrown')
     }
   })
 
-  it('Shoud return true if it has a variable', function (done) {
+  it('Shoud return true if it has a property', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      if (!port.hasVariable(var3)) {
+      if (!port.hasProperty(var3)) {
         done()
       } else {
-        done('Incorrect return type in hasVariable')
+        done('Incorrect return type in hasProperty')
       }
     } catch (e) {
       done('Error thrown')
     }
   })
 
-  it('Shoud not process with a wrong param in hasVariable', function (done) {
+  it('Shoud not process with a wrong param in hasProperty', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      component.hasVariable(1)
-      done('Has Variable executed with wrong param.')
+      component.hasProperty(1)
+      done('Has Property executed with wrong param.')
     } catch (e) {
       done()
     }
   })
 
-  it('Should return a variable in GetVariable', function (done) {
+  it('Should return a property in GetProperty', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
-      component.addVariable(var3)
-      if (component.getVariable('Variable 3').id === var3.id) {
+      component.addProperty(var3)
+      if (component.getProperty('Property 3').id === var3.id) {
         done()
       } else {
-        done('Incorrect return type in getVariable')
+        done('Incorrect return type in getProperty')
       }
     } catch (e) {
       done('Error thrown')
     }
   })
 
-  it('Should return a variable in GetVariable', function (done) {
+  it('Should return a property in GetProperty', function (done) {
     try {
       var component = new Flow.Component()
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
-      component.addVariable(var3)
-      if (component.getVariable('Variable 3')._type === 'variable') {
+      component.addProperty(var3)
+      if (component.getProperty('Property 3')._type === 'property') {
         done()
       } else {
-        done('Incorrect return type in getVariable')
+        done('Incorrect return type in getProperty')
       }
     } catch (e) {
       done('Error thrown')
@@ -409,7 +409,7 @@ describe('Component Tests', function () {
       if (component.getPort('Result').id === port.id) {
         done()
       } else {
-        done('Incorrect return type in getVariable')
+        done('Incorrect return type in getProperty')
       }
     } catch (e) {
       done('Error thrown')
@@ -464,11 +464,11 @@ describe('Component Tests', function () {
 
   it('Create a simple add component', function (done) {
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
     addComponent.getPort('Result').onEmit(function () {
-      addComponent.getVariable('Variable 1')
-      if (addComponent.getPort('Result').getVariable('Variable 3').data === 3) {
+      addComponent.getProperty('Property 1')
+      if (addComponent.getPort('Result').getProperty('Property 3').data === 3) {
         done()
       } else {
         done('Failed')
@@ -479,17 +479,17 @@ describe('Component Tests', function () {
 
   it('Should not execute a connected component if it does not belong to a graph.', function (done) {
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
     subComponent.getPort('Result').onEmit(function () {
-      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
+      if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
 
       } else {
 
@@ -507,21 +507,21 @@ describe('Component Tests', function () {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
     subComponent.getPort('Result').onEmit(function () {
-      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
+      if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
         done()
       } else {
         done('Result failed.')

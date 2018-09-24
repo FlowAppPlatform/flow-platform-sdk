@@ -14,7 +14,7 @@ Import it into your project.
 
 - [Component](./classes/Component/README.md): Think of a component as a function. It's a black-box that takes some inputs, processes something and sends out output. For example: We can have component for sending an email, addition of two numbers, getting data from an API, etc. 
 
-- [Variable](./classes/Variable/README.md): Components can take inputs (think function parameters) and these are called variables. There can be 0 or more variables to a component.
+- [Property](./classes/Property/README.md): Components can take inputs (think function parameters) and these are called propertys. There can be 0 or more propertys to a component.
 
 - [Port](./classes/Port/README.md): Ports are output points of a component. An example for this would be: 
     - For an email component, ports can be "error", "email sent", "email bounced", etc. 
