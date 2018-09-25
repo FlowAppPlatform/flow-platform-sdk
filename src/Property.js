@@ -1,10 +1,10 @@
 /**
- * Documentation at /docs/classes/Variable/README.md
+ * Documentation at /docs/classes/Property/README.md
  */
 
 import Util from './Util'
 
-class Variable {
+class Property {
   constructor (name, dataType) {
     if (!name) {
       throw new Error('Name is required.')
@@ -14,7 +14,7 @@ class Variable {
       throw new Error('DataType is required.')
     }
 
-    this._type = 'variable'
+    this._type = 'property'
 
     this.name = name
     this.dataType = dataType
@@ -24,11 +24,11 @@ class Variable {
     this.index = null
   }
 
-  linkToVariable (variable) {
-    if (variable && variable._type === 'variable') { this._data = variable._data }
+  linkToProperty (property) {
+    if (property && property._type === 'property') { this._data = property._data }
   }
 
-  unlinkVariable () {
+  unlinkProperty () {
     this._data = JSON.parse(JSON.stringify(this._data))
   }
 
@@ -132,4 +132,4 @@ class Variable {
   }
 }
 
-module.exports = Variable
+module.exports = Property

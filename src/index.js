@@ -4,13 +4,13 @@
 
 import Component from './Component'
 import Port from './Port'
-import Variable from './Variable'
+import Property from './Property'
 import Graph from './Graph'
 
 var Flow = {
   Component,
   Port,
-  Variable,
+  Property,
   Graph,
   isServer () {
     if (typeof window !== 'undefined') {

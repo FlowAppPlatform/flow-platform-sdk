@@ -81,8 +81,8 @@ describe('Graph Tests', function () {
       var graph = new Flow.Graph('Math')
 
       var addComponent = new AddComponent()
-      addComponent.getVariable('Variable 1').data = 1
-      addComponent.getVariable('Variable 2').data = 2
+      addComponent.getProperty('Property 1').data = 1
+      addComponent.getProperty('Property 2').data = 2
 
       graph.addComponent(addComponent)
 
@@ -97,8 +97,8 @@ describe('Graph Tests', function () {
       var graph = new Flow.Graph('Math')
 
       var addComponent = new AddComponent()
-      addComponent.getVariable('Variable 1').data = 1
-      addComponent.getVariable('Variable 2').data = 2
+      addComponent.getProperty('Property 1').data = 1
+      addComponent.getProperty('Property 2').data = 2
 
       graph.addComponent(addComponent)
       graph.removeComponent(addComponent)
@@ -114,8 +114,8 @@ describe('Graph Tests', function () {
       var graph = new Flow.Graph('Math')
 
       var addComponent = new AddComponent()
-      addComponent.getVariable('Variable 1').data = 1
-      addComponent.getVariable('Variable 2').data = 2
+      addComponent.getProperty('Property 1').data = 1
+      addComponent.getProperty('Property 2').data = 2
 
       graph.removeComponent(addComponent)
 
@@ -189,7 +189,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should create a map with init()', function (done) {
+  it('should create a graph with init()', function (done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.init({
@@ -202,7 +202,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should not create a map', function (done) {
+  it('should not create a graph', function (done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.map('Not an Object')

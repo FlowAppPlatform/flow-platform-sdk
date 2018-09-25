@@ -1,7 +1,7 @@
 Flow: Flow-based programming for JavaScript 
 ========================================================
-[![Build Status](https://travis-ci.org/CloudBoost/flow-sdk.svg?branch=master)](https://travis-ci.org/CloudBoost/flow-sdk)
-[![codecov](https://codecov.io/gh/CloudBoost/flow-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/CloudBoost/flow-sdk)
+[![Build Status](https://travis-ci.org/flowappplatform/flow-platform-sdk.svg?branch=master)](https://travis-ci.org/flowappplatform/flow-platform-sdk)
+[![codecov](https://codecov.io/gh/flowappplatform/flow-platform-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/flowappplatform/flow-platform-sdk)
 [![npm version](https://badge.fury.io/js/cloudboost-flow.svg)](https://badge.fury.io/js/cloudboost-flow)
 
 CloudBoost is an implementation of [flow-based programming](http://en.wikipedia.org/wiki/Flow-based_programming) for JavaScript running on both Node.js and the browser. From WikiPedia:
@@ -26,10 +26,10 @@ CloudBoost Flow is not a web framework or a UI toolkit. It is a way to coordinat
 
 ## Requirements and installing
 
-CloudBoost Flow is available for Node.js [via NPM](https://npmjs.org/package/flow-sdk), so you can install it with:
+CloudBoost Flow is available for Node.js [via NPM](https://npmjs.org/package/flow-platform-sdk), so you can install it with:
 
 ```bash
-$ npm install flow-sdk --save
+$ npm install flow-platform-sdk --save
 ```
 
 
@@ -41,7 +41,7 @@ CloudBoost Flow requires a reasonably recent version of [Node.js](http://nodejs.
 $ npm run-script test
 ```
 
-CloudBoost Flow is available from [GitHub](https://github.com/cloudboost/flow-sdk) under the MIT license.
+CloudBoost Flow is available from [GitHub](https://github.com/flowappplatform/flow-platform-sdk) under the MIT license.
 
 
 ## Development

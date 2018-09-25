@@ -6,17 +6,16 @@ import EventEmitter from 'event-emitter'
 import Util from './Util'
 
 class Graph {
-  constructor (name) {
+  constructor(name) {
     this._socket = new EventEmitter()
     this._type = 'graph'
     this.name = name
     // Genere a new ID for this instance.
     this._id = Util.generateId()
     this._components = {}
-    this._graph = {}
   }
 
-  addComponent (component) {
+  addComponent(component) {
     if (typeof component === 'object' && component._type && component._type === 'component') {
       if (!component.id) {
         throw new Error('Component does not have an id. Please instantiate the component.')
@@ -29,7 +28,7 @@ class Graph {
     }
   }
 
-  removeComponent (component) {
+  removeComponent(component) {
     if (typeof component === 'object' && component._type && component._type === 'component') {
       if (!component.id) {
         throw new Error('Component does not have an id. Please instantiate the component.')
@@ -42,45 +41,61 @@ class Graph {
     }
   }
 
-  init (map) {
-    if (typeof component === 'object') this._graph = map
+  init(graphJson, componentClasses) {
+
+    if (graphJson) {
+      this.name = graphJson.name;
+      for (var i = 0; i < graphJson.data.length; i++) {
+        if (graphJson.data[i].graphComponentId && componentClasses[graphJson.data[i].graphComponentId]) {
+          let component = new componentClasses[graphJson.data[i].graphComponentId](graphJson.data[i].id);
+          //add property data
+          component.initProperties(graphJson.data[i].propertyData)
+          //add connections. 
+          component.initConnections(graphJson.data[i].connections)
+          this.addComponent(component);
+        }
+      }
+    }
     else {
-      throw new Error('Map is not a valid JSON object')
+      throw new Error('Graph JSON is not a valid JSON object')
     }
   }
 
-  toJson () {
-    return this._graph
+  execute() {
+    //execute the start component of a graph.
+    if (this._components['start']) {
+      this._components['start'].execute();
+    }
   }
 
   // getters and setters.
-  get name () {
+  get name() {
     return this._name
   }
 
-  set name (name) {
+  set name(name) {
     if (!Util.validateType(name, 'string')) {
       throw new Error('Name must be a string.')
     }
     this._name = name
   }
 
-  get id () {
+  get id() {
     return this._id
   }
 
-  set id (id) {
+  set id(id) {
     throw new Error('ID is read-only')
   }
 
-  get map () {
+  get graph() {
     return this._graph
   }
 
-  set map (map) {
-    if (typeof component === 'object') this._graph = map
+  set graph(graph) {
+    if (typeof component === 'object') this._graph = graph
     else {
-      throw new Error('Map is not a valid JSON object')
+      throw new Error('Graph is not a valid JSON object')
     }
   }
 }

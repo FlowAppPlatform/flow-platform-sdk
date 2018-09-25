@@ -2,7 +2,7 @@
 
 import Flow from '../../src/index'
 import Graph from './Graph'
-import Variable from './Variable'
+import Property from './Property'
 import Component from './Component'
 import Port from './Port'
 

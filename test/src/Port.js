@@ -69,154 +69,154 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Add variable to port', function (done) {
+  it('Add property to port', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      port.addVariable(var3)
+      port.addProperty(var3)
       done()
     } catch (e) {
       done('Error thrown' + JSON.stringify(e))
     }
   })
 
-  it('Remove variable to port', function (done) {
+  it('Remove property to port', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      port.addVariable(var3)
-      port.removeVariable(var3)
+      port.addProperty(var3)
+      port.removeProperty(var3)
       done()
     } catch (e) {
       done('Error thrown' + JSON.stringify(e))
     }
   })
 
-  it('Should not add any other object as variable', function (done) {
+  it('Should not add any other object as property', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      port.addVariable('a')
-      done('Error added an object that was not a variable')
+      port.addProperty('a')
+      done('Error added an object that was not a property')
     } catch (e) {
       done()
     }
   })
 
-  it('Should not add same variable twice.', function (done) {
+  it('Should not add same property twice.', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      port.addVariable(var3)
-      port.addVariable(var3)
-      done('Error added same variable twice')
+      port.addProperty(var3)
+      port.addProperty(var3)
+      done('Error added same property twice')
     } catch (e) {
       done()
     }
   })
 
-  it('Shoud not remove same variable twice', function (done) {
+  it('Shoud not remove same property twice', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      port.addVariable(var3)
-      port.removeVariable(var3)
-      port.removeVariable(var3)
-      done('Removed same variable twice')
+      port.addProperty(var3)
+      port.removeProperty(var3)
+      port.removeProperty(var3)
+      done('Removed same property twice')
     } catch (e) {
       done()
     }
   })
 
-  it('Shoud return true if it has a variable', function (done) {
+  it('Shoud return true if it has a property', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      port.addVariable(var3)
-      if (port.hasVariable(var3)) {
+      port.addProperty(var3)
+      if (port.hasProperty(var3)) {
         done()
       } else {
-        done('Incorrect return type in hasVariable')
+        done('Incorrect return type in hasProperty')
       }
     } catch (e) {
       done('Error thrown')
     }
   })
 
-  it('Shoud return true if it has a variable', function (done) {
+  it('Shoud return true if it has a property', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      if (!port.hasVariable(var3)) {
+      if (!port.hasProperty(var3)) {
         done()
       } else {
-        done('Incorrect return type in hasVariable')
+        done('Incorrect return type in hasProperty')
       }
     } catch (e) {
       done('Error thrown')
     }
   })
 
-  it('Shoud return true if it has a variable', function (done) {
+  it('Shoud return true if it has a property', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
 
-      port.hasVariable(1)
-      done('Has Variable executed with wrong param.')
+      port.hasProperty(1)
+      done('Has Property executed with wrong param.')
     } catch (e) {
       done()
     }
   })
 
-  it('Should return a variable in GetVariable', function (done) {
+  it('Should return a property in GetProperty', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
-      port.addVariable(var3)
-      if (port.getVariable('Variable 3').id === var3.id) {
+      port.addProperty(var3)
+      if (port.getProperty('Property 3').id === var3.id) {
         done()
       } else {
-        done('Incorrect return type in getVariable')
+        done('Incorrect return type in getProperty')
       }
     } catch (e) {
       done('Error thrown')
     }
   })
 
-  it('Should return a variable in GetVariable', function (done) {
+  it('Should return a property in GetProperty', function (done) {
     try {
       var port = new Flow.Port('Result')
 
-      var var3 = new Flow.Variable('Variable 3', 'number')
+      var var3 = new Flow.Property('Property 3', 'number')
       var3.required = true
-      port.addVariable(var3)
-      if (port.getVariable('Variable 3')._type === 'variable') {
+      port.addProperty(var3)
+      if (port.getProperty('Property 3')._type === 'property') {
         done()
       } else {
-        done('Incorrect return type in getVariable')
+        done('Incorrect return type in getProperty')
       }
     } catch (e) {
       done('Error thrown')
@@ -227,21 +227,21 @@ describe('Port Tests', function () {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
     subComponent.getPort('Result').onEmit(function () {
-      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
+      if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
         done()
       } else {
         done('Result failed.')
@@ -255,14 +255,14 @@ describe('Port Tests', function () {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
@@ -286,14 +286,14 @@ describe('Port Tests', function () {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
@@ -311,14 +311,14 @@ describe('Port Tests', function () {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
@@ -344,11 +344,11 @@ describe('Port Tests', function () {
 
   it('On Emit should execute.', function (done) {
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
     addComponent.getPort('Result').onEmit(function () {
-      addComponent.getVariable('Variable 1')
-      if (addComponent.getPort('Result').getVariable('Variable 3').data === 3) {
+      addComponent.getProperty('Property 1')
+      if (addComponent.getPort('Result').getProperty('Property 3').data === 3) {
         done()
       } else {
         done('Failed')
@@ -361,21 +361,21 @@ describe('Port Tests', function () {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
-    addComponent.getVariable('Variable 1').data = 1
-    addComponent.getVariable('Variable 2').data = 2
+    addComponent.getProperty('Property 1').data = 1
+    addComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getVariable('Variable 1').linkToVariable(addComponent.getPort('Result').getVariable('Variable 3'))
-    subComponent.getVariable('Variable 2').data = 2
+    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
     subComponent.getPort('Result').onEmit(function () {
-      if (subComponent.getPort('Result').getVariable('Variable 3').data === 1) {
+      if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
         done()
       } else {
         done('Result failed.')
