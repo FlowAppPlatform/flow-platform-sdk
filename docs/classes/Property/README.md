@@ -34,6 +34,7 @@ Here is a list of Flow datatypes.
 - *Single Select* `select-single`: This is a single select box. For example country select. 
 - *Select Multiple*  `select-multiple`: This is a multiple select box.   
 - *Rating*  `rating`: Rating from 1 to 5.
+- *Object*  `object`
 
 #### Setting Data to a Property
 
