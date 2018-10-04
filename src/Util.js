@@ -88,7 +88,7 @@ class Util {
   }
 
   static getValidDataTypes () {
-    return ['number', 'decimal', 'text', 'date', 'datetime', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single']
+    return ['number', 'decimal', 'text', 'date', 'datetime', 'time', 'url', 'rating', 'email', 'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'function', 'list', 'select-multiple', 'select-single', 'object']
   }
 }
 
