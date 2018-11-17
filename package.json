@@ -8,7 +8,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "echo 'Building library...' && eslint src --fix && webpack && echo 'Done.'",
+    "build": "echo 'Building library...' && webpack && echo 'Done.'",
     "build:watch": "webpack --watch",
     "test": "echo 'Bulding tests...' && cd test && eslint src --fix && webpack && cd dist && istanbul cover ../../node_modules/mocha/bin/_mocha --reporter index.js -- -R spec && npm run build",
     "test:unit": "echo 'Running unit tests...' && cd test && webpack && _mocha dist/index.js",
