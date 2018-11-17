@@ -24,4 +24,4 @@ var Flow = {
   }
 }
 
-module.exports = Flow
+export default Flow

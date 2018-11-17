@@ -136,7 +136,7 @@ class Graph {
   }
 }
 
-module.exports = Graph
+export default Graph
 
 function resolvePath (string) {
   if (typeof string !== 'string') {

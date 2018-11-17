@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import Flow from '../../src/index'
+import Flow from '../src/index'
 import Graph from './Graph'
 import Property from './Property'
 import Component from './Component'

@@ -292,4 +292,4 @@ class Port {
   }
 }
 
-module.exports = Port
+export default Port

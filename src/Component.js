@@ -437,4 +437,4 @@ class Component {
 }
 
 // export.
-module.exports = Component
+export default Component

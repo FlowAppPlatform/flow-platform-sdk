@@ -1,4 +1,4 @@
-import Flow from '../../src/index'
+import Flow from '../src/index'
 import AddComponent from './components/AddComponent'
 
 describe('Graph Tests', function () {

@@ -1,4 +1,4 @@
-import Flow from '../../src'
+import Flow from '../src'
 
 describe('Property Tests', function () {
   it('A new property should have an ID', function (done) {
