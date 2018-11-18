@@ -1,7 +1,7 @@
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
-import pkg from "./package.json";
-import babel from "rollup-plugin-babel";
+import resolve from 'rollup-plugin-node-resolve'
+import commonjs from 'rollup-plugin-commonjs'
+import pkg from './package.json'
+import babel from 'rollup-plugin-babel'
 
 export default [
   // CommonJS (for Node) and ES module (for bundlers) build.
@@ -11,18 +11,18 @@ export default [
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   {
-    input: "src/index.js",
+    input: 'src/index.js',
     external: [],
     plugins: [
       resolve(),
       commonjs(),
       babel({
-        exclude: "node_modules/**"
+        exclude: 'node_modules/**'
       })
     ],
     output: [
-      { file: pkg.main, format: "cjs" },
-      { file: pkg.module, format: "es" }
+      { file: pkg.main, format: 'cjs' },
+      { file: pkg.module, format: 'es' }
     ]
   }
-];
+]
