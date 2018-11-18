@@ -1,6 +1,6 @@
 {
   "name": "flow-platform-sdk",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "dist/flow-platform-sdk.cjs.js",
   "module": "dist/flow-platform-sdk.esm.js",
   "license": "MIT",
