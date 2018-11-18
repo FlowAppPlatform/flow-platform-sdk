@@ -6,7 +6,7 @@ import Util from './Util'
 import Property from './Property'
 
 class Port {
-  constructor (name) {
+  constructor(name) {
     // set initial properties
     if (!name) {
       throw new Error('Port Name is required.')
@@ -22,7 +22,7 @@ class Port {
     this._socket = null
   }
 
-  addProperty (property) {
+  addProperty(property) {
     if (property instanceof Property) {
       if (!property.id) {
         throw new Error('Property does not have an ID.')
@@ -43,7 +43,7 @@ class Port {
     }
   }
 
-  removeProperty (property) {
+  removeProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
         throw new Error('Property does not have an ID.')
@@ -72,7 +72,7 @@ class Port {
     }
   }
 
-  updateProperty (property) {
+  updateProperty(property) {
     if (property instanceof Property) {
       if (!property.id) {
         throw new Error('Property does not have an ID.')
@@ -94,7 +94,7 @@ class Port {
     }
   }
 
-  hasProperty (property) {
+  hasProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
         throw new Error('Property does not have an ID.')
@@ -120,7 +120,7 @@ class Port {
     }
   }
 
-  getProperty (property) {
+  getProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
         throw new Error('Property does not have an ID.')
@@ -148,7 +148,7 @@ class Port {
   }
 
   // This passes the flow to components that this port is connected to.
-  emit () {
+  emit() {
     if (this._componentAttachedTo) {
       for (var i = 0; i < this._connectedComponents.length; i++) {
         if (this._componentAttachedTo.isOnGraph()) {
@@ -166,6 +166,8 @@ class Port {
       if (this._onEmit) {
         this._onEmit()
       }
+      // Announce emission
+      this._componentAttachedTo._socket.emit(`emitted-port`, this)
     } else {
       throw new Error(
         'This port cannot emit because it does not belong to any component'
@@ -173,11 +175,11 @@ class Port {
     }
   }
 
-  onEmit (callback) {
+  onEmit(callback) {
     this._onEmit = callback
   }
 
-  connectComponent (component) {
+  connectComponent(component) {
     if (component && component._type && component._type === 'component') {
       if (!component.id) {
         throw new Error('Component does not have an ID.')
@@ -199,7 +201,7 @@ class Port {
     }
   }
 
-  connectComponentById (componentId) {
+  connectComponentById(componentId) {
     if (componentId && typeof componentId === 'string') {
       if (!componentId) {
         throw new Error('Component ID is not of type string')
@@ -217,7 +219,7 @@ class Port {
     }
   }
 
-  disconnectComponentById (componentId) {
+  disconnectComponentById(componentId) {
     if (componentId && typeof componentId === 'string') {
       if (!componentId) {
         throw new Error('Component ID is not of type string')
@@ -236,7 +238,7 @@ class Port {
     }
   }
 
-  disconnectComponent (component) {
+  disconnectComponent(component) {
     if (component && component._type && component._type === 'component') {
       if (!component.id) {
         throw new Error('Component does not have an ID.')
@@ -256,16 +258,16 @@ class Port {
     }
   }
 
-  getConnectedComponentIds () {
+  getConnectedComponentIds() {
     return this._connectedComponents
   }
 
   // getters and setters
-  get description () {
+  get description() {
     return this._description
   }
 
-  set description (description) {
+  set description(description) {
     if (!Util.validateType(description, 'string')) {
       throw new Error('Description must be a string.')
     }
@@ -273,21 +275,21 @@ class Port {
     this._description = description
   }
 
-  get name () {
+  get name() {
     return this._name
   }
 
-  set name (name) {
+  set name(name) {
     if (!Util.validateType(name, 'string')) {
       throw new Error('Name must be a string.')
     }
     this._name = name
   }
 
-  get id () {
+  get id() {
     return this._id
   }
-  set id (id) {
+  set id(id) {
     throw new Error('ID is read-only')
   }
 }
