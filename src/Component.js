@@ -7,7 +7,7 @@ import Port from './Port'
 import Property from './Property'
 
 class Component {
-  constructor (id) {
+  constructor(id) {
     // Icon URL is the URL of an Icon in SVG that can be showed in the UI.
     this._iconUrl = ''
     this._type = 'component'
@@ -44,7 +44,7 @@ class Component {
     this._executionPlatform = []
   }
 
-  isOnGraph () {
+  isOnGraph() {
     // The Socket belongs to a Graph. If this component has a socket. It's on the graph.
     if (this._socket) {
       return true
@@ -53,13 +53,13 @@ class Component {
     }
   }
 
-  initProperties (properties) {
+  initProperties(properties) {
     for (var key in properties) {
       if (this.hasProperty(key)) this.getProperty(key).data = properties[key]
     }
   }
 
-  initConnections (connections) {
+  initConnections(connections) {
     for (var i = 0; i < connections.length; i++) {
       this.getPort(connections[i].fromPortId).connectComponentById(
         connections[i].toComponentId
@@ -67,7 +67,7 @@ class Component {
     }
   }
 
-  addProperties (properties) {
+  addProperties(properties) {
     if (properties instanceof Property) {
       this.addProperty(properties)
     } else if (properties instanceof Array) {
@@ -79,7 +79,7 @@ class Component {
     }
   }
 
-  addProperty (property) {
+  addProperty(property) {
     if (property instanceof Property) {
       if (!property.id) {
         throw new Error('Property does not have an ID.')
@@ -100,7 +100,7 @@ class Component {
     }
   }
 
-  removeProperty (property) {
+  removeProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
         throw new Error('Property does not have an ID.')
@@ -125,7 +125,7 @@ class Component {
     }
   }
 
-  updateProperty (property) {
+  updateProperty(property) {
     if (property instanceof Property) {
       if (!property.id) {
         throw new Error('Property does not have an ID.')
@@ -147,7 +147,7 @@ class Component {
     }
   }
 
-  getProperty (property) {
+  getProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
         throw new Error('Property does not have an ID.')
@@ -174,7 +174,7 @@ class Component {
     }
   }
 
-  hasProperty (property) {
+  hasProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
         throw new Error('Property does not have an ID.')
@@ -201,7 +201,7 @@ class Component {
   }
 
   // execute the component task.
-  execute () {
+  execute() {
     var component = this
 
     if (
@@ -223,18 +223,21 @@ class Component {
     if (component._task && Util.validateType(component._task, 'function')) {
       component._isProcessingTask = true
       if (this.isOnGraph()) {
-        component._socket.emit(`resolve-properties-${component.id}`)
+        component._socket.emit(`resolve-properties`, component.id)
       }
       component._task()
     }
   }
 
-  taskComplete () {
+  taskComplete() {
     // Task is complete, and this component is no longer processing.
     this._isProcessingTask = false
+    if (this.isOnGraph()) {
+      this._socket.emit(`component-executed`, this.id)
+    }
   }
   // Task is a custom code as a function that runs when the component executes.
-  attachTask (task) {
+  attachTask(task) {
     if (!Util.validateType(task, 'function')) {
       throw new Error('Task must be a function.')
     }
@@ -243,11 +246,11 @@ class Component {
   }
 
   // Task is a custom code as a function that runs when the component executes.
-  detachTask () {
+  detachTask() {
     this._task = null
   }
 
-  addPort (port) {
+  addPort(port) {
     if (port instanceof Port) {
       if (!port.id) {
         throw new Error('Port does not have an ID.')
@@ -274,7 +277,7 @@ class Component {
     }
   }
 
-  removePort (port) {
+  removePort(port) {
     if (port instanceof Port) {
       if (!port.id) {
         throw new Error('Port does not have an ID.')
@@ -289,7 +292,7 @@ class Component {
     }
   }
 
-  getPort (port) {
+  getPort(port) {
     if (port instanceof Port || typeof port === 'string') {
       if (port instanceof Port) {
         if (!port.id) {
@@ -319,7 +322,7 @@ class Component {
     }
   }
 
-  hasPort (port) {
+  hasPort(port) {
     if (port instanceof Port) {
       if (!port.id) {
         throw new Error('Port does not have an ID.')
@@ -334,28 +337,28 @@ class Component {
     }
   }
 
-  getPorts () {
+  getPorts() {
     return this._ports
   }
 
   // Private Functions.
 
-  _attachSocket (socket) {
+  _attachSocket(socket) {
     this._socket = socket
     var component = this
-    this._socket.on('execute-component-' + this.id, function () {
+    this._socket.on('execute-component-' + this.id, function() {
       component.execute(component)
     })
   }
 
-  _detachSocket () {
+  _detachSocket() {
     if (this._socket) {
       this._socket.off('execute-component-' + this.id, this.execute)
       this._socket = null
     }
   }
 
-  setExecutionPlatform (platform) {
+  setExecutionPlatform(platform) {
     if (Array.isArray(platform)) {
       if (platform.length > 2) {
         throw new Error('Too many elements in the array')
@@ -381,11 +384,11 @@ class Component {
   }
 
   // getters and setters
-  get description () {
+  get description() {
     return this._description
   }
 
-  set description (description) {
+  set description(description) {
     if (!Util.validateType(description, 'string')) {
       throw new Error('Description must be a string.')
     }
@@ -393,45 +396,45 @@ class Component {
     this._description = description
   }
 
-  get task () {
+  get task() {
     return this._task
   }
 
-  set task (task) {
+  set task(task) {
     this.attachTask(task)
   }
 
-  get name () {
+  get name() {
     return this._name
   }
 
-  set name (name) {
+  set name(name) {
     if (!Util.validateType(name, 'string')) {
       throw new Error('Name must be a string.')
     }
     this._name = name
   }
 
-  get iconUrl () {
+  get iconUrl() {
     return this._iconUrl
   }
 
-  set iconUrl (iconUrl) {
+  set iconUrl(iconUrl) {
     if (!Util.validateType(iconUrl, 'url')) {
       throw new Error('iconUrl must be a URL.')
     }
     this._iconUrl = iconUrl
   }
 
-  get ports () {
+  get ports() {
     return this._ports
   }
 
-  get id () {
+  get id() {
     return this._id
   }
 
-  set id (id) {
+  set id(id) {
     throw new Error('ID is read-only')
   }
 }

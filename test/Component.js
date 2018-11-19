@@ -2,13 +2,17 @@ import Flow from '../src/index'
 import AddComponent from './components/AddComponent'
 import SubtractComponent from './components/SubtractComponent'
 
-describe('Component Tests', function () {
-  it('A new component should have an ID', function (done) {
+describe('Component Tests', function() {
+  it('A new component should have an ID', function(done) {
     let component = new Flow.Component()
-    if (component.id) { done() } else { done('component does not have an ID') }
+    if (component.id) {
+      done()
+    } else {
+      done('component does not have an ID')
+    }
   })
 
-  it('should set a name ', function (done) {
+  it('should set a name ', function(done) {
     try {
       var component = new Flow.Component()
       component.name = 'New name'
@@ -23,10 +27,12 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should get an id. ', function (done) {
+  it('should get an id. ', function(done) {
     try {
       var component = new Flow.Component()
-      if (component.id) { done() } else {
+      if (component.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -34,7 +40,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set a description ', function (done) {
+  it('should set a description ', function(done) {
     try {
       var component = new Flow.Component()
       component.description = 'New description'
@@ -49,7 +55,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set a name ', function (done) {
+  it('should set a name ', function(done) {
     try {
       var component = new Flow.Component()
       component.name = 'Sample'
@@ -64,7 +70,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set a iconUrl ', function (done) {
+  it('should set a iconUrl ', function(done) {
     try {
       var component = new Flow.Component()
       component.iconUrl = 'Sample'
@@ -79,7 +85,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set a iconUrl ', function (done) {
+  it('should set a iconUrl ', function(done) {
     try {
       var component = new Flow.Component()
       component.iconUrl = 'https://google.com'
@@ -94,7 +100,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set a task ', function (done) {
+  it('should set a task ', function(done) {
     try {
       var component = new Flow.Component()
       component.task = 'Sample'
@@ -109,12 +115,10 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set a task ', function (done) {
+  it('should set a task ', function(done) {
     try {
       var component = new Flow.Component()
-      component.task = function () {
-
-      }
+      component.task = function() {}
 
       if (component.task) {
         done()
@@ -126,10 +130,12 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should get an id.', function (done) {
+  it('should get an id.', function(done) {
     try {
       var component = new Flow.Component()
-      if (component.id) { done() } else {
+      if (component.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -137,7 +143,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Add property to component', function (done) {
+  it('Add property to component', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -151,7 +157,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Remove property from the  component', function (done) {
+  it('Remove property from the  component', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -166,7 +172,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should not add any other object as property', function (done) {
+  it('Should not add any other object as property', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -177,7 +183,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should not add same property twice.', function (done) {
+  it('Should not add same property twice.', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -192,7 +198,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud not remove same property twice', function (done) {
+  it('Shoud not remove same property twice', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -208,7 +214,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud return true if it has a property', function (done) {
+  it('Shoud return true if it has a property', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -226,7 +232,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud return true if it has a property', function (done) {
+  it('Shoud return true if it has a property', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -243,7 +249,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud not process with a wrong param in hasProperty', function (done) {
+  it('Shoud not process with a wrong param in hasProperty', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -257,7 +263,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should return a property in GetProperty', function (done) {
+  it('Should return a property in GetProperty', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -274,7 +280,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should return a property in GetProperty', function (done) {
+  it('Should return a property in GetProperty', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -291,7 +297,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Add port to component', function (done) {
+  it('Add port to component', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -304,7 +310,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Remove port from the  component', function (done) {
+  it('Remove port from the  component', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -318,7 +324,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should not add any other object as port', function (done) {
+  it('Should not add any other object as port', function(done) {
     try {
       var component = new Flow.Component()
       component.addPort('a')
@@ -328,7 +334,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should not add same port twice.', function (done) {
+  it('Should not add same port twice.', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -342,7 +348,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud not remove same port twice', function (done) {
+  it('Shoud not remove same port twice', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -357,7 +363,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud return true if it has a port', function (done) {
+  it('Shoud return true if it has a port', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -374,7 +380,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud return false if it does not have a port', function (done) {
+  it('Shoud return false if it does not have a port', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -390,7 +396,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Shoud not process with a wrong param in hasPort', function (done) {
+  it('Shoud not process with a wrong param in hasPort', function(done) {
     try {
       var component = new Flow.Component()
       component.hasPort(1)
@@ -400,7 +406,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should return a port in GetPort', function (done) {
+  it('Should return a port in GetPort', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -416,7 +422,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Should return a port in GetPort', function (done) {
+  it('Should return a port in GetPort', function(done) {
     try {
       var component = new Flow.Component()
 
@@ -432,11 +438,11 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Attach and run a task.', function (done) {
+  it('Attach and run a task.', function(done) {
     let component = new Flow.Component()
     // attach a task.
 
-    component.attachTask(function () {
+    component.attachTask(function() {
       // do nothing.
     })
 
@@ -445,7 +451,7 @@ describe('Component Tests', function () {
     done()
   })
 
-  it('Do not run a task if its not attached. ', function (done) {
+  it('Do not run a task if its not attached. ', function(done) {
     let component = new Flow.Component()
 
     // Task is commented and not attached.
@@ -462,11 +468,11 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Create a simple add component', function (done) {
+  it('Create a simple add component', function(done) {
     var addComponent = new AddComponent()
     addComponent.getProperty('Property 1').data = 1
     addComponent.getProperty('Property 2').data = 2
-    addComponent.getPort('Result').onEmit(function () {
+    addComponent.getPort('Result').onEmit(function() {
       addComponent.getProperty('Property 1')
       if (addComponent.getPort('Result').getProperty('Property 3').data === 3) {
         done()
@@ -477,22 +483,22 @@ describe('Component Tests', function () {
     addComponent.execute()
   })
 
-  it('Should not execute a connected component if it does not belong to a graph.', function (done) {
+  it('Should not execute a connected component if it does not belong to a graph.', function(done) {
     var addComponent = new AddComponent()
     addComponent.getProperty('Property 1').data = 1
     addComponent.getProperty('Property 2').data = 2
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
-    subComponent.getPort('Result').onEmit(function () {
+    subComponent.getPort('Result').onEmit(function() {
       if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
-
       } else {
-
       }
     })
     try {
@@ -503,7 +509,7 @@ describe('Component Tests', function () {
     }
   })
 
-  it('Connect two components and execute.', function (done) {
+  it('Connect two components and execute.', function(done) {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
@@ -513,14 +519,16 @@ describe('Component Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
-    subComponent.getPort('Result').onEmit(function () {
+    subComponent.getPort('Result').onEmit(function() {
       if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
         done()
       } else {
@@ -531,18 +539,16 @@ describe('Component Tests', function () {
     addComponent.execute()
   })
 
-  it('should set the _executionPlatform with valid string', function (done) {
+  it('should set the _executionPlatform with valid string', function(done) {
     try {
       let component = new Flow.Component()
 
       component.setExecutionPlatform('server')
       done()
-    } catch (e) {
-
-    }
+    } catch (e) {}
   })
 
-  it('should not set the _executionPlatform with an invalid string', function (done) {
+  it('should not set the _executionPlatform with an invalid string', function(done) {
     try {
       let component = new Flow.Component()
 
@@ -552,18 +558,16 @@ describe('Component Tests', function () {
     }
   })
 
-  it('should set _executionPlatform with a valid array', function (done) {
+  it('should set _executionPlatform with a valid array', function(done) {
     try {
       let component = new Flow.Component()
 
       component.setExecutionPlatform(['server', 'client'])
       done()
-    } catch (e) {
-
-    }
+    } catch (e) {}
   })
 
-  it('should not set _executionPlatform with an invalid array', function (done) {
+  it('should not set _executionPlatform with an invalid array', function(done) {
     try {
       let component = new Flow.Component()
 

@@ -1,6 +1,6 @@
 {
   "name": "flow-platform-sdk",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "dist/flow-platform-sdk.cjs.js",
   "module": "dist/flow-platform-sdk.esm.js",
   "license": "MIT",
@@ -17,6 +17,11 @@
     "chance": "1.0.16",
     "mocha": "5.2.0",
     "rollup": "0.67.3",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "prettier": "^1.15.2",
     "rollup-plugin-babel": "4.0.3",
     "rollup-plugin-commonjs": "9.2.0",
     "rollup-plugin-node-resolve": "3.4.0"
@@ -25,6 +30,10 @@
     "prepare": "npm run build",
     "build": "rollup -c",
     "watch": "rollup -c -w",
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --ignore-path .gitignore",
+    "lint:eslint:fix": "eslint --ignore-path .gitignore --fix",
+    "lint:js": "npm run lint:eslint -- . ",
     "test": "mocha --require @babel/register && npm run build"
   },
   "renovate": {

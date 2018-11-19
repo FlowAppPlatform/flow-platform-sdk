@@ -6,8 +6,8 @@ import Property from './Property'
 import Component from './Component'
 import Port from './Port'
 
-describe('should isServer & isClient works', function () {
-  it('isServer returns true for node env', function (done) {
+describe('should isServer & isClient works', function() {
+  it('isServer returns true for node env', function(done) {
     global.window = undefined
     const runningOnServer = Flow.isServer()
     if (runningOnServer) {
@@ -17,7 +17,7 @@ describe('should isServer & isClient works', function () {
     }
   })
 
-  it('isServer returns false for browser env', function (done) {
+  it('isServer returns false for browser env', function(done) {
     global.window = {}
     const runningOnServer = Flow.isServer()
     if (!runningOnServer) {
@@ -27,7 +27,7 @@ describe('should isServer & isClient works', function () {
     }
   })
 
-  it('isClient returns false for node env', function (done) {
+  it('isClient returns false for node env', function(done) {
     global.window = undefined
     const runningOnServer = Flow.isClient()
     if (!runningOnServer) {
@@ -37,7 +37,7 @@ describe('should isServer & isClient works', function () {
     }
   })
 
-  it('isClient returns true for browser env', function (done) {
+  it('isClient returns true for browser env', function(done) {
     global.window = {}
     const runningOnServer = Flow.isClient()
     if (runningOnServer) {
