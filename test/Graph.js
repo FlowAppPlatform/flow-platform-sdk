@@ -221,4 +221,46 @@ describe('Graph Tests', function() {
       done()
     }
   })
+
+  it('should return component with getComponent()', function(done) {
+    try {
+      var graph = new Flow.Graph('Math')
+
+      var addComponent = new AddComponent()
+      addComponent.getProperty('Property 1').data = 1
+      addComponent.getProperty('Property 2').data = 2
+
+      graph.addComponent(addComponent)
+      const returnedComponent = graph.getComponent(addComponent.id)
+
+      if (!returnedComponent) {
+        done('Component was not returned')
+      }
+
+      if (returnedComponent._type !== 'component') {
+        done('returned object is not of type component')
+      }
+
+      const notFoundComponent = graph.getComponent('notfound')
+
+      if (notFoundComponent !== null) {
+        done('a non existing component was returned')
+      }
+
+      done()
+    } catch (e) {
+      done('error is thrown')
+    }
+  })
+
+  it('should throw when componentId is not a string', function(done) {
+    try {
+      var graph = new Flow.Graph('Math')
+
+      graph.getComponent({ something: 'here' })
+      done('did not throw error')
+    } catch (e) {
+      done()
+    }
+  })
 })
