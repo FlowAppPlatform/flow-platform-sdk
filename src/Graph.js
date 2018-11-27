@@ -52,6 +52,17 @@ class Graph {
     }
   }
 
+  getComponent(componentId) {
+    if (typeof componentId !== 'string') {
+      throw new Error('Expecing componentId to be a string')
+    }
+    const component = this._components[componentId]
+    if (component) {
+      return component
+    }
+    return null
+  }
+
   _componentExecuted(componentId) {
     this._executedComponent = componentId
     let executedComponent = null
