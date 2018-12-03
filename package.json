@@ -16,7 +16,7 @@
     "chai": "4.2.0",
     "chance": "1.0.17",
     "mocha": "5.2.0",
-    "rollup": "0.67.3",
+    "rollup": "0.67.4",
     "babel-eslint": "10.0.1",
     "eslint": "5.9.0",
     "eslint-config-prettier": "3.3.0",
