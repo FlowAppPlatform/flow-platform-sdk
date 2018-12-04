@@ -14,7 +14,7 @@
     "@babel/register": "7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "chai": "4.2.0",
-    "chance": "1.0.17",
+    "chance": "1.0.18",
     "mocha": "5.2.0",
     "rollup": "0.67.4",
     "babel-eslint": "10.0.1",
