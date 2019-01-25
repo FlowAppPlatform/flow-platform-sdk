@@ -89,6 +89,9 @@ class Graph {
 
   _portEmitted(port) {
     this._emittedPorts[port._componentAttachedTo.id] = port
+    if (port._componentAttachedTo.id === 'updater') {
+      this.onComponentEmitted(port, port._componentAttachedTo)
+    }
   }
 
   onComplete(cb) {
@@ -158,6 +161,10 @@ class Graph {
         }
       }
     })
+  }
+
+  onComponentEmitted(port, component) {
+    return component.getPort(port._name)._propertys
   }
 
   // getters and setters.
