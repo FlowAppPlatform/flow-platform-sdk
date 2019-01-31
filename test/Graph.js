@@ -1,22 +1,30 @@
-import Flow from '../../src/index'
+import Flow from '../src/index'
 import AddComponent from './components/AddComponent'
 
-describe('Graph Tests', function () {
-  it('A new graph should have an ID', function (done) {
+describe('Graph Tests', function() {
+  it('A new graph should have an ID', function(done) {
     let graph = new Flow.Graph('Name')
-    if (graph.id) { done() } else { done('Graph does not have an ID') }
+    if (graph.id) {
+      done()
+    } else {
+      done('Graph does not have an ID')
+    }
   })
 
-  it('Graph should not be created without a name', function (done) {
+  it('Graph should not be created without a name', function(done) {
     try {
       let graph = new Flow.Graph()
-      if (graph.id) { done('Graph created and has an id') } else { done('Graph created but does not have an ID') }
+      if (graph.id) {
+        done('Graph created and has an id')
+      } else {
+        done('Graph created but does not have an ID')
+      }
     } catch (e) {
       done()
     }
   })
 
-  it('Graph should add any object in place of a component', function (done) {
+  it('Graph should add any object in place of a component', function(done) {
     try {
       let graph = new Flow.Graph()
       graph.addComponent('Component')
@@ -26,7 +34,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Graph should remove any object in place of a component', function (done) {
+  it('Graph should remove any object in place of a component', function(done) {
     try {
       let graph = new Flow.Graph()
       graph.removeComponent('Component')
@@ -36,7 +44,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Should not add null as a component', function (done) {
+  it('Should not add null as a component', function(done) {
     try {
       let graph = new Flow.Graph()
       graph.addComponent()
@@ -46,7 +54,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Should not remove null as a component', function (done) {
+  it('Should not remove null as a component', function(done) {
     try {
       let graph = new Flow.Graph()
       graph.removeComponent()
@@ -56,7 +64,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Should not add any object in place of component', function (done) {
+  it('Should not add any object in place of component', function(done) {
     try {
       let graph = new Flow.Graph()
       graph.addComponent({})
@@ -66,7 +74,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Should not remove object as a component', function (done) {
+  it('Should not remove object as a component', function(done) {
     try {
       let graph = new Flow.Graph()
       graph.removeComponent({})
@@ -76,7 +84,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Should add a component to the graph', function (done) {
+  it('Should add a component to the graph', function(done) {
     try {
       var graph = new Flow.Graph('Math')
 
@@ -92,7 +100,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('Should remove a component to the graph', function (done) {
+  it('Should remove a component to the graph', function(done) {
     try {
       var graph = new Flow.Graph('Math')
 
@@ -109,7 +117,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should not throw an error when you try to remove a component which is not added. ', function (done) {
+  it('should not throw an error when you try to remove a component which is not added. ', function(done) {
     try {
       var graph = new Flow.Graph('Math')
 
@@ -125,7 +133,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should set a name ', function (done) {
+  it('should set a name ', function(done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.name = 'New name'
@@ -140,7 +148,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should set any other datatype other than string as name ', function (done) {
+  it('should set any other datatype other than string as name ', function(done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.name = 1
@@ -155,10 +163,12 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should get an id. ', function (done) {
+  it('should get an id. ', function(done) {
     try {
       var graph = new Flow.Graph('Math')
-      if (graph.id) { done() } else {
+      if (graph.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -166,7 +176,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should not set an id ', function (done) {
+  it('should not set an id ', function(done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.id = 'New id'
@@ -176,7 +186,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should create a map', function (done) {
+  it('should create a map', function(done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.map({
@@ -189,7 +199,7 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should create a graph with init()', function (done) {
+  it('should create a graph with init()', function(done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.init({
@@ -202,11 +212,53 @@ describe('Graph Tests', function () {
     }
   })
 
-  it('should not create a graph', function (done) {
+  it('should not create a graph', function(done) {
     try {
       var graph = new Flow.Graph('Math')
       graph.map('Not an Object')
       done('Map was created')
+    } catch (e) {
+      done()
+    }
+  })
+
+  it('should return component with getComponent()', function(done) {
+    try {
+      var graph = new Flow.Graph('Math')
+
+      var addComponent = new AddComponent()
+      addComponent.getProperty('Property 1').data = 1
+      addComponent.getProperty('Property 2').data = 2
+
+      graph.addComponent(addComponent)
+      const returnedComponent = graph.getComponent(addComponent.id)
+
+      if (!returnedComponent) {
+        done('Component was not returned')
+      }
+
+      if (returnedComponent._type !== 'component') {
+        done('returned object is not of type component')
+      }
+
+      const notFoundComponent = graph.getComponent('notfound')
+
+      if (notFoundComponent !== null) {
+        done('a non existing component was returned')
+      }
+
+      done()
+    } catch (e) {
+      done('error is thrown')
+    }
+  })
+
+  it('should throw when componentId is not a string', function(done) {
+    try {
+      var graph = new Flow.Graph('Math')
+
+      graph.getComponent({ something: 'here' })
+      done('did not throw error')
     } catch (e) {
       done()
     }

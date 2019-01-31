@@ -1,23 +1,31 @@
-import Flow from '../../src/index'
+import Flow from '../src/index'
 import AddComponent from './components/AddComponent'
 import SubtractComponent from './components/SubtractComponent'
 
-describe('Port Tests', function () {
-  it('A new port should have an ID', function (done) {
+describe('Port Tests', function() {
+  it('A new port should have an ID', function(done) {
     let port = new Flow.Port('Name')
-    if (port.id) { done() } else { done('port does not have an ID') }
+    if (port.id) {
+      done()
+    } else {
+      done('port does not have an ID')
+    }
   })
 
-  it('port should not be created without a name', function (done) {
+  it('port should not be created without a name', function(done) {
     try {
       let port = new Flow.Port()
-      if (port.id) { done('port created and has an id') } else { done('port created but does not have an ID') }
+      if (port.id) {
+        done('port created and has an id')
+      } else {
+        done('port created but does not have an ID')
+      }
     } catch (e) {
       done()
     }
   })
 
-  it('should set a name ', function (done) {
+  it('should set a name ', function(done) {
     try {
       var port = new Flow.Port('Sample')
       port.name = 'New name'
@@ -32,10 +40,12 @@ describe('Port Tests', function () {
     }
   })
 
-  it('should get an id. ', function (done) {
+  it('should get an id. ', function(done) {
     try {
       var port = new Flow.Port('Sample')
-      if (port.id) { done() } else {
+      if (port.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -43,7 +53,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('should set a description ', function (done) {
+  it('should set a description ', function(done) {
     try {
       var port = new Flow.Port('Sample')
       port.description = 'New description'
@@ -58,10 +68,12 @@ describe('Port Tests', function () {
     }
   })
 
-  it('should get an id.', function (done) {
+  it('should get an id.', function(done) {
     try {
       var port = new Flow.Port('Sample')
-      if (port.id) { done() } else {
+      if (port.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -69,7 +81,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Add property to port', function (done) {
+  it('Add property to port', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -83,7 +95,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Remove property to port', function (done) {
+  it('Remove property to port', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -98,7 +110,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Should not add any other object as property', function (done) {
+  it('Should not add any other object as property', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -109,7 +121,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Should not add same property twice.', function (done) {
+  it('Should not add same property twice.', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -124,7 +136,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Shoud not remove same property twice', function (done) {
+  it('Shoud not remove same property twice', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -140,7 +152,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Shoud return true if it has a property', function (done) {
+  it('Shoud return true if it has a property', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -158,7 +170,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Shoud return true if it has a property', function (done) {
+  it('Shoud return true if it has a property', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -175,7 +187,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Shoud return true if it has a property', function (done) {
+  it('Shoud return true if it has a property', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -189,7 +201,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Should return a property in GetProperty', function (done) {
+  it('Should return a property in GetProperty', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -206,7 +218,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Should return a property in GetProperty', function (done) {
+  it('Should return a property in GetProperty', function(done) {
     try {
       var port = new Flow.Port('Result')
 
@@ -223,7 +235,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Connect two components and execute.', function (done) {
+  it('Connect two components and execute.', function(done) {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
@@ -233,14 +245,16 @@ describe('Port Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
-    subComponent.getPort('Result').onEmit(function () {
+    subComponent.getPort('Result').onEmit(function() {
       if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
         done()
       } else {
@@ -251,7 +265,7 @@ describe('Port Tests', function () {
     addComponent.execute()
   })
 
-  it('Connect two components and disconnect.', function (done) {
+  it('Connect two components and disconnect.', function(done) {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
@@ -261,7 +275,9 @@ describe('Port Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
@@ -269,12 +285,12 @@ describe('Port Tests', function () {
     addComponent.getPort('Result').connectComponent(subComponent)
     addComponent.getPort('Result').disconnectComponent(subComponent)
 
-    subComponent.getPort('Result').onEmit(function () {
+    subComponent.getPort('Result').onEmit(function() {
       done('Subtract component which was disconnected executed.')
     })
 
-    addComponent.getPort('Result').onEmit(function () {
-      setTimeout(function () {
+    addComponent.getPort('Result').onEmit(function() {
+      setTimeout(function() {
         done()
       }, 20)
     })
@@ -282,7 +298,7 @@ describe('Port Tests', function () {
     addComponent.execute()
   })
 
-  it('Connect not connect components twice. ', function (done) {
+  it('Connect not connect components twice. ', function(done) {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
@@ -292,7 +308,9 @@ describe('Port Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
@@ -307,7 +325,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Connect not disconnect components twice. ', function (done) {
+  it('Connect not disconnect components twice. ', function(done) {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
@@ -317,7 +335,9 @@ describe('Port Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
@@ -332,7 +352,7 @@ describe('Port Tests', function () {
     }
   })
 
-  it('Emit should not execute, if not attached to a component', function (done) {
+  it('Emit should not execute, if not attached to a component', function(done) {
     try {
       var port = new Flow.Port('Result')
       port.emit()
@@ -342,11 +362,11 @@ describe('Port Tests', function () {
     }
   })
 
-  it('On Emit should execute.', function (done) {
+  it('On Emit should execute.', function(done) {
     var addComponent = new AddComponent()
     addComponent.getProperty('Property 1').data = 1
     addComponent.getProperty('Property 2').data = 2
-    addComponent.getPort('Result').onEmit(function () {
+    addComponent.getPort('Result').onEmit(function() {
       addComponent.getProperty('Property 1')
       if (addComponent.getPort('Result').getProperty('Property 3').data === 3) {
         done()
@@ -357,7 +377,7 @@ describe('Port Tests', function () {
     addComponent.execute()
   })
 
-  it('Emit should execute other components', function (done) {
+  it('Emit should execute other components', function(done) {
     var graph = new Flow.Graph('Math')
 
     var addComponent = new AddComponent()
@@ -367,14 +387,16 @@ describe('Port Tests', function () {
     graph.addComponent(addComponent)
 
     var subComponent = new SubtractComponent()
-    subComponent.getProperty('Property 1').linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
+    subComponent
+      .getProperty('Property 1')
+      .linkToProperty(addComponent.getPort('Result').getProperty('Property 3'))
     subComponent.getProperty('Property 2').data = 2
 
     graph.addComponent(subComponent)
 
     addComponent.getPort('Result').connectComponent(subComponent)
 
-    subComponent.getPort('Result').onEmit(function () {
+    subComponent.getPort('Result').onEmit(function() {
       if (subComponent.getPort('Result').getProperty('Property 3').data === 1) {
         done()
       } else {

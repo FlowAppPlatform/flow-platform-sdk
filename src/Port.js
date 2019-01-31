@@ -6,7 +6,7 @@ import Util from './Util'
 import Property from './Property'
 
 class Port {
-  constructor (name) {
+  constructor(name) {
     // set initial properties
     if (!name) {
       throw new Error('Port Name is required.')
@@ -22,12 +22,17 @@ class Port {
     this._socket = null
   }
 
-  addProperty (property) {
+  addProperty(property) {
     if (property instanceof Property) {
-      if (!property.id) { throw new Error('Property does not have an ID.') }
+      if (!property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
-        if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+        if (
+          property.name === this._propertys[i].name ||
+          property.id === this._propertys[i].id
+        ) {
           throw new Error('Property with the same name or id already exists.')
         }
       }
@@ -38,9 +43,11 @@ class Port {
     }
   }
 
-  removeProperty (property) {
+  removeProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
-      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+      if (property instanceof Property && !property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
         if (typeof property === 'string') {
@@ -49,7 +56,10 @@ class Port {
             return
           }
         } else {
-          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          if (
+            property.name === this._propertys[i].name ||
+            property.id === this._propertys[i].id
+          ) {
             this._propertys.splice(i, 1)
             return
           }
@@ -62,12 +72,17 @@ class Port {
     }
   }
 
-  updateProperty (property) {
+  updateProperty(property) {
     if (property instanceof Property) {
-      if (!property.id) { throw new Error('Property does not have an ID.') }
+      if (!property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
-        if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+        if (
+          property.name === this._propertys[i].name ||
+          property.id === this._propertys[i].id
+        ) {
           this._propertys[i] = property
           return
         }
@@ -79,9 +94,11 @@ class Port {
     }
   }
 
-  hasProperty (property) {
+  hasProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
-      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+      if (property instanceof Property && !property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
         if (typeof property === 'string') {
@@ -89,7 +106,10 @@ class Port {
             return true
           }
         } else {
-          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          if (
+            property.name === this._propertys[i].name ||
+            property.id === this._propertys[i].id
+          ) {
             return true
           }
         }
@@ -100,9 +120,11 @@ class Port {
     }
   }
 
-  getProperty (property) {
+  getProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
-      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+      if (property instanceof Property && !property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
         if (typeof property === 'string') {
@@ -110,7 +132,10 @@ class Port {
             return this._propertys[i]
           }
         } else {
-          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          if (
+            property.name === this._propertys[i].name ||
+            property.id === this._propertys[i].id
+          ) {
             return this._propertys[i]
           }
         }
@@ -123,32 +148,50 @@ class Port {
   }
 
   // This passes the flow to components that this port is connected to.
-  emit () {
+  emit() {
     if (this._componentAttachedTo) {
       for (var i = 0; i < this._connectedComponents.length; i++) {
-        if (this._componentAttachedTo.isOnGraph()) { this._componentAttachedTo._socket.emit('execute-component-' + this._connectedComponents[i]) } else { throw new Error('Port cannot be emitted because the component it belongs to does not belong to a graph.') }
+        if (this._componentAttachedTo.isOnGraph()) {
+          this._componentAttachedTo._socket.emit(
+            'execute-component-' + this._connectedComponents[i]
+          )
+        } else {
+          throw new Error(
+            'Port cannot be emitted because the component it belongs to does not belong to a graph.'
+          )
+        }
       }
 
       // Fire an onEmit Callback.
-      if (this._onEmit) { this._onEmit() }
+      if (this._onEmit) {
+        this._onEmit()
+      }
+      // Announce emission
+      this._componentAttachedTo._socket.emit(`emitted-port`, this)
     } else {
-      throw new Error('This port cannot emit because it does not belong to any component')
+      throw new Error(
+        'This port cannot emit because it does not belong to any component'
+      )
     }
   }
 
-  onEmit (callback) {
+  onEmit(callback) {
     this._onEmit = callback
   }
 
-  connectComponent (component) {
+  connectComponent(component) {
     if (component && component._type && component._type === 'component') {
-      if (!component.id) { throw new Error('Component does not have an ID.') }
+      if (!component.id) {
+        throw new Error('Component does not have an ID.')
+      }
 
       var componentId = component.id
 
       for (let i = 0; i < this._connectedComponents.length; i++) {
         if (componentId === this._connectedComponents[i]) {
-          throw new Error('Port is already connected to ' + component.name + '.')
+          throw new Error(
+            'Port is already connected to ' + component.name + '.'
+          )
         }
       }
 
@@ -158,10 +201,11 @@ class Port {
     }
   }
 
-  connectComponentById (componentId) {
+  connectComponentById(componentId) {
     if (componentId && typeof componentId === 'string') {
-      if (!componentId) { throw new Error('Component ID is not of type string') }
-
+      if (!componentId) {
+        throw new Error('Component ID is not of type string')
+      }
 
       for (let i = 0; i < this._connectedComponents.length; i++) {
         if (componentId === this._connectedComponents[i]) {
@@ -175,45 +219,55 @@ class Port {
     }
   }
 
-  disconnectComponentById (componentId) {
+  disconnectComponentById(componentId) {
     if (componentId && typeof componentId === 'string') {
-      if (!componentId) { throw new Error('Component ID is not of type string') }
+      if (!componentId) {
+        throw new Error('Component ID is not of type string')
+      }
 
       if (this._connectedComponents.indexOf(componentId) < 0) {
         throw new Error('Component is not connected to the port.')
       }
 
-      this._connectedComponents.splice(this._connectedComponents.indexOf(componentId), 1)
+      this._connectedComponents.splice(
+        this._connectedComponents.indexOf(componentId),
+        1
+      )
     } else {
       throw new Error('component should be an instance of Component class.')
     }
   }
 
-  disconnectComponent (component) {
+  disconnectComponent(component) {
     if (component && component._type && component._type === 'component') {
-      if (!component.id) { throw new Error('Component does not have an ID.') }
+      if (!component.id) {
+        throw new Error('Component does not have an ID.')
+      }
 
       var componentId = component.id
       if (this._connectedComponents.indexOf(componentId) < 0) {
         throw new Error('Component is not connected to the port.')
       }
 
-      this._connectedComponents.splice(this._connectedComponents.indexOf(componentId), 1)
+      this._connectedComponents.splice(
+        this._connectedComponents.indexOf(componentId),
+        1
+      )
     } else {
       throw new Error('component should be an instance of Component class.')
     }
   }
 
-  getConnectedComponentIds () {
+  getConnectedComponentIds() {
     return this._connectedComponents
   }
 
   // getters and setters
-  get description () {
+  get description() {
     return this._description
   }
 
-  set description (description) {
+  set description(description) {
     if (!Util.validateType(description, 'string')) {
       throw new Error('Description must be a string.')
     }
@@ -221,23 +275,23 @@ class Port {
     this._description = description
   }
 
-  get name () {
+  get name() {
     return this._name
   }
 
-  set name (name) {
+  set name(name) {
     if (!Util.validateType(name, 'string')) {
       throw new Error('Name must be a string.')
     }
     this._name = name
   }
 
-  get id () {
+  get id() {
     return this._id
   }
-  set id (id) {
+  set id(id) {
     throw new Error('ID is read-only')
   }
 }
 
-module.exports = Port
+export default Port

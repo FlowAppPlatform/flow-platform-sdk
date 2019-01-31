@@ -1,11 +1,11 @@
-import Flow from '../../../src/index'
+import Flow from '../../src/index'
 
-class AddComponent extends Flow.Component {
-  constructor () {
+class SubtractComponent extends Flow.Component {
+  constructor() {
     super()
 
     // construct the component.
-    this.name = 'Add'
+    this.name = 'Subtract'
 
     var var1 = new Flow.Property('Property 1', 'number')
     var1.required = true
@@ -26,12 +26,14 @@ class AddComponent extends Flow.Component {
 
     this.addPort(port)
 
-    this.attachTask(function () {
-      this.getPort('Result').getProperty('Property 3').data = this.getProperty('Property 1').data + this.getProperty('Property 2').data
+    this.attachTask(function() {
+      this.getPort('Result').getProperty('Property 3').data =
+        this.getProperty('Property 1').data -
+        this.getProperty('Property 2').data
       this.getPort('Result').emit()
       this.taskComplete()
     })
   }
 }
 
-module.exports = AddComponent
+module.exports = SubtractComponent

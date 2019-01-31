@@ -1,30 +1,42 @@
-import Flow from '../../src'
+import Flow from '../src'
 
-describe('Property Tests', function () {
-  it('A new property should have an ID', function (done) {
+describe('Property Tests', function() {
+  it('A new property should have an ID', function(done) {
     let property = new Flow.Property('Name', 'datatype')
-    if (property.id) { done() } else { done('property does not have an ID') }
+    if (property.id) {
+      done()
+    } else {
+      done('property does not have an ID')
+    }
   })
 
-  it('property should not be created without a name', function (done) {
+  it('property should not be created without a name', function(done) {
     try {
       let property = new Flow.Property()
-      if (property.id) { done('property created and has an id') } else { done('property created but does not have an ID') }
+      if (property.id) {
+        done('property created and has an id')
+      } else {
+        done('property created but does not have an ID')
+      }
     } catch (e) {
       done()
     }
   })
 
-  it('property should not be created without a datatype', function (done) {
+  it('property should not be created without a datatype', function(done) {
     try {
       let property = new Flow.Property('name', null)
-      if (property.id) { done('property created and has an id') } else { done('property created but does not have an ID') }
+      if (property.id) {
+        done('property created and has an id')
+      } else {
+        done('property created but does not have an ID')
+      }
     } catch (e) {
       done()
     }
   })
 
-  it('should set a name ', function (done) {
+  it('should set a name ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'string')
       property.name = 'New name'
@@ -39,10 +51,12 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should get an id. ', function (done) {
+  it('should get an id. ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'string')
-      if (property.id) { done() } else {
+      if (property.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -50,7 +64,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set a description ', function (done) {
+  it('should set a description ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'string')
       property.description = 'New description'
@@ -65,7 +79,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set required ', function (done) {
+  it('should set required ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'string')
       property.required = true
@@ -80,10 +94,12 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should get an id. ', function (done) {
+  it('should get an id. ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'string')
-      if (property.id) { done() } else {
+      if (property.id) {
+        done()
+      } else {
         done('Does not have an ID')
       }
     } catch (e) {
@@ -91,7 +107,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set values - select single', function (done) {
+  it('should set values - select single', function(done) {
     try {
       var property = new Flow.Property('Country', 'select-single')
       property.values = ['India', 'USA']
@@ -101,7 +117,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set values - select multiple ', function (done) {
+  it('should set values - select multiple ', function(done) {
     try {
       var property = new Flow.Property('Country', 'select-multiple')
       property.values = ['India', 'USA']
@@ -111,7 +127,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set values when datatype is somethign else from select-single or select multiple', function (done) {
+  it('should not set values when datatype is somethign else from select-single or select multiple', function(done) {
     try {
       var property = new Flow.Property('Country', 'string')
       property.values = ['India', 'USA']
@@ -121,7 +137,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set an id ', function (done) {
+  it('should not set an id ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'string')
       property.id = 'New id'
@@ -131,7 +147,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type text', function (done) {
+  it('should set data of type text', function(done) {
     try {
       var property = new Flow.Property('Sample', 'text')
       property.data = 'New data'
@@ -141,7 +157,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type text ', function (done) {
+  it('should not set incorrect data of type text ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'text')
       property.data = 1
@@ -151,7 +167,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type number', function (done) {
+  it('should set data of type number', function(done) {
     try {
       var property = new Flow.Property('Sample', 'number')
       property.data = 1
@@ -161,7 +177,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type number ', function (done) {
+  it('should not set incorrect data of type number ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'number')
       property.data = 'Sample'
@@ -171,7 +187,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type URL', function (done) {
+  it('should set data of type URL', function(done) {
     try {
       var property = new Flow.Property('Sample', 'url')
       property.data = 'http://google.com'
@@ -181,7 +197,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type URL ', function (done) {
+  it('should not set incorrect data of type URL ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'url')
       property.data = 'Sample'
@@ -191,7 +207,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type Email', function (done) {
+  it('should set data of type Email', function(done) {
     try {
       var property = new Flow.Property('Sample', 'email')
       property.data = 'sample@smapl.com'
@@ -201,7 +217,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type Email ', function (done) {
+  it('should not set incorrect data of type Email ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'email')
       property.data = 'Sample'
@@ -211,7 +227,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type Date', function (done) {
+  it('should set data of type Date', function(done) {
     try {
       var property = new Flow.Property('Sample', 'date')
       property.data = new Date()
@@ -221,7 +237,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set string as dates', function (done) {
+  it('should set string as dates', function(done) {
     try {
       var property = new Flow.Property('Sample', 'date')
       property.data = new Date().toString()
@@ -231,7 +247,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type Date ', function (done) {
+  it('should not set incorrect data of type Date ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'date')
       property.data = 'Sample'
@@ -241,7 +257,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type DateTime', function (done) {
+  it('should set data of type DateTime', function(done) {
     try {
       var property = new Flow.Property('Sample', 'datetime')
       property.data = new Date()
@@ -251,7 +267,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type datetime ', function (done) {
+  it('should not set incorrect data of type datetime ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'datetime')
       property.data = 'Sample'
@@ -261,7 +277,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type time', function (done) {
+  it('should set data of type time', function(done) {
     try {
       var property = new Flow.Property('Sample', 'time')
       property.data = new Date()
@@ -271,7 +287,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type time ', function (done) {
+  it('should not set incorrect data of type time ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'time')
       property.data = 'Sample'
@@ -281,7 +297,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type boolean', function (done) {
+  it('should set data of type boolean', function(done) {
     try {
       var property = new Flow.Property('Sample', 'boolean')
       property.data = true
@@ -291,7 +307,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type boolean ', function (done) {
+  it('should not set incorrect data of type boolean ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'boolean')
       property.data = 'Sample'
@@ -301,7 +317,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set data of type list', function (done) {
+  it('should set data of type list', function(done) {
     try {
       var property = new Flow.Property('Sample', 'list')
       property.data = []
@@ -311,7 +327,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type list ', function (done) {
+  it('should not set incorrect data of type list ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'list')
       property.data = 'Sample'
@@ -321,7 +337,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type select-multiple ', function (done) {
+  it('should not set incorrect data of type select-multiple ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'select-multiple')
       property.values = ['1', '2', '3']
@@ -332,7 +348,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type select-multiple ', function (done) {
+  it('should not set incorrect data of type select-multiple ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'select-multiple')
       property.values = ['1', '2', '3']
@@ -343,7 +359,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should set multiple values in select-multiple ', function (done) {
+  it('should set multiple values in select-multiple ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'select-multiple')
       property.values = ['1', '2', '3']
@@ -354,7 +370,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type select-single ', function (done) {
+  it('should not set incorrect data of type select-single ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'select-single')
       property.values = ['1', '2', '3']
@@ -365,7 +381,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set incorrect data of type select-single ', function (done) {
+  it('should not set incorrect data of type select-single ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'select-single')
       property.values = ['1', '2', '3']
@@ -376,7 +392,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('should not set multiple values in select-single ', function (done) {
+  it('should not set multiple values in select-single ', function(done) {
     try {
       var property = new Flow.Property('Sample', 'select-single')
       property.values = ['1', '2', '3']
@@ -387,7 +403,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('link propertys ', function (done) {
+  it('link propertys ', function(done) {
     try {
       var propertyA = new Flow.Property('Sample', 'string')
       var propertyB = new Flow.Property('Sample', 'string')
@@ -403,7 +419,7 @@ describe('Property Tests', function () {
     }
   })
 
-  it('unlink propertys ', function (done) {
+  it('unlink propertys ', function(done) {
     try {
       var propertyA = new Flow.Property('Sample', 'string')
       var propertyB = new Flow.Property('Sample', 'string')

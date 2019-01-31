@@ -12,16 +12,16 @@ var Flow = {
   Port,
   Property,
   Graph,
-  isServer () {
+  isServer() {
     if (typeof window !== 'undefined') {
       return false
     }
 
     return true
   },
-  isClient () {
+  isClient() {
     return !this.isServer()
   }
 }
 
-module.exports = Flow
+export default Flow

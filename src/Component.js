@@ -22,7 +22,7 @@ class Component {
     this._socket = null
 
     // Genere a new ID for this instance.
-    this._id = id || Util.generateId();
+    this._id = id || Util.generateId()
 
     this._task = null
 
@@ -30,9 +30,11 @@ class Component {
 
     // check if the env is NodeJS
     this._platform = 'browser'
-    if (typeof (process) !== 'undefined' &&
+    if (
+      typeof process !== 'undefined' &&
       process.versions &&
-      process.versions.node) {
+      process.versions.node
+    ) {
       this._platform = 'node'
     }
 
@@ -53,25 +55,24 @@ class Component {
 
   initProperties(properties) {
     for (var key in properties) {
-      if(this.hasProperty(key))
-        this.getProperty(key).data = properties[key];
+      if (this.hasProperty(key)) this.getProperty(key).data = properties[key]
     }
   }
-
 
   initConnections(connections) {
-    for (var i=0; i<connections.length; i++) {
-      this.getPort(connections[i].fromPortId).connectComponentById(connections[i].toComponentId);
+    for (var i = 0; i < connections.length; i++) {
+      this.getPort(connections[i].fromPortId).connectComponentById(
+        connections[i].toComponentId
+      )
     }
   }
-
 
   addProperties(properties) {
     if (properties instanceof Property) {
-      this.addProperty(properties);
+      this.addProperty(properties)
     } else if (properties instanceof Array) {
       for (let i = 0; i < properties.length; i++) {
-        this.addProperty(properties[i]);
+        this.addProperty(properties[i])
       }
     } else {
       throw new Error('propertys should be an instance of Property class.')
@@ -80,10 +81,15 @@ class Component {
 
   addProperty(property) {
     if (property instanceof Property) {
-      if (!property.id) { throw new Error('Property does not have an ID.') }
+      if (!property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
-        if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+        if (
+          property.name === this._propertys[i].name ||
+          property.id === this._propertys[i].id
+        ) {
           throw new Error('Property with the same name or id already exists.')
         }
       }
@@ -96,7 +102,9 @@ class Component {
 
   removeProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
-      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+      if (property instanceof Property && !property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
         if (typeof property === 'string') {
@@ -104,7 +112,10 @@ class Component {
             this._propertys.splice(i, 1)
           }
         } else {
-          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          if (
+            property.name === this._propertys[i].name ||
+            property.id === this._propertys[i].id
+          ) {
             this._propertys.splice(i, 1)
           }
         }
@@ -116,10 +127,15 @@ class Component {
 
   updateProperty(property) {
     if (property instanceof Property) {
-      if (!property.id) { throw new Error('Property does not have an ID.') }
+      if (!property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
-        if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+        if (
+          property.name === this._propertys[i].name ||
+          property.id === this._propertys[i].id
+        ) {
           this._propertys[i] = property
           return
         }
@@ -133,7 +149,9 @@ class Component {
 
   getProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
-      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+      if (property instanceof Property && !property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
         if (typeof property === 'string') {
@@ -141,7 +159,10 @@ class Component {
             return this._propertys[i]
           }
         } else {
-          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          if (
+            property.name === this._propertys[i].name ||
+            property.id === this._propertys[i].id
+          ) {
             return this._propertys[i]
           }
         }
@@ -155,7 +176,9 @@ class Component {
 
   hasProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
-      if (property instanceof Property && !property.id) { throw new Error('Property does not have an ID.') }
+      if (property instanceof Property && !property.id) {
+        throw new Error('Property does not have an ID.')
+      }
 
       for (let i = 0; i < this._propertys.length; i++) {
         if (typeof property === 'string') {
@@ -163,7 +186,10 @@ class Component {
             return true
           }
         } else {
-          if (property.name === this._propertys[i].name || property.id === this._propertys[i].id) {
+          if (
+            property.name === this._propertys[i].name ||
+            property.id === this._propertys[i].id
+          ) {
             return true
           }
         }
@@ -178,16 +204,27 @@ class Component {
   execute() {
     var component = this
 
-    if (arguments[0] && arguments[0]._type && arguments[0]._type === 'component') {
+    if (
+      arguments[0] &&
+      arguments[0]._type &&
+      arguments[0]._type === 'component'
+    ) {
       component = arguments[0]
     }
 
-    if (!component._task) { throw new Error('No task attached.') }
+    if (!component._task) {
+      throw new Error('No task attached.')
+    }
     // check if task is attached and if its actually a function.
-    if (component._isProcessingTask) { throw new Error('Component is already processing a task.') }
+    if (component._isProcessingTask) {
+      throw new Error('Component is already processing a task.')
+    }
 
     if (component._task && Util.validateType(component._task, 'function')) {
       component._isProcessingTask = true
+      if (this.isOnGraph()) {
+        component._socket.emit(`resolve-properties`, component.id)
+      }
       component._task()
     }
   }
@@ -195,6 +232,9 @@ class Component {
   taskComplete() {
     // Task is complete, and this component is no longer processing.
     this._isProcessingTask = false
+    if (this.isOnGraph()) {
+      this._socket.emit(`component-executed`, this.id)
+    }
   }
   // Task is a custom code as a function that runs when the component executes.
   attachTask(task) {
@@ -212,15 +252,22 @@ class Component {
 
   addPort(port) {
     if (port instanceof Port) {
-      if (!port.id) { throw new Error('Port does not have an ID.') }
+      if (!port.id) {
+        throw new Error('Port does not have an ID.')
+      }
 
       for (let i = 0; i < this._ports.length; i++) {
-        if (port.name === this._ports[i].name || port.id === this._ports[i].id) {
+        if (
+          port.name === this._ports[i].name ||
+          port.id === this._ports[i].id
+        ) {
           throw new Error('Port with the same name or id already exists.')
         }
       }
 
-      if (port._componentAttachedTo) { throw new Error('This port is already attached with other component') }
+      if (port._componentAttachedTo) {
+        throw new Error('This port is already attached with other component')
+      }
 
       port._componentAttachedTo = this
 
@@ -232,7 +279,9 @@ class Component {
 
   removePort(port) {
     if (port instanceof Port) {
-      if (!port.id) { throw new Error('Port does not have an ID.') }
+      if (!port.id) {
+        throw new Error('Port does not have an ID.')
+      }
       if (this._ports.indexOf(port) < 0) {
         throw new Error('Port not found in the component.')
       }
@@ -246,7 +295,9 @@ class Component {
   getPort(port) {
     if (port instanceof Port || typeof port === 'string') {
       if (port instanceof Port) {
-        if (!port.id) { throw new Error('Port does not have an ID.') }
+        if (!port.id) {
+          throw new Error('Port does not have an ID.')
+        }
 
         if (this._ports.indexOf(port) < 0) {
           throw new Error('Port not found in the component.')
@@ -262,7 +313,9 @@ class Component {
           }
         }
 
-        throw new Error('Port with name ' + port + ' not found in the component.')
+        throw new Error(
+          'Port with name ' + port + ` not found in the component ${this.id}`
+        )
       }
     } else {
       throw new Error('Port should be an instance of Port class.')
@@ -271,7 +324,9 @@ class Component {
 
   hasPort(port) {
     if (port instanceof Port) {
-      if (!port.id) { throw new Error('Port does not have an ID.') }
+      if (!port.id) {
+        throw new Error('Port does not have an ID.')
+      }
       if (this._ports.indexOf(port) < 0) {
         return false
       }
@@ -291,7 +346,7 @@ class Component {
   _attachSocket(socket) {
     this._socket = socket
     var component = this
-    this._socket.on('execute-component-' + this.id, function () {
+    this._socket.on('execute-component-' + this.id, function() {
       component.execute(component)
     })
   }
@@ -305,16 +360,24 @@ class Component {
 
   setExecutionPlatform(platform) {
     if (Array.isArray(platform)) {
-      if (platform.length > 2) throw new Error('Too many elements in the array')
+      if (platform.length > 2) {
+        throw new Error('Too many elements in the array')
+      }
 
       platform.forEach(arg => {
-        if (arg !== 'server' && arg !== 'client') throw new Error('Invalid argument')
+        if (arg !== 'server' && arg !== 'client') {
+          throw new Error('Invalid argument')
+        }
       })
       this._executionPlatform = platform
     } else {
-      if (typeof (platform) !== 'string') throw new Error('Platform should be a string')
+      if (typeof platform !== 'string') {
+        throw new Error('Platform should be a string')
+      }
 
-      if (platform !== 'server' && platform !== 'client') throw new Error('Invalid string')
+      if (platform !== 'server' && platform !== 'client') {
+        throw new Error('Invalid string')
+      }
 
       this._executionPlatform = [platform]
     }
@@ -377,4 +440,4 @@ class Component {
 }
 
 // export.
-module.exports = Component
+export default Component

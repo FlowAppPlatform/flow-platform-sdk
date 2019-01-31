@@ -1,49 +1,56 @@
 {
   "name": "flow-platform-sdk",
-  "version": "1.0.0",
-  "description": "Cloudboost Flow",
-  "main": "./dist/index.js",
-  "keywords": [],
-  "files": ["dist/"],
-  "scripts": {
-    "build": "echo 'Building library...' && eslint src --fix && webpack && echo 'Done.'",
-    "test": "echo 'Bulding tests...' && cd test && eslint src --fix && webpack && cd dist && istanbul cover ../../node_modules/mocha/bin/_mocha --reporter index.js -- -R spec && npm run build",
-    "test:unit": "echo 'Running unit tests...' && cd test && webpack && _mocha dist/index.js",
-    "debug-test": "echo 'Bulding library...' && webpack && echo 'Bulding tests...' && cd test && webpack && cd dist && mocha index.js --debug-brk"
-  },
-  "author": "hello@cloudboost.io",
+  "version": "1.3.0",
+  "main": "dist/flow-platform-sdk.cjs.js",
+  "module": "dist/flow-platform-sdk.esm.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flowappplatform/flow-platform-sdk.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.2",
+    "@babel/preset-env": "7.3.1",
+    "@babel/register": "7.0.0",
+    "babel-core": "7.0.0-bridge.0",
+    "chai": "4.2.0",
+    "chance": "1.0.18",
+    "mocha": "5.2.0",
+    "rollup": "1.1.2",
+    "babel-eslint": "10.0.1",
+    "eslint": "5.12.1",
+    "eslint-config-prettier": "4.0.0",
+    "eslint-plugin-prettier": "3.0.1",
+    "prettier": "1.16.3",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-commonjs": "9.2.0",
+    "rollup-plugin-node-resolve": "4.0.0"
+  },
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --ignore-path .gitignore",
+    "lint:eslint:fix": "eslint --ignore-path .gitignore --fix",
+    "lint:js": "npm run lint:eslint -- . ",
+    "test": "mocha --require @babel/register && npm run build"
+  },
+  "renovate": {
+    "extends": [
+      "config:js-lib"
+    ],
+    "automerge": true,
+    "major": {
+      "automerge": false
+    },
+    "automergeType": "branch"
+  },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "event-emitter": "^0.3.5",
     "url-regex": "^4.1.1"
-  },
-  "devDependencies": {
-    "babel-core": "^6.17.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-es2015-without-strict": "0.0.4",
-    "chai": "^3.5.0",
-    "chance": "^1.0.1",
-    "eslint": "^4.14.0",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "grunt": "~0.4.5",
-    "grunt-bump": "^0.3.1",
-    "grunt-bumpup": "^0.6.3",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-release": "^0.13.0",
-    "istanbul": "^0.4.5",
-    "json-loader": "^0.5.4",
-    "mocha": "^2.5.3",
-    "mocha-phantomjs": "^4.1.0",
-    "phantomjs": "^2.1.7",
-    "publish": "^0.6.0",
-    "webpack": "~1.13.1",
-    "webpack-dev-server": "~1.14.1"
   }
 }
