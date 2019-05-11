@@ -141,7 +141,7 @@ class Port {
         }
       }
 
-      throw new Error('Property not found.')
+      throw new Error(`Property ${property} not found.`)
     } else {
       throw new Error('Property should be an instance of property class.')
     }
