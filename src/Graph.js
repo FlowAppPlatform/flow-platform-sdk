@@ -145,12 +145,12 @@ class Graph {
     var targetComponent = this._components[targetComponentId]
     targetComponent._propertys.forEach(property => {
       // resolve path
-      // check that component has property data before accessing port componentId and propertyId
+      // check that component is required before accessing port componentId and propertyId
       // this change was made to allow for optional properties
       const _resolvePath = resolvePath(property.data)
-      const componentId = _resolvePath && _resolvePath.componentId
-      const portId = _resolvePath && _resolvePath.portId
-      const propertyId = _resolvePath && _resolvePath.propertyId
+      const componentId = property._required && _resolvePath.componentId
+      const portId = property._required && _resolvePath.portId
+      const propertyId = property._required && _resolvePath.propertyId
 
       // if resolved
       if (componentId && portId && propertyId) {
