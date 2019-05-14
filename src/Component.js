@@ -75,14 +75,14 @@ class Component {
         this.addProperty(properties[i])
       }
     } else {
-      throw new Error('propertys should be an instance of Property class.')
+      throw new Error(`Property ${property} should be an instance of property class.`)
     }
   }
 
   addProperty(property) {
     if (property instanceof Property) {
       if (!property.id) {
-        throw new Error('Property does not have an ID.')
+        throw new Error(`Property ${property} does not have an ID.`)
       }
 
       for (let i = 0; i < this._propertys.length; i++) {
@@ -90,20 +90,20 @@ class Component {
           property.name === this._propertys[i].name ||
           property.id === this._propertys[i].id
         ) {
-          throw new Error('Property with the same name or id already exists.')
+          throw new Error(`Property with the same name or id as ${property} already exists.`)
         }
       }
 
       this._propertys.push(property)
     } else {
-      throw new Error('propertys should be an instance of Property class.')
+      throw new Error(`Property ${property} should be an instance of Property class.`)
     }
   }
 
   removeProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
-        throw new Error('Property does not have an ID.')
+        throw new Error(`Property ${property} does not have an ID.`)
       }
 
       for (let i = 0; i < this._propertys.length; i++) {
@@ -121,14 +121,14 @@ class Component {
         }
       }
     } else {
-      throw new Error('propertys should be an instance of Property class.')
+      throw new Error(`Property ${property} should be an instance of Property class.`)
     }
   }
 
   updateProperty(property) {
     if (property instanceof Property) {
       if (!property.id) {
-        throw new Error('Property does not have an ID.')
+        throw new Error(`Property ${property} does not have an ID.`)
       }
 
       for (let i = 0; i < this._propertys.length; i++) {
@@ -141,16 +141,16 @@ class Component {
         }
       }
 
-      throw new Error('Property not found and is not updated.')
+      throw new Error(`Property ${property} not found and is not updated.`)
     } else {
-      throw new Error('propertys should be an instance of Property class.')
+      throw new Error(`Property ${property} should be an instance of Property class.`)
     }
   }
 
   getProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
-        throw new Error('Property does not have an ID.')
+        throw new Error(`Property ${property} does not have an ID.`)
       }
 
       for (let i = 0; i < this._propertys.length; i++) {
@@ -170,14 +170,14 @@ class Component {
 
       throw new Error(`Property ${property} not found.`)
     } else {
-      throw new Error('Property should be an instance of property class.')
+      throw new Error(`Property ${property} should be an instance of property class.`)
     }
   }
 
   hasProperty(property) {
     if (property instanceof Property || typeof property === 'string') {
       if (property instanceof Property && !property.id) {
-        throw new Error('Property does not have an ID.')
+        throw new Error(`Property ${property} does not have an ID.`)
       }
 
       for (let i = 0; i < this._propertys.length; i++) {
@@ -196,7 +196,7 @@ class Component {
       }
       return false
     } else {
-      throw new Error('propertys should be an instance of Property class.')
+      throw new Error(`Property ${property} should be an instance of property class.`)
     }
   }
 
