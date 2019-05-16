@@ -51,6 +51,6 @@
   ],
   "dependencies": {
     "event-emitter": "^0.3.5",
-    "url-regex": "^4.1.1"
+    "url-regex": "^5.0.0"
   }
 }
