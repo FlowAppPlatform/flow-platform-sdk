@@ -9,9 +9,9 @@
     "url": "https://github.com/flowappplatform/flow-platform-sdk.git"
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@babel/register": "7.6.0",
+    "@babel/core": "7.6.2",
+    "@babel/preset-env": "7.6.2",
+    "@babel/register": "7.6.2",
     "babel-core": "7.0.0-bridge.0",
     "chai": "4.2.0",
     "chance": "1.1.0",
